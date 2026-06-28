@@ -1,0 +1,6020 @@
+{
+  "nodes": [
+    {
+      "id": "g0",
+      "type": "group",
+      "label": "PLC Engine Core",
+      "x": 0,
+      "y": 0,
+      "width": 2200,
+      "height": 3020,
+      "color": "1"
+    },
+    {
+      "id": "n_plc_engine_engine_init",
+      "type": "file",
+      "file": ".__init__()_2.md",
+      "x": 20,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_apply_output",
+      "type": "file",
+      "file": "._apply_output().md",
+      "x": 220,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_block_ctx",
+      "type": "file",
+      "file": "._block_ctx().md",
+      "x": 420,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_call_fbd",
+      "type": "file",
+      "file": "._call_fbd().md",
+      "x": 20,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_call_lad",
+      "type": "file",
+      "file": "._call_lad().md",
+      "x": 220,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_collect_called",
+      "type": "file",
+      "file": "._collect_called().md",
+      "x": 420,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_ctd",
+      "type": "file",
+      "file": "._ctd().md",
+      "x": 20,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_ctu",
+      "type": "file",
+      "file": "._ctu().md",
+      "x": 220,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_eval_fbd_box",
+      "type": "file",
+      "file": "._eval_fbd_box().md",
+      "x": 420,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_eval_fbd_network",
+      "type": "file",
+      "file": "._eval_fbd_network().md",
+      "x": 20,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_eval_lad_network",
+      "type": "file",
+      "file": "._eval_lad_network().md",
+      "x": 220,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_fedge",
+      "type": "file",
+      "file": "._fedge().md",
+      "x": 420,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_find_block",
+      "type": "file",
+      "file": "._find_block().md",
+      "x": 20,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_iface_call_inputs",
+      "type": "file",
+      "file": "._iface_call_inputs().md",
+      "x": 220,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_iface_call_outputs",
+      "type": "file",
+      "file": "._iface_call_outputs().md",
+      "x": 420,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_iface_members",
+      "type": "file",
+      "file": "._iface_members().md",
+      "x": 20,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_iface_sections",
+      "type": "file",
+      "file": "._iface_sections().md",
+      "x": 220,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_inline_value",
+      "type": "file",
+      "file": "._inline_value().md",
+      "x": 420,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_instance_id",
+      "type": "file",
+      "file": "._instance_id().md",
+      "x": 20,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_math",
+      "type": "file",
+      "file": "._math().md",
+      "x": 220,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_rd",
+      "type": "file",
+      "file": "._rd().md",
+      "x": 420,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_rd_bool",
+      "type": "file",
+      "file": "._rd_bool().md",
+      "x": 20,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_rd_num",
+      "type": "file",
+      "file": "._rd_num().md",
+      "x": 220,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_redge",
+      "type": "file",
+      "file": "._redge().md",
+      "x": 420,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_reset_runtime_state",
+      "type": "file",
+      "file": "._reset_runtime_state().md",
+      "x": 20,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_resolve",
+      "type": "file",
+      "file": "._resolve().md",
+      "x": 220,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_rs",
+      "type": "file",
+      "file": "._rs().md",
+      "x": 420,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_run_block",
+      "type": "file",
+      "file": "._run_block().md",
+      "x": 20,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_rung_power",
+      "type": "file",
+      "file": "._rung_power().md",
+      "x": 220,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_secs",
+      "type": "file",
+      "file": "._secs().md",
+      "x": 420,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_seed_memory",
+      "type": "file",
+      "file": "._seed_memory().md",
+      "x": 20,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_set_q",
+      "type": "file",
+      "file": "._set_q().md",
+      "x": 220,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_sr",
+      "type": "file",
+      "file": "._sr().md",
+      "x": 420,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_tof",
+      "type": "file",
+      "file": "._tof().md",
+      "x": 20,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_ton",
+      "type": "file",
+      "file": "._ton().md",
+      "x": 220,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_topo",
+      "type": "file",
+      "file": "._topo().md",
+      "x": 420,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_tp",
+      "type": "file",
+      "file": "._tp().md",
+      "x": 20,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_wkey",
+      "type": "file",
+      "file": "._wkey().md",
+      "x": 220,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_write",
+      "type": "file",
+      "file": "._write().md",
+      "x": 420,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_force",
+      "type": "file",
+      "file": ".force().md",
+      "x": 20,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_now",
+      "type": "file",
+      "file": ".now().md",
+      "x": 220,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_read_inputs",
+      "type": "file",
+      "file": ".read_inputs().md",
+      "x": 420,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_scan",
+      "type": "file",
+      "file": ".scan().md",
+      "x": 20,
+      "y": 1200,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_set_program",
+      "type": "file",
+      "file": ".set_program().md",
+      "x": 220,
+      "y": 1200,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_snapshot",
+      "type": "file",
+      "file": ".snapshot().md",
+      "x": 420,
+      "y": 1200,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_write_outputs",
+      "type": "file",
+      "file": ".write_outputs().md",
+      "x": 20,
+      "y": 1280,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_500",
+      "type": "file",
+      "file": "AND over stages ( OR over branches ( AND over inline element values ) )..md",
+      "x": 220,
+      "y": 1280,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_526",
+      "type": "file",
+      "file": "Apply one output-area element with rung power p. Records el._live..md",
+      "x": 420,
+      "y": 1280,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_993",
+      "type": "file",
+      "file": "Block idsnames referenced by any kind'call' elementbox..md",
+      "x": 20,
+      "y": 1360,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_962",
+      "type": "file",
+      "file": "Build a per-block evaluation context member-name (lowercase) - member.md",
+      "x": 220,
+      "y": 1360,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_37",
+      "type": "file",
+      "file": "Coerce any memory value to a number. bool - int; None'' - 0..md",
+      "x": 420,
+      "y": 1360,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_52",
+      "type": "file",
+      "file": "Divide-by-zero-guarded division (mirrors codegen.js idiv  sim.js mathOp)..md",
+      "x": 20,
+      "y": 1440,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine",
+      "type": "file",
+      "file": "Engine.md",
+      "x": 220,
+      "y": 1440,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_724",
+      "type": "file",
+      "file": "Evaluate one FBD box; return a list of output-pin values (in pin order)..md",
+      "x": 420,
+      "y": 1440,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_655",
+      "type": "file",
+      "file": "Execute a call element copy wired args into the callee instance,         run it.md",
+      "x": 20,
+      "y": 1520,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_860",
+      "type": "file",
+      "file": "Execute an FBD call box. Returns output-pin values (ENO + members)..md",
+      "x": 220,
+      "y": 1520,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_972",
+      "type": "file",
+      "file": "Execute every network of a block under its own member context..md",
+      "x": 420,
+      "y": 1520,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_227",
+      "type": "file",
+      "file": "Initialise M with every declared tag by its NAME (bool-False, num-0)..md",
+      "x": 20,
+      "y": 1600,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_479",
+      "type": "file",
+      "file": "Inline (contact-area) element value; records el._live in self.live..md",
+      "x": 220,
+      "y": 1600,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_952",
+      "type": "file",
+      "file": "Instance name used to key member storage. Mirrors codegen.js         the instan.md",
+      "x": 420,
+      "y": 1600,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_155",
+      "type": "file",
+      "file": "Interprets a TIA-Web project (LADFBD), drives GPIO, exposes live state.      Pu.md",
+      "x": 20,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_388",
+      "type": "file",
+      "file": "L-value memory key for writing an operand, or None if not writable..md",
+      "x": 220,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_1068",
+      "type": "file",
+      "file": "Live state for the browser monitor. mem includes every project tag by         na.md",
+      "x": 420,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_201",
+      "type": "file",
+      "file": "Load or replace the running program. Resets all state, seeds memory         with.md",
+      "x": 20,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_58",
+      "type": "file",
+      "file": "NORM_X OUT = (VALUE-MIN)(MAX-MIN); 0 if MAX==MIN. Not clamped (matches sim.js).md",
+      "x": 220,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_368",
+      "type": "file",
+      "file": "Read an operand's raw stored value..md",
+      "x": 420,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_329",
+      "type": "file",
+      "file": "Read every mapped GPIO input into M (by tag name)..md",
+      "x": 20,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_381",
+      "type": "file",
+      "file": "Resolve a PT operand to seconds literal (already seconds) or num(value)..md",
+      "x": 220,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_241",
+      "type": "file",
+      "file": "Resolve a block reference (id preferred, then name)..md",
+      "x": 420,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_1014",
+      "type": "file",
+      "file": "Run exactly one PLC scan (no IO). Mirrors sim.js scanOnce()         run every.md",
+      "x": 20,
+      "y": 1920,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_66",
+      "type": "file",
+      "file": "SCALE_X OUT = VALUE(MAX-MIN)+MIN (mirrors sim.js scaleX)..md",
+      "x": 220,
+      "y": 1920,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_1045",
+      "type": "file",
+      "file": "Set Mkey = value (inputmemory forcing from the app). Booleans stay         bo.md",
+      "x": 420,
+      "y": 1920,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_105",
+      "type": "file",
+      "file": "Time literal - seconds (codegen.js uses seconds for the PT argument)..md",
+      "x": 20,
+      "y": 2000,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_891",
+      "type": "file",
+      "file": "Topological order of boxes by wires; back-edges (cycles) are skipped         (mi.md",
+      "x": 220,
+      "y": 2000,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_334",
+      "type": "file",
+      "file": "Write M (by tag name) to every mapped GPIO output. Digital outputs         take.md",
+      "x": 420,
+      "y": 2000,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_627",
+      "type": "file",
+      "file": "Write a Q result to operand if set; the result is discarded otherwise         (t.md",
+      "x": 20,
+      "y": 2080,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_cmp",
+      "type": "file",
+      "file": "_cmp().md",
+      "x": 220,
+      "y": 2080,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_not_empty",
+      "type": "file",
+      "file": "_not_empty().md",
+      "x": 420,
+      "y": 2080,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_idiv",
+      "type": "file",
+      "file": "idiv().md",
+      "x": 20,
+      "y": 2160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_norm_x",
+      "type": "file",
+      "file": "norm_x().md",
+      "x": 220,
+      "y": 2160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_num",
+      "type": "file",
+      "file": "num()_1.md",
+      "x": 420,
+      "y": 2160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_parse_time_ms",
+      "type": "file",
+      "file": "parse_time_ms().md",
+      "x": 20,
+      "y": 2240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_parse_time_s",
+      "type": "file",
+      "file": "parse_time_s().md",
+      "x": 220,
+      "y": 2240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine",
+      "type": "file",
+      "file": "plc_engine.py.md",
+      "x": 420,
+      "y": 2240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_scale_x",
+      "type": "file",
+      "file": "scale_x().md",
+      "x": 20,
+      "y": 2320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g1",
+      "type": "group",
+      "label": "FBD Editor",
+      "x": 2280,
+      "y": 0,
+      "width": 1980,
+      "height": 2520,
+      "color": "2"
+    },
+    {
+      "id": "n_js_fbd_addnetwork",
+      "type": "file",
+      "file": "addNetwork().md",
+      "x": 2300,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_addoperandlabel",
+      "type": "file",
+      "file": "addOperandLabel().md",
+      "x": 2500,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_appendinput",
+      "type": "file",
+      "file": "appendInput().md",
+      "x": 2700,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_attachpendingtracker",
+      "type": "file",
+      "file": "attachPendingTracker().md",
+      "x": 2300,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_attachtagdrop",
+      "type": "file",
+      "file": "attachTagDrop().md",
+      "x": 2500,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_boxgeom",
+      "type": "file",
+      "file": "boxGeom().md",
+      "x": 2700,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_boxlabel",
+      "type": "file",
+      "file": "boxLabel().md",
+      "x": 2300,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_buildbox",
+      "type": "file",
+      "file": "buildBox().md",
+      "x": 2500,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_buildboxparams",
+      "type": "file",
+      "file": "buildBoxParams().md",
+      "x": 2700,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_buildpin",
+      "type": "file",
+      "file": "buildPin().md",
+      "x": 2300,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_buildsheet",
+      "type": "file",
+      "file": "buildSheet().md",
+      "x": 2500,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_buildwire",
+      "type": "file",
+      "file": "buildWire().md",
+      "x": 2700,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_callinfo",
+      "type": "file",
+      "file": "callInfo().md",
+      "x": 2300,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_cancelpending",
+      "type": "file",
+      "file": "cancelPending().md",
+      "x": 2500,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_clearhighlight",
+      "type": "file",
+      "file": "clearHighlight().md",
+      "x": 2700,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_clienttosvg",
+      "type": "file",
+      "file": "clientToSvg().md",
+      "x": 2300,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_closemenu",
+      "type": "file",
+      "file": "closeMenu().md",
+      "x": 2500,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_cmpop",
+      "type": "file",
+      "file": "cmpOp().md",
+      "x": 2700,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_cssesc",
+      "type": "file",
+      "file": "cssEsc().md",
+      "x": 2300,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_deletenetwork",
+      "type": "file",
+      "file": "deleteNetwork().md",
+      "x": 2500,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_deleteselection",
+      "type": "file",
+      "file": "deleteSelection().md",
+      "x": 2700,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_dropblockcall",
+      "type": "file",
+      "file": "dropBlockCall().md",
+      "x": 2300,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_editheadertext",
+      "type": "file",
+      "file": "editHeaderText().md",
+      "x": 2500,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_enableboxdrag",
+      "type": "file",
+      "file": "enableBoxDrag().md",
+      "x": 2700,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_enabledrop",
+      "type": "file",
+      "file": "enableDrop().md",
+      "x": 2300,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd",
+      "type": "file",
+      "file": "fbd.js.md",
+      "x": 2500,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_findboxinnet",
+      "type": "file",
+      "file": "findBoxInNet().md",
+      "x": 2700,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_findpin",
+      "type": "file",
+      "file": "findPin().md",
+      "x": 2300,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_focusnewoperand",
+      "type": "file",
+      "file": "focusNewOperand().md",
+      "x": 2500,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_getblockid",
+      "type": "file",
+      "file": "getBlockId().md",
+      "x": 2700,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_getkind",
+      "type": "file",
+      "file": "getKind().md",
+      "x": 2300,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_gettag",
+      "type": "file",
+      "file": "getTag().md",
+      "x": 2500,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_hasblock",
+      "type": "file",
+      "file": "hasBlock().md",
+      "x": 2700,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_haskind",
+      "type": "file",
+      "file": "hasKind().md",
+      "x": 2300,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_hastag",
+      "type": "file",
+      "file": "hasTag().md",
+      "x": 2500,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_hastitlebar",
+      "type": "file",
+      "file": "hasTitleBar().md",
+      "x": 2700,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_highlight",
+      "type": "file",
+      "file": "highlight().md",
+      "x": 2300,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_inputparammap",
+      "type": "file",
+      "file": "inputParamMap().md",
+      "x": 2500,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_insert",
+      "type": "file",
+      "file": "insert().md",
+      "x": 2700,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_insertat",
+      "type": "file",
+      "file": "insertAt().md",
+      "x": 2300,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_insertnetworkbelow",
+      "type": "file",
+      "file": "insertNetworkBelow().md",
+      "x": 2500,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_isinputwired",
+      "type": "file",
+      "file": "isInputWired().md",
+      "x": 2700,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_killeditinput",
+      "type": "file",
+      "file": "killEditInput().md",
+      "x": 2300,
+      "y": 1200,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_markactivecards",
+      "type": "file",
+      "file": "markActiveCards().md",
+      "x": 2500,
+      "y": 1200,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_markdirty",
+      "type": "file",
+      "file": "markDirty().md",
+      "x": 2700,
+      "y": 1200,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_netof",
+      "type": "file",
+      "file": "netOf().md",
+      "x": 2300,
+      "y": 1280,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_onkeydown",
+      "type": "file",
+      "file": "onKeyDown().md",
+      "x": 2500,
+      "y": 1280,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_onmenudocdown",
+      "type": "file",
+      "file": "onMenuDocDown().md",
+      "x": 2700,
+      "y": 1280,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_onpinclick",
+      "type": "file",
+      "file": "onPinClick().md",
+      "x": 2300,
+      "y": 1360,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_open",
+      "type": "file",
+      "file": "open().md",
+      "x": 2500,
+      "y": 1360,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_opencalledblock",
+      "type": "file",
+      "file": "openCalledBlock().md",
+      "x": 2700,
+      "y": 1360,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_openinlineedit",
+      "type": "file",
+      "file": "openInlineEdit().md",
+      "x": 2300,
+      "y": 1440,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_openpinmenu",
+      "type": "file",
+      "file": "openPinMenu().md",
+      "x": 2500,
+      "y": 1440,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_openwiremenu",
+      "type": "file",
+      "file": "openWireMenu().md",
+      "x": 2700,
+      "y": 1440,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_outputparammap",
+      "type": "file",
+      "file": "outputParamMap().md",
+      "x": 2300,
+      "y": 1520,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_paramlabel",
+      "type": "file",
+      "file": "paramLabel().md",
+      "x": 2500,
+      "y": 1520,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_pinpoint",
+      "type": "file",
+      "file": "pinPoint().md",
+      "x": 2700,
+      "y": 1520,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_redrawwires",
+      "type": "file",
+      "file": "redrawWires().md",
+      "x": 2300,
+      "y": 1600,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_removeinput",
+      "type": "file",
+      "file": "removeInput().md",
+      "x": 2500,
+      "y": 1600,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_removepin",
+      "type": "file",
+      "file": "removePin().md",
+      "x": 2700,
+      "y": 1600,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_render",
+      "type": "file",
+      "file": "render()_2.md",
+      "x": 2300,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_rendernetwork",
+      "type": "file",
+      "file": "renderNetwork().md",
+      "x": 2500,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_scrolltonet",
+      "type": "file",
+      "file": "scrollToNet().md",
+      "x": 2700,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_select",
+      "type": "file",
+      "file": "select().md",
+      "x": 2300,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_selectbox",
+      "type": "file",
+      "file": "selectBox().md",
+      "x": 2500,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_selectwire",
+      "type": "file",
+      "file": "selectWire().md",
+      "x": 2700,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_setflow",
+      "type": "file",
+      "file": "setFlow().md",
+      "x": 2300,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_showmenu",
+      "type": "file",
+      "file": "showMenu().md",
+      "x": 2500,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_togglepininverted",
+      "type": "file",
+      "file": "togglePinInverted().md",
+      "x": 2700,
+      "y": 1840,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_toolbtn",
+      "type": "file",
+      "file": "toolBtn().md",
+      "x": 2300,
+      "y": 1920,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_fbd_wirepath",
+      "type": "file",
+      "file": "wirePath().md",
+      "x": 2500,
+      "y": 1920,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g2",
+      "type": "group",
+      "label": "LAD Editor",
+      "x": 4340,
+      "y": 0,
+      "width": 1760,
+      "height": 2320,
+      "color": "3"
+    },
+    {
+      "id": "n_js_lad_addhit",
+      "type": "file",
+      "file": "addHit().md",
+      "x": 4360,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_addnetwork",
+      "type": "file",
+      "file": "addNetwork()_1.md",
+      "x": 4560,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_applyeditvalue",
+      "type": "file",
+      "file": "applyEditValue().md",
+      "x": 4760,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_attachtagdrop",
+      "type": "file",
+      "file": "attachTagDrop()_1.md",
+      "x": 4360,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_buildnetworksvg",
+      "type": "file",
+      "file": "buildNetworkSVG().md",
+      "x": 4560,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_callarglabel",
+      "type": "file",
+      "file": "callArgLabel().md",
+      "x": 4760,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_callboxrows",
+      "type": "file",
+      "file": "callBoxRows().md",
+      "x": 4360,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_clearhighlight",
+      "type": "file",
+      "file": "clearHighlight()_1.md",
+      "x": 4560,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_closemenu",
+      "type": "file",
+      "file": "closeMenu()_1.md",
+      "x": 4760,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_collectelements",
+      "type": "file",
+      "file": "collectElements().md",
+      "x": 4360,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_cssesc",
+      "type": "file",
+      "file": "cssEsc()_1.md",
+      "x": 4560,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_cyclecompareop",
+      "type": "file",
+      "file": "cycleCompareOp().md",
+      "x": 4760,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_deletenetwork",
+      "type": "file",
+      "file": "deleteNetwork()_1.md",
+      "x": 4360,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_deleteselection",
+      "type": "file",
+      "file": "deleteSelection()_1.md",
+      "x": 4560,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_dropblockcall",
+      "type": "file",
+      "file": "dropBlockCall()_1.md",
+      "x": 4760,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_editheadertext",
+      "type": "file",
+      "file": "editHeaderText()_1.md",
+      "x": 4360,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_elgroup",
+      "type": "file",
+      "file": "elGroup().md",
+      "x": 4560,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_enabledrop",
+      "type": "file",
+      "file": "enableDrop()_1.md",
+      "x": 4760,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_findelbyid",
+      "type": "file",
+      "file": "findElById().md",
+      "x": 4360,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_focusnewoperand",
+      "type": "file",
+      "file": "focusNewOperand()_1.md",
+      "x": 4560,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_getactivenet",
+      "type": "file",
+      "file": "getActiveNet().md",
+      "x": 4760,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_getblockid",
+      "type": "file",
+      "file": "getBlockId()_1.md",
+      "x": 4360,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_getkind",
+      "type": "file",
+      "file": "getKind()_1.md",
+      "x": 4560,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_gettag",
+      "type": "file",
+      "file": "getTag()_1.md",
+      "x": 4760,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_hasblock",
+      "type": "file",
+      "file": "hasBlock()_1.md",
+      "x": 4360,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_haskind",
+      "type": "file",
+      "file": "hasKind()_1.md",
+      "x": 4560,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_hastag",
+      "type": "file",
+      "file": "hasTag()_1.md",
+      "x": 4760,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_highlight",
+      "type": "file",
+      "file": "highlight()_1.md",
+      "x": 4360,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_inputparammap",
+      "type": "file",
+      "file": "inputParamMap()_1.md",
+      "x": 4560,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_insert",
+      "type": "file",
+      "file": "insert()_1.md",
+      "x": 4760,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_insertnetworkbelow",
+      "type": "file",
+      "file": "insertNetworkBelow()_1.md",
+      "x": 4360,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_killeditinput",
+      "type": "file",
+      "file": "killEditInput()_1.md",
+      "x": 4560,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad",
+      "type": "file",
+      "file": "lad.js.md",
+      "x": 4760,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_locate",
+      "type": "file",
+      "file": "locate().md",
+      "x": 4360,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_markactivecards",
+      "type": "file",
+      "file": "markActiveCards()_1.md",
+      "x": 4560,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_markdirty",
+      "type": "file",
+      "file": "markDirty()_1.md",
+      "x": 4760,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_onkeydown",
+      "type": "file",
+      "file": "onKeyDown()_1.md",
+      "x": 4360,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_onmenudocdown",
+      "type": "file",
+      "file": "onMenuDocDown()_1.md",
+      "x": 4560,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_open",
+      "type": "file",
+      "file": "open()_1.md",
+      "x": 4760,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_opencalledblock",
+      "type": "file",
+      "file": "openCalledBlock()_1.md",
+      "x": 4360,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_openelementmenu",
+      "type": "file",
+      "file": "openElementMenu().md",
+      "x": 4560,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_openinlineedit",
+      "type": "file",
+      "file": "openInlineEdit()_1.md",
+      "x": 4760,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_openparallelbranch",
+      "type": "file",
+      "file": "openParallelBranch().md",
+      "x": 4360,
+      "y": 1200,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_openparallelbranchat",
+      "type": "file",
+      "file": "openParallelBranchAt().md",
+      "x": 4560,
+      "y": 1200,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_operandlabel",
+      "type": "file",
+      "file": "operandLabel().md",
+      "x": 4760,
+      "y": 1200,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_outputparammap",
+      "type": "file",
+      "file": "outputParamMap()_1.md",
+      "x": 4360,
+      "y": 1280,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_outputsloth",
+      "type": "file",
+      "file": "outputSlotH().md",
+      "x": 4560,
+      "y": 1280,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_paramlabel",
+      "type": "file",
+      "file": "paramLabel()_1.md",
+      "x": 4760,
+      "y": 1280,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_render",
+      "type": "file",
+      "file": "render()_5.md",
+      "x": 4360,
+      "y": 1360,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_renderbranch",
+      "type": "file",
+      "file": "renderBranch().md",
+      "x": 4560,
+      "y": 1360,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_rendercallbox",
+      "type": "file",
+      "file": "renderCallBox().md",
+      "x": 4760,
+      "y": 1360,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_rendercoil",
+      "type": "file",
+      "file": "renderCoil().md",
+      "x": 4360,
+      "y": 1440,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_rendercomparebox",
+      "type": "file",
+      "file": "renderCompareBox().md",
+      "x": 4560,
+      "y": 1440,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_renderinlineelement",
+      "type": "file",
+      "file": "renderInlineElement().md",
+      "x": 4760,
+      "y": 1440,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_rendernetwork",
+      "type": "file",
+      "file": "renderNetwork()_1.md",
+      "x": 4360,
+      "y": 1520,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_renderoutput",
+      "type": "file",
+      "file": "renderOutput().md",
+      "x": 4560,
+      "y": 1520,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_renderoutputbox",
+      "type": "file",
+      "file": "renderOutputBox().md",
+      "x": 4760,
+      "y": 1520,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_rungpowered",
+      "type": "file",
+      "file": "rungPowered().md",
+      "x": 4360,
+      "y": 1600,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_scrolltonet",
+      "type": "file",
+      "file": "scrollToNet()_1.md",
+      "x": 4560,
+      "y": 1600,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_seg",
+      "type": "file",
+      "file": "seg().md",
+      "x": 4760,
+      "y": 1600,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_select",
+      "type": "file",
+      "file": "select()_1.md",
+      "x": 4360,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_showmenu",
+      "type": "file",
+      "file": "showMenu()_1.md",
+      "x": 4560,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_toolbtn",
+      "type": "file",
+      "file": "toolBtn()_1.md",
+      "x": 4760,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_lad_wire",
+      "type": "file",
+      "file": "wire().md",
+      "x": 4360,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g3",
+      "type": "group",
+      "label": "Cyclic Scan Simulator",
+      "x": 6180,
+      "y": 0,
+      "width": 1760,
+      "height": 2020,
+      "color": "4"
+    },
+    {
+      "id": "n_cyclic_scan_simulator",
+      "type": "file",
+      "file": "Cyclic Scan Simulator \u2014 scan loop evaluating all networks per LADFBD semantics.md",
+      "x": 6200,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_lad_power_flow",
+      "type": "file",
+      "file": "LAD Power-Flow Semantics \u2014 rungPower = AND(stages(OR(branches(AND(elements))))).md",
+      "x": 6400,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_applyoutput",
+      "type": "file",
+      "file": "applyOutput().md",
+      "x": 6600,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_blockorder",
+      "type": "file",
+      "file": "blockOrder().md",
+      "x": 6200,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_boolcell",
+      "type": "file",
+      "file": "boolCell().md",
+      "x": 6400,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_booldefault",
+      "type": "file",
+      "file": "boolDefault().md",
+      "x": 6600,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_branchvalue",
+      "type": "file",
+      "file": "branchValue().md",
+      "x": 6200,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_buildscope",
+      "type": "file",
+      "file": "buildScope().md",
+      "x": 6400,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_clearliveflags",
+      "type": "file",
+      "file": "clearLiveFlags().md",
+      "x": 6600,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_cmp",
+      "type": "file",
+      "file": "cmp().md",
+      "x": 6200,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_collectcalledids",
+      "type": "file",
+      "file": "collectCalledIds().md",
+      "x": 6400,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_collectrows",
+      "type": "file",
+      "file": "collectRows().md",
+      "x": 6600,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_evalbox",
+      "type": "file",
+      "file": "evalBox().md",
+      "x": 6200,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_evalctd",
+      "type": "file",
+      "file": "evalCTD().md",
+      "x": 6400,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_evalctu",
+      "type": "file",
+      "file": "evalCTU().md",
+      "x": 6600,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_evalfbdnetwork",
+      "type": "file",
+      "file": "evalFbdNetwork().md",
+      "x": 6200,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_evalladnetwork",
+      "type": "file",
+      "file": "evalLadNetwork().md",
+      "x": 6400,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_evaltof",
+      "type": "file",
+      "file": "evalTOF().md",
+      "x": 6600,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_evalton",
+      "type": "file",
+      "file": "evalTON().md",
+      "x": 6200,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_evaltp",
+      "type": "file",
+      "file": "evalTP().md",
+      "x": 6400,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_executeblock",
+      "type": "file",
+      "file": "executeBlock().md",
+      "x": 6600,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_findbox",
+      "type": "file",
+      "file": "findBox().md",
+      "x": 6200,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_grouprows",
+      "type": "file",
+      "file": "groupRows().md",
+      "x": 6400,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_inparamkey",
+      "type": "file",
+      "file": "inParamKey().md",
+      "x": 6600,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_inlinevalue",
+      "type": "file",
+      "file": "inlineValue().md",
+      "x": 6200,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_inputpinvalue",
+      "type": "file",
+      "file": "inputPinValue().md",
+      "x": 6400,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_inst",
+      "type": "file",
+      "file": "inst().md",
+      "x": 6600,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_isboolbox",
+      "type": "file",
+      "file": "isBoolBox().md",
+      "x": 6200,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_mathop",
+      "type": "file",
+      "file": "mathOp().md",
+      "x": 6400,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_memisbit",
+      "type": "file",
+      "file": "memIsBit().md",
+      "x": 6600,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_momentarybutton",
+      "type": "file",
+      "file": "momentaryButton().md",
+      "x": 6200,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_needsrebuild",
+      "type": "file",
+      "file": "needsRebuild().md",
+      "x": 6400,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_normx",
+      "type": "file",
+      "file": "normX().md",
+      "x": 6600,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_notempty",
+      "type": "file",
+      "file": "notEmpty().md",
+      "x": 6200,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_num",
+      "type": "file",
+      "file": "num().md",
+      "x": 6400,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_numcell",
+      "type": "file",
+      "file": "numCell().md",
+      "x": 6600,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_numdefault",
+      "type": "file",
+      "file": "numDefault().md",
+      "x": 6200,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_orderboxes",
+      "type": "file",
+      "file": "orderBoxes().md",
+      "x": 6400,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_pinkey",
+      "type": "file",
+      "file": "pinKey().md",
+      "x": 6600,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_readmember",
+      "type": "file",
+      "file": "readMember().md",
+      "x": 6200,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_refreshvalues",
+      "type": "file",
+      "file": "refreshValues().md",
+      "x": 6400,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_rendertable",
+      "type": "file",
+      "file": "renderTable().md",
+      "x": 6600,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_reset",
+      "type": "file",
+      "file": "reset()_1.md",
+      "x": 6200,
+      "y": 1200,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_rungpower",
+      "type": "file",
+      "file": "rungPower()_1.md",
+      "x": 6400,
+      "y": 1200,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_scalex",
+      "type": "file",
+      "file": "scaleX().md",
+      "x": 6600,
+      "y": 1200,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_scanonce",
+      "type": "file",
+      "file": "scanOnce().md",
+      "x": 6200,
+      "y": 1280,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim",
+      "type": "file",
+      "file": "sim.js.md",
+      "x": 6400,
+      "y": 1280,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_stagevalue",
+      "type": "file",
+      "file": "stageValue().md",
+      "x": 6600,
+      "y": 1280,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_start",
+      "type": "file",
+      "file": "start().md",
+      "x": 6200,
+      "y": 1360,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_stop",
+      "type": "file",
+      "file": "stop().md",
+      "x": 6400,
+      "y": 1360,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_toggle",
+      "type": "file",
+      "file": "toggle()_1.md",
+      "x": 6600,
+      "y": 1360,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_unwirednum",
+      "type": "file",
+      "file": "unwiredNum().md",
+      "x": 6200,
+      "y": 1440,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_wireinto",
+      "type": "file",
+      "file": "wireInto().md",
+      "x": 6400,
+      "y": 1440,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_writebitrow",
+      "type": "file",
+      "file": "writeBitRow().md",
+      "x": 6600,
+      "y": 1440,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_writemember",
+      "type": "file",
+      "file": "writeMember().md",
+      "x": 6200,
+      "y": 1520,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_sim_writewordrow",
+      "type": "file",
+      "file": "writeWordRow().md",
+      "x": 6400,
+      "y": 1520,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g4",
+      "type": "group",
+      "label": "App Architecture & Core",
+      "x": 8020,
+      "y": 0,
+      "width": 1760,
+      "height": 1920,
+      "color": "5"
+    },
+    {
+      "id": "n_claude_md",
+      "type": "file",
+      "file": "CLAUDE.md \u2014 Contributor  Agent Guide.md",
+      "x": 8040,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_iife_pattern",
+      "type": "file",
+      "file": "IIFE Module Pattern \u2014 (function(T){...})(window.TIA) \u2014 no ES modules, file safe.md",
+      "x": 8240,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_readme",
+      "type": "file",
+      "file": "README.md \u2014 User Documentation.md",
+      "x": 8440,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_spec",
+      "type": "file",
+      "file": "SPEC.md \u2014 Module Interface Contract.md",
+      "x": 8040,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_event_bus",
+      "type": "file",
+      "file": "T.bus \u2014 Cross-Module Event Bus (onoffemit).md",
+      "x": 8240,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_data_model",
+      "type": "file",
+      "file": "TIA Data Model \u2014 Project  Block  Network  Stage  Branch  Element  Box  Wire.md",
+      "x": 8440,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_instructions_applyfilter",
+      "type": "file",
+      "file": "applyFilter().md",
+      "x": 8040,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_instructions_builditem",
+      "type": "file",
+      "file": "buildItem().md",
+      "x": 8240,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_clone",
+      "type": "file",
+      "file": "clone().md",
+      "x": 8440,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_close",
+      "type": "file",
+      "file": "close().md",
+      "x": 8040,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core",
+      "type": "file",
+      "file": "core.js.md",
+      "x": 8240,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_destroy",
+      "type": "file",
+      "file": "destroy().md",
+      "x": 8440,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_instructions_doinsert",
+      "type": "file",
+      "file": "doInsert().md",
+      "x": 8040,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_emit",
+      "type": "file",
+      "file": "emit().md",
+      "x": 8240,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_exportfile",
+      "type": "file",
+      "file": "exportFile().md",
+      "x": 8440,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_file_url_constraint",
+      "type": "file",
+      "file": "file Constraint \u2014 no ES modules, no fetch, no CDN, no bundler.md",
+      "x": 8040,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_filter",
+      "type": "file",
+      "file": "filter().md",
+      "x": 8240,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_getbit",
+      "type": "file",
+      "file": "getBit().md",
+      "x": 8440,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_getword",
+      "type": "file",
+      "file": "getWord().md",
+      "x": 8040,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_instructions_glyphfor",
+      "type": "file",
+      "file": "glyphFor().md",
+      "x": 8240,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_importfile",
+      "type": "file",
+      "file": "importFile().md",
+      "x": 8440,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_index",
+      "type": "file",
+      "file": "index.html \u2014 App Entry Point.md",
+      "x": 8040,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_instructions",
+      "type": "file",
+      "file": "instructions.js.md",
+      "x": 8240,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_instructions_kindtoken",
+      "type": "file",
+      "file": "kindToken().md",
+      "x": 8440,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_load",
+      "type": "file",
+      "file": "load().md",
+      "x": 8040,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_move",
+      "type": "file",
+      "file": "move().md",
+      "x": 8240,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_newblock",
+      "type": "file",
+      "file": "newBlock().md",
+      "x": 8440,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_newbox",
+      "type": "file",
+      "file": "newBox().md",
+      "x": 8040,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_newbranch",
+      "type": "file",
+      "file": "newBranch().md",
+      "x": 8240,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_newelement",
+      "type": "file",
+      "file": "newElement().md",
+      "x": 8440,
+      "y": 800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_newinstancedb",
+      "type": "file",
+      "file": "newInstanceDB().md",
+      "x": 8040,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_newinterface",
+      "type": "file",
+      "file": "newInterface().md",
+      "x": 8240,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_newmember",
+      "type": "file",
+      "file": "newMember().md",
+      "x": 8440,
+      "y": 880,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_newnetwork",
+      "type": "file",
+      "file": "newNetwork().md",
+      "x": 8040,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_newproject",
+      "type": "file",
+      "file": "newProject().md",
+      "x": 8240,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_newstage",
+      "type": "file",
+      "file": "newStage().md",
+      "x": 8440,
+      "y": 960,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_newtag",
+      "type": "file",
+      "file": "newTag().md",
+      "x": 8040,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_newwire",
+      "type": "file",
+      "file": "newWire().md",
+      "x": 8240,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_off",
+      "type": "file",
+      "file": "off().md",
+      "x": 8440,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_on",
+      "type": "file",
+      "file": "on().md",
+      "x": 8040,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_onblur",
+      "type": "file",
+      "file": "onBlur().md",
+      "x": 8240,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_oninput",
+      "type": "file",
+      "file": "onInput().md",
+      "x": 8440,
+      "y": 1120,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_onkey",
+      "type": "file",
+      "file": "onKey().md",
+      "x": 8040,
+      "y": 1200,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_paint",
+      "type": "file",
+      "file": "paint().md",
+      "x": 8240,
+      "y": 1200,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_pick",
+      "type": "file",
+      "file": "pick().md",
+      "x": 8440,
+      "y": 1200,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_position",
+      "type": "file",
+      "file": "position().md",
+      "x": 8040,
+      "y": 1280,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_render",
+      "type": "file",
+      "file": "render().md",
+      "x": 8240,
+      "y": 1280,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_instructions_render",
+      "type": "file",
+      "file": "render()_4.md",
+      "x": 8440,
+      "y": 1280,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_reset",
+      "type": "file",
+      "file": "reset().md",
+      "x": 8040,
+      "y": 1360,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_save",
+      "type": "file",
+      "file": "save().md",
+      "x": 8240,
+      "y": 1360,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_setbit",
+      "type": "file",
+      "file": "setBit().md",
+      "x": 8440,
+      "y": 1360,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_core_setword",
+      "type": "file",
+      "file": "setWord().md",
+      "x": 8040,
+      "y": 1440,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_tia_namespace",
+      "type": "file",
+      "file": "window.TIA Global Namespace (alias T).md",
+      "x": 8240,
+      "y": 1440,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g5",
+      "type": "group",
+      "label": "Python Code Generator",
+      "x": 0,
+      "y": 3100,
+      "width": 1320,
+      "height": 1220,
+      "color": "6"
+    },
+    {
+      "id": "n_js_codegen_blockbody",
+      "type": "file",
+      "file": "blockBody().md",
+      "x": 20,
+      "y": 3180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_blockctx",
+      "type": "file",
+      "file": "blockCtx().md",
+      "x": 220,
+      "y": 3180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_buildpintable",
+      "type": "file",
+      "file": "buildPinTable().md",
+      "x": 420,
+      "y": 3180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_calllines",
+      "type": "file",
+      "file": "callLines().md",
+      "x": 20,
+      "y": 3260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen",
+      "type": "file",
+      "file": "codegen.js.md",
+      "x": 220,
+      "y": 3260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_collectcalled",
+      "type": "file",
+      "file": "collectCalled().md",
+      "x": 420,
+      "y": 3260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_collectkeys",
+      "type": "file",
+      "file": "collectKeys().md",
+      "x": 20,
+      "y": 3340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_copypy",
+      "type": "file",
+      "file": "copyPy().md",
+      "x": 220,
+      "y": 3340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_cvvar",
+      "type": "file",
+      "file": "cvVar().md",
+      "x": 420,
+      "y": 3340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_defaultdir",
+      "type": "file",
+      "file": "defaultDir().md",
+      "x": 20,
+      "y": 3420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_downloadpy",
+      "type": "file",
+      "file": "downloadPy().md",
+      "x": 220,
+      "y": 3420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_ensuregpio",
+      "type": "file",
+      "file": "ensureGpio().md",
+      "x": 420,
+      "y": 3420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_fbdbox",
+      "type": "file",
+      "file": "fbdBox().md",
+      "x": 20,
+      "y": 3500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_fbdnetwork",
+      "type": "file",
+      "file": "fbdNetwork().md",
+      "x": 220,
+      "y": 3500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_gpioentry",
+      "type": "file",
+      "file": "gpioEntry().md",
+      "x": 420,
+      "y": 3500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_gpiomap",
+      "type": "file",
+      "file": "gpioMap().md",
+      "x": 20,
+      "y": 3580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_inlineexpr",
+      "type": "file",
+      "file": "inlineExpr().md",
+      "x": 220,
+      "y": 3580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_ladnetwork",
+      "type": "file",
+      "file": "ladNetwork().md",
+      "x": 420,
+      "y": 3580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_outputlines",
+      "type": "file",
+      "file": "outputLines().md",
+      "x": 20,
+      "y": 3660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_pyid",
+      "type": "file",
+      "file": "pyId().md",
+      "x": 220,
+      "y": 3660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_pystr",
+      "type": "file",
+      "file": "pyStr().md",
+      "x": 420,
+      "y": 3660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_rd",
+      "type": "file",
+      "file": "rd().md",
+      "x": 20,
+      "y": 3740,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_rdbool",
+      "type": "file",
+      "file": "rdBool().md",
+      "x": 220,
+      "y": 3740,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_rdnum",
+      "type": "file",
+      "file": "rdNum().md",
+      "x": 420,
+      "y": 3740,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_renderrpi",
+      "type": "file",
+      "file": "renderRpi().md",
+      "x": 20,
+      "y": 3820,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_resolveop",
+      "type": "file",
+      "file": "resolveOp().md",
+      "x": 220,
+      "y": 3820,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_rungpower",
+      "type": "file",
+      "file": "rungPower().md",
+      "x": 420,
+      "y": 3820,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_secs",
+      "type": "file",
+      "file": "secs().md",
+      "x": 20,
+      "y": 3900,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_sel",
+      "type": "file",
+      "file": "sel().md",
+      "x": 220,
+      "y": 3900,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_setgpio",
+      "type": "file",
+      "file": "setGpio().md",
+      "x": 420,
+      "y": 3900,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_setq",
+      "type": "file",
+      "file": "setQ().md",
+      "x": 20,
+      "y": 3980,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_topo",
+      "type": "file",
+      "file": "topo().md",
+      "x": 220,
+      "y": 3980,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_codegen_wt",
+      "type": "file",
+      "file": "wt().md",
+      "x": 420,
+      "y": 3980,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g6",
+      "type": "group",
+      "label": "Pi HTTP Runtime Server",
+      "x": 2280,
+      "y": 3100,
+      "width": 1320,
+      "height": 1120,
+      "color": "1"
+    },
+    {
+      "id": "n_plc_server_runtime_init",
+      "type": "file",
+      "file": ".__init__()_3.md",
+      "x": 2300,
+      "y": 3180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_handler_cors",
+      "type": "file",
+      "file": "._cors().md",
+      "x": 2500,
+      "y": 3180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_gpiozero_available",
+      "type": "file",
+      "file": "._gpiozero_available().md",
+      "x": 2700,
+      "y": 3180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_handler_handle_api_get",
+      "type": "file",
+      "file": "._handle_api_get().md",
+      "x": 2300,
+      "y": 3260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_handler_handle_api_post",
+      "type": "file",
+      "file": "._handle_api_post().md",
+      "x": 2500,
+      "y": 3260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_runtime_loop",
+      "type": "file",
+      "file": "._loop().md",
+      "x": 2700,
+      "y": 3260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_handler_read_body_json",
+      "type": "file",
+      "file": "._read_body_json().md",
+      "x": 2300,
+      "y": 3340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_handler_send_bytes",
+      "type": "file",
+      "file": "._send_bytes().md",
+      "x": 2500,
+      "y": 3340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_handler_send_json",
+      "type": "file",
+      "file": "._send_json().md",
+      "x": 2700,
+      "y": 3340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_handler_serve_static",
+      "type": "file",
+      "file": "._serve_static().md",
+      "x": 2300,
+      "y": 3420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_handler_do_get",
+      "type": "file",
+      "file": ".do_GET().md",
+      "x": 2500,
+      "y": 3420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_handler_do_options",
+      "type": "file",
+      "file": ".do_OPTIONS().md",
+      "x": 2700,
+      "y": 3420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_handler_do_post",
+      "type": "file",
+      "file": ".do_POST().md",
+      "x": 2300,
+      "y": 3500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_runtime_force",
+      "type": "file",
+      "file": ".force()_1.md",
+      "x": 2500,
+      "y": 3500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_runtime_info",
+      "type": "file",
+      "file": ".info().md",
+      "x": 2700,
+      "y": 3500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_handler_log_message",
+      "type": "file",
+      "file": ".log_message().md",
+      "x": 2300,
+      "y": 3580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_runtime_set_program",
+      "type": "file",
+      "file": ".set_program()_1.md",
+      "x": 2500,
+      "y": 3580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_runtime_set_running",
+      "type": "file",
+      "file": ".set_running().md",
+      "x": 2700,
+      "y": 3580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_runtime_shutdown",
+      "type": "file",
+      "file": ".shutdown().md",
+      "x": 2300,
+      "y": 3660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_runtime_state",
+      "type": "file",
+      "file": ".state().md",
+      "x": 2500,
+      "y": 3660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_rationale_63",
+      "type": "file",
+      "file": "Background thread read inputs, scan, write outputs at ~SCAN_HZ while         ru.md",
+      "x": 2700,
+      "y": 3660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_basehttprequesthandler",
+      "type": "file",
+      "file": "BaseHTTPRequestHandler.md",
+      "x": 2300,
+      "y": 3740,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_handler",
+      "type": "file",
+      "file": "Handler.md",
+      "x": 2500,
+      "y": 3740,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_rationale_47",
+      "type": "file",
+      "file": "Holds the engine, the running flag, and the scan thread. All engine access     i.md",
+      "x": 2700,
+      "y": 3740,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_runtime",
+      "type": "file",
+      "file": "Runtime.md",
+      "x": 2300,
+      "y": 3820,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_rationale_220",
+      "type": "file",
+      "file": "Serve files from STATIC_DIR. GET  - index.html. Path traversal is         prev.md",
+      "x": 2500,
+      "y": 3820,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server_main",
+      "type": "file",
+      "file": "main().md",
+      "x": 2700,
+      "y": 3820,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_server",
+      "type": "file",
+      "file": "plc_server.py.md",
+      "x": 2300,
+      "y": 3900,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g7",
+      "type": "group",
+      "label": "App Bootstrap & Tabs",
+      "x": 4340,
+      "y": 3100,
+      "width": 1100,
+      "height": 920,
+      "color": "2"
+    },
+    {
+      "id": "n_js_app_activatetab",
+      "type": "file",
+      "file": "activateTab().md",
+      "x": 4360,
+      "y": 3180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_adoptproject",
+      "type": "file",
+      "file": "adoptProject().md",
+      "x": 4560,
+      "y": 3180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app",
+      "type": "file",
+      "file": "app.js.md",
+      "x": 4760,
+      "y": 3180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_boot",
+      "type": "file",
+      "file": "boot().md",
+      "x": 4360,
+      "y": 3260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_builddemoproject",
+      "type": "file",
+      "file": "buildDemoProject().md",
+      "x": 4560,
+      "y": 3260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_buildmenu",
+      "type": "file",
+      "file": "buildMenu().md",
+      "x": 4760,
+      "y": 3260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_closedropdown",
+      "type": "file",
+      "file": "closeDropdown().md",
+      "x": 4360,
+      "y": 3340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_closetab",
+      "type": "file",
+      "file": "closeTab().md",
+      "x": 4560,
+      "y": 3340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_initautosave",
+      "type": "file",
+      "file": "initAutosave().md",
+      "x": 4760,
+      "y": 3340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_initleftpaneltabs",
+      "type": "file",
+      "file": "initLeftPanelTabs().md",
+      "x": 4360,
+      "y": 3420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_initsplitters",
+      "type": "file",
+      "file": "initSplitters().md",
+      "x": 4560,
+      "y": 3420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_migrate",
+      "type": "file",
+      "file": "migrate().md",
+      "x": 4760,
+      "y": 3420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_openblock",
+      "type": "file",
+      "file": "openBlock().md",
+      "x": 4360,
+      "y": 3500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_openrpi",
+      "type": "file",
+      "file": "openRpi().md",
+      "x": 4560,
+      "y": 3500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_opentags",
+      "type": "file",
+      "file": "openTags().md",
+      "x": 4760,
+      "y": 3500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_renderinspector",
+      "type": "file",
+      "file": "renderInspector().md",
+      "x": 4360,
+      "y": 3580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_renderinspectortabs",
+      "type": "file",
+      "file": "renderInspectorTabs().md",
+      "x": 4560,
+      "y": 3580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_renderproperties",
+      "type": "file",
+      "file": "renderProperties().md",
+      "x": 4760,
+      "y": 3580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_rendertabs",
+      "type": "file",
+      "file": "renderTabs().md",
+      "x": 4360,
+      "y": 3660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_showdropdown",
+      "type": "file",
+      "file": "showDropdown().md",
+      "x": 4560,
+      "y": 3660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_showhelp",
+      "type": "file",
+      "file": "showHelp().md",
+      "x": 4760,
+      "y": 3660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_app_switchleftpanel",
+      "type": "file",
+      "file": "switchLeftPanel().md",
+      "x": 4360,
+      "y": 3740,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g8",
+      "type": "group",
+      "label": "Project Tree UI",
+      "x": 6180,
+      "y": 3100,
+      "width": 1100,
+      "height": 820,
+      "color": "3"
+    },
+    {
+      "id": "n_js_tree_buildmodal",
+      "type": "file",
+      "file": "buildModal().md",
+      "x": 6200,
+      "y": 3180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_closecontextmenu",
+      "type": "file",
+      "file": "closeContextMenu().md",
+      "x": 6400,
+      "y": 3180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_closemodal",
+      "type": "file",
+      "file": "closeModal().md",
+      "x": 6600,
+      "y": 3180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_ctxitem",
+      "type": "file",
+      "file": "ctxItem().md",
+      "x": 6200,
+      "y": 3260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_deleteblock",
+      "type": "file",
+      "file": "deleteBlock().md",
+      "x": 6400,
+      "y": 3260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_icon",
+      "type": "file",
+      "file": "icon()_2.md",
+      "x": 6600,
+      "y": 3260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_nameclash",
+      "type": "file",
+      "file": "nameClash().md",
+      "x": 6200,
+      "y": 3340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_noderow",
+      "type": "file",
+      "file": "nodeRow().md",
+      "x": 6400,
+      "y": 3340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_ondocdownforctx",
+      "type": "file",
+      "file": "onDocDownForCtx().md",
+      "x": 6600,
+      "y": 3340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_onescforctx",
+      "type": "file",
+      "file": "onEscForCtx().md",
+      "x": 6200,
+      "y": 3420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_openaddblockmodal",
+      "type": "file",
+      "file": "openAddBlockModal().md",
+      "x": 6400,
+      "y": 3420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_openblock",
+      "type": "file",
+      "file": "openBlock()_1.md",
+      "x": 6600,
+      "y": 3420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_openrenamemodal",
+      "type": "file",
+      "file": "openRenameModal().md",
+      "x": 6200,
+      "y": 3500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_previewblock",
+      "type": "file",
+      "file": "previewBlock().md",
+      "x": 6400,
+      "y": 3500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_previewtags",
+      "type": "file",
+      "file": "previewTags().md",
+      "x": 6600,
+      "y": 3500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_render",
+      "type": "file",
+      "file": "render()_8.md",
+      "x": 6200,
+      "y": 3580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_seeddefaults",
+      "type": "file",
+      "file": "seedDefaults().md",
+      "x": 6400,
+      "y": 3580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_showblockmenu",
+      "type": "file",
+      "file": "showBlockMenu().md",
+      "x": 6600,
+      "y": 3580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_toggle",
+      "type": "file",
+      "file": "toggle()_2.md",
+      "x": 6200,
+      "y": 3660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree",
+      "type": "file",
+      "file": "tree.js.md",
+      "x": 6400,
+      "y": 3660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tree_twisty",
+      "type": "file",
+      "file": "twisty()_2.md",
+      "x": 6600,
+      "y": 3660,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g9",
+      "type": "group",
+      "label": "Toolbar & Ribbon",
+      "x": 8020,
+      "y": 3100,
+      "width": 1100,
+      "height": 720,
+      "color": "4"
+    },
+    {
+      "id": "n_js_toolbar_addnetwork",
+      "type": "file",
+      "file": "addNetwork()_2.md",
+      "x": 8040,
+      "y": 3180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar_btn",
+      "type": "file",
+      "file": "btn().md",
+      "x": 8240,
+      "y": 3180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar_build",
+      "type": "file",
+      "file": "build().md",
+      "x": 8440,
+      "y": 3180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar_compile",
+      "type": "file",
+      "file": "compile().md",
+      "x": 8040,
+      "y": 3260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar_deleteselection",
+      "type": "file",
+      "file": "deleteSelection()_2.md",
+      "x": 8240,
+      "y": 3260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar_exportproject",
+      "type": "file",
+      "file": "exportProject().md",
+      "x": 8440,
+      "y": 3260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar_exportpython",
+      "type": "file",
+      "file": "exportPython().md",
+      "x": 8040,
+      "y": 3340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar_group",
+      "type": "file",
+      "file": "group().md",
+      "x": 8240,
+      "y": 3340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar_newproject",
+      "type": "file",
+      "file": "newProject()_1.md",
+      "x": 8440,
+      "y": 3340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar_onlineconnect",
+      "type": "file",
+      "file": "onlineConnect().md",
+      "x": 8040,
+      "y": 3420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar_onlinedownload",
+      "type": "file",
+      "file": "onlineDownload().md",
+      "x": 8240,
+      "y": 3420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar_onlinemonitor",
+      "type": "file",
+      "file": "onlineMonitor().md",
+      "x": 8440,
+      "y": 3420,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar_openproject",
+      "type": "file",
+      "file": "openProject().md",
+      "x": 8040,
+      "y": 3500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar_save",
+      "type": "file",
+      "file": "save()_1.md",
+      "x": 8240,
+      "y": 3500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar_togglesim",
+      "type": "file",
+      "file": "toggleSim().md",
+      "x": 8440,
+      "y": 3500,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar",
+      "type": "file",
+      "file": "toolbar.js.md",
+      "x": 8040,
+      "y": 3580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar_updateonlinebtns",
+      "type": "file",
+      "file": "updateOnlineBtns().md",
+      "x": 8240,
+      "y": 3580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_toolbar_updatesimbtn",
+      "type": "file",
+      "file": "updateSimBtn().md",
+      "x": 8440,
+      "y": 3580,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g10",
+      "type": "group",
+      "label": "Tags Outline Panel",
+      "x": 0,
+      "y": 4400,
+      "width": 880,
+      "height": 620,
+      "color": "5"
+    },
+    {
+      "id": "n_js_outline_buckettags",
+      "type": "file",
+      "file": "bucketTags().md",
+      "x": 20,
+      "y": 4480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_outline_headerrow",
+      "type": "file",
+      "file": "headerRow().md",
+      "x": 220,
+      "y": 4480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_outline_icon",
+      "type": "file",
+      "file": "icon()_1.md",
+      "x": 420,
+      "y": 4480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_outline_matches",
+      "type": "file",
+      "file": "matches().md",
+      "x": 20,
+      "y": 4560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_outline_membermatches",
+      "type": "file",
+      "file": "memberMatches().md",
+      "x": 220,
+      "y": 4560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_outline_memberrow",
+      "type": "file",
+      "file": "memberRow()_1.md",
+      "x": 420,
+      "y": 4560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_outline",
+      "type": "file",
+      "file": "outline.js.md",
+      "x": 20,
+      "y": 4640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_outline_render",
+      "type": "file",
+      "file": "render()_6.md",
+      "x": 220,
+      "y": 4640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_outline_subhead",
+      "type": "file",
+      "file": "subHead().md",
+      "x": 420,
+      "y": 4640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_outline_tagmatches",
+      "type": "file",
+      "file": "tagMatches().md",
+      "x": 20,
+      "y": 4720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_outline_tagrow",
+      "type": "file",
+      "file": "tagRow()_1.md",
+      "x": 220,
+      "y": 4720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_outline_toggle",
+      "type": "file",
+      "file": "toggle().md",
+      "x": 420,
+      "y": 4720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_outline_twisty",
+      "type": "file",
+      "file": "twisty()_1.md",
+      "x": 20,
+      "y": 4800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g11",
+      "type": "group",
+      "label": "GPIO Backend & Mock",
+      "x": 2280,
+      "y": 4400,
+      "width": 880,
+      "height": 620,
+      "color": "6"
+    },
+    {
+      "id": "n_plc_engine_mockpin_init",
+      "type": "file",
+      "file": ".__init__().md",
+      "x": 2300,
+      "y": 4480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_mockanalog_init",
+      "type": "file",
+      "file": ".__init__()_1.md",
+      "x": 2500,
+      "y": 4480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_build_gpio",
+      "type": "file",
+      "file": "._build_gpio().md",
+      "x": 2700,
+      "y": 4480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_make_input",
+      "type": "file",
+      "file": "._make_input().md",
+      "x": 2300,
+      "y": 4560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_make_output",
+      "type": "file",
+      "file": "._make_output().md",
+      "x": 2500,
+      "y": 4560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_engine_make_pwm",
+      "type": "file",
+      "file": "._make_pwm().md",
+      "x": 2700,
+      "y": 4560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_mockpin_value",
+      "type": "file",
+      "file": ".value().md",
+      "x": 2300,
+      "y": 4640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_mockanalog_value",
+      "type": "file",
+      "file": ".value()_1.md",
+      "x": 2500,
+      "y": 4640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_250",
+      "type": "file",
+      "file": "Build inputoutput pin devices from project'gpio' (mirrors codegen.js.md",
+      "x": 2700,
+      "y": 4640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_122",
+      "type": "file",
+      "file": "Dependency-free stand-in for a gpiozero device (mirrors codegen _MockPin)..md",
+      "x": 2300,
+      "y": 4720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_rationale_136",
+      "type": "file",
+      "file": "Float-capable stand-in for a gpiozero PWMOutputDevice (duty 0.0..1.0).     Mirro.md",
+      "x": 2500,
+      "y": 4720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_mockanalog",
+      "type": "file",
+      "file": "_MockAnalog.md",
+      "x": 2700,
+      "y": 4720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_plc_engine_mockpin",
+      "type": "file",
+      "file": "_MockPin.md",
+      "x": 2300,
+      "y": 4800,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g12",
+      "type": "group",
+      "label": "Block Interface Editor",
+      "x": 4340,
+      "y": 4400,
+      "width": 880,
+      "height": 520,
+      "color": "1"
+    },
+    {
+      "id": "n_js_iface_addmember",
+      "type": "file",
+      "file": "addMember().md",
+      "x": 4360,
+      "y": 4480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_iface_buildmemberrow",
+      "type": "file",
+      "file": "buildMemberRow().md",
+      "x": 4560,
+      "y": 4480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_iface_cssescape",
+      "type": "file",
+      "file": "cssEscape().md",
+      "x": 4760,
+      "y": 4480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_iface",
+      "type": "file",
+      "file": "iface.js.md",
+      "x": 4360,
+      "y": 4560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_iface_monitorcell",
+      "type": "file",
+      "file": "monitorCell().md",
+      "x": 4560,
+      "y": 4560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_iface_notifyiface",
+      "type": "file",
+      "file": "notifyIface().md",
+      "x": 4760,
+      "y": 4560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_iface_refreshdbvalues",
+      "type": "file",
+      "file": "refreshDbValues().md",
+      "x": 4360,
+      "y": 4640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_iface_removemember",
+      "type": "file",
+      "file": "removeMember().md",
+      "x": 4560,
+      "y": 4640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_iface_render",
+      "type": "file",
+      "file": "render()_3.md",
+      "x": 4760,
+      "y": 4640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_iface_renderdb",
+      "type": "file",
+      "file": "renderDb().md",
+      "x": 4360,
+      "y": 4720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_iface_renderiface",
+      "type": "file",
+      "file": "renderIface().md",
+      "x": 4560,
+      "y": 4720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g13",
+      "type": "group",
+      "label": "PLC Tags Table",
+      "x": 6180,
+      "y": 4400,
+      "width": 880,
+      "height": 520,
+      "color": "2"
+    },
+    {
+      "id": "n_js_tags_addtag",
+      "type": "file",
+      "file": "addTag().md",
+      "x": 6200,
+      "y": 4480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tags_addresslooksvalid",
+      "type": "file",
+      "file": "addressLooksValid().md",
+      "x": 6400,
+      "y": 4480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tags_buildrow",
+      "type": "file",
+      "file": "buildRow().md",
+      "x": 6600,
+      "y": 4480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tags_deleteselected",
+      "type": "file",
+      "file": "deleteSelected().md",
+      "x": 6200,
+      "y": 4560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tags_emitchanged",
+      "type": "file",
+      "file": "emitChanged().md",
+      "x": 6400,
+      "y": 4560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tags_open",
+      "type": "file",
+      "file": "open()_2.md",
+      "x": 6600,
+      "y": 4560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tags_refreshdot",
+      "type": "file",
+      "file": "refreshDot().md",
+      "x": 6200,
+      "y": 4640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tags_render",
+      "type": "file",
+      "file": "render()_7.md",
+      "x": 6400,
+      "y": 4640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tags_selectrow",
+      "type": "file",
+      "file": "selectRow().md",
+      "x": 6600,
+      "y": 4640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tags_suggestaddress",
+      "type": "file",
+      "file": "suggestAddress().md",
+      "x": 6200,
+      "y": 4720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_tags",
+      "type": "file",
+      "file": "tags.js.md",
+      "x": 6400,
+      "y": 4720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g14",
+      "type": "group",
+      "label": "Details View",
+      "x": 8020,
+      "y": 4400,
+      "width": 660,
+      "height": 420,
+      "color": "3"
+    },
+    {
+      "id": "n_js_details",
+      "type": "file",
+      "file": "details.js.md",
+      "x": 8040,
+      "y": 4480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_details_freshref",
+      "type": "file",
+      "file": "freshRef().md",
+      "x": 8240,
+      "y": 4480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_details_icon",
+      "type": "file",
+      "file": "icon().md",
+      "x": 8440,
+      "y": 4480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_details_leafrow",
+      "type": "file",
+      "file": "leafRow().md",
+      "x": 8040,
+      "y": 4560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_details_memberrow",
+      "type": "file",
+      "file": "memberRow().md",
+      "x": 8240,
+      "y": 4560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_details_render",
+      "type": "file",
+      "file": "render()_1.md",
+      "x": 8440,
+      "y": 4560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_details_tagrow",
+      "type": "file",
+      "file": "tagRow().md",
+      "x": 8040,
+      "y": 4640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_details_twisty",
+      "type": "file",
+      "file": "twisty().md",
+      "x": 8240,
+      "y": 4640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g15",
+      "type": "group",
+      "label": "Online Pi Monitor",
+      "x": 0,
+      "y": 5100,
+      "width": 660,
+      "height": 420,
+      "color": "4"
+    },
+    {
+      "id": "n_js_online_api",
+      "type": "file",
+      "file": "api().md",
+      "x": 20,
+      "y": 5180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_online_applystate",
+      "type": "file",
+      "file": "applyState().md",
+      "x": 220,
+      "y": 5180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_online_buildindex",
+      "type": "file",
+      "file": "buildIndex().md",
+      "x": 420,
+      "y": 5180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_online_emit",
+      "type": "file",
+      "file": "emit()_1.md",
+      "x": 20,
+      "y": 5260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_online",
+      "type": "file",
+      "file": "online.js.md",
+      "x": 220,
+      "y": 5260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_online_poll",
+      "type": "file",
+      "file": "poll().md",
+      "x": 420,
+      "y": 5260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_js_online_snap",
+      "type": "file",
+      "file": "snap().md",
+      "x": 20,
+      "y": 5340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g16",
+      "type": "group",
+      "label": "Shell Launcher",
+      "x": 2280,
+      "y": 5100,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_run_plc",
+      "type": "file",
+      "file": "run_plc.sh.md",
+      "x": 2300,
+      "y": 5180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_root_tia_portal_web_app_run_plc_sh__entry",
+      "type": "file",
+      "file": "run_plc.sh script.md",
+      "x": 2500,
+      "y": 5180,
+      "width": 180,
+      "height": 60
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_js_app_claude_md",
+      "fromNode": "n_js_app",
+      "toNode": "n_claude_md",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_index",
+      "fromNode": "n_js_app",
+      "toNode": "n_index",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_activatetab",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_activatetab",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_adoptproject",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_adoptproject",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_boot",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_boot",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_builddemoproject",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_builddemoproject",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_buildmenu",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_buildmenu",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_closedropdown",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_closedropdown",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_closetab",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_closetab",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_initautosave",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_initautosave",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_initleftpaneltabs",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_initleftpaneltabs",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_initsplitters",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_initsplitters",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_migrate",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_migrate",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_openblock",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_openblock",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_openrpi",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_openrpi",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_opentags",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_opentags",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_renderinspector",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_renderinspector",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_renderinspectortabs",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_renderinspectortabs",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_renderproperties",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_renderproperties",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_rendertabs",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_rendertabs",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_showdropdown",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_showdropdown",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_showhelp",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_showhelp",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_js_app_switchleftpanel",
+      "fromNode": "n_js_app",
+      "toNode": "n_js_app_switchleftpanel",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_builddemoproject_js_app_boot",
+      "fromNode": "n_js_app_builddemoproject",
+      "toNode": "n_js_app_boot",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_builddemoproject_js_app_migrate",
+      "fromNode": "n_js_app_builddemoproject",
+      "toNode": "n_js_app_migrate",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_migrate_js_app_adoptproject",
+      "fromNode": "n_js_app_migrate",
+      "toNode": "n_js_app_adoptproject",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_migrate_js_app_boot",
+      "fromNode": "n_js_app_migrate",
+      "toNode": "n_js_app_boot",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_adoptproject_js_app_openblock",
+      "fromNode": "n_js_app_adoptproject",
+      "toNode": "n_js_app_openblock",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_adoptproject_js_app_renderinspector",
+      "fromNode": "n_js_app_adoptproject",
+      "toNode": "n_js_app_renderinspector",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_rendertabs_js_app_activatetab",
+      "fromNode": "n_js_app_rendertabs",
+      "toNode": "n_js_app_activatetab",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_rendertabs_js_app_closetab",
+      "fromNode": "n_js_app_rendertabs",
+      "toNode": "n_js_app_closetab",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_activatetab_js_app_closetab",
+      "fromNode": "n_js_app_activatetab",
+      "toNode": "n_js_app_closetab",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_activatetab_js_app_openblock",
+      "fromNode": "n_js_app_activatetab",
+      "toNode": "n_js_app_openblock",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_activatetab_js_app_openrpi",
+      "fromNode": "n_js_app_activatetab",
+      "toNode": "n_js_app_openrpi",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_activatetab_js_app_opentags",
+      "fromNode": "n_js_app_activatetab",
+      "toNode": "n_js_app_opentags",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_openblock_js_app_boot",
+      "fromNode": "n_js_app_openblock",
+      "toNode": "n_js_app_boot",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_renderinspectortabs_js_app_renderinspector",
+      "fromNode": "n_js_app_renderinspectortabs",
+      "toNode": "n_js_app_renderinspector",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_renderinspector_js_app_boot",
+      "fromNode": "n_js_app_renderinspector",
+      "toNode": "n_js_app_boot",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_renderinspector_js_app_renderproperties",
+      "fromNode": "n_js_app_renderinspector",
+      "toNode": "n_js_app_renderproperties",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_buildmenu_js_app_boot",
+      "fromNode": "n_js_app_buildmenu",
+      "toNode": "n_js_app_boot",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_showdropdown_js_app_closedropdown",
+      "fromNode": "n_js_app_showdropdown",
+      "toNode": "n_js_app_closedropdown",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_initsplitters_js_app_boot",
+      "fromNode": "n_js_app_initsplitters",
+      "toNode": "n_js_app_boot",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_initautosave_js_app_boot",
+      "fromNode": "n_js_app_initautosave",
+      "toNode": "n_js_app_boot",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_app_initleftpaneltabs_js_app_boot",
+      "fromNode": "n_js_app_initleftpaneltabs",
+      "toNode": "n_js_app_boot",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_index",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_index",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_cyclic_scan_simulator",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_cyclic_scan_simulator",
+      "label": "conceptually_related_to [INFERRED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_blockbody",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_blockbody",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_blockctx",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_blockctx",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_buildpintable",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_buildpintable",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_calllines",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_calllines",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_collectcalled",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_collectcalled",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_collectkeys",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_collectkeys",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_copypy",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_copypy",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_cvvar",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_cvvar",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_defaultdir",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_defaultdir",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_downloadpy",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_downloadpy",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_ensuregpio",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_ensuregpio",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_fbdbox",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_fbdbox",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_fbdnetwork",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_fbdnetwork",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_gpioentry",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_gpioentry",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_gpiomap",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_gpiomap",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_inlineexpr",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_inlineexpr",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_ladnetwork",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_ladnetwork",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_outputlines",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_outputlines",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_pyid",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_pyid",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_pystr",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_pystr",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_rd",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_rd",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_rdbool",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_rdbool",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_rdnum",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_rdnum",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_renderrpi",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_renderrpi",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_resolveop",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_resolveop",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_rungpower",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_rungpower",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_secs",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_secs",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_sel",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_sel",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_setgpio",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_setgpio",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_setq",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_setq",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_topo",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_topo",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_js_codegen_wt",
+      "fromNode": "n_js_codegen",
+      "toNode": "n_js_codegen_wt",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_pystr_js_codegen_calllines",
+      "fromNode": "n_js_codegen_pystr",
+      "toNode": "n_js_codegen_calllines",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_pystr_js_codegen_fbdbox",
+      "fromNode": "n_js_codegen_pystr",
+      "toNode": "n_js_codegen_fbdbox",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_pystr_js_codegen_inlineexpr",
+      "fromNode": "n_js_codegen_pystr",
+      "toNode": "n_js_codegen_inlineexpr",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_pystr_js_codegen_outputlines",
+      "fromNode": "n_js_codegen_pystr",
+      "toNode": "n_js_codegen_outputlines",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_pystr_js_codegen_rd",
+      "fromNode": "n_js_codegen_pystr",
+      "toNode": "n_js_codegen_rd",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_pystr_js_codegen_wt",
+      "fromNode": "n_js_codegen_pystr",
+      "toNode": "n_js_codegen_wt",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_pyid_js_codegen_calllines",
+      "fromNode": "n_js_codegen_pyid",
+      "toNode": "n_js_codegen_calllines",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_resolveop_js_codegen_rd",
+      "fromNode": "n_js_codegen_resolveop",
+      "toNode": "n_js_codegen_rd",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_resolveop_js_codegen_secs",
+      "fromNode": "n_js_codegen_resolveop",
+      "toNode": "n_js_codegen_secs",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_resolveop_js_codegen_wt",
+      "fromNode": "n_js_codegen_resolveop",
+      "toNode": "n_js_codegen_wt",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_rd_js_codegen_inlineexpr",
+      "fromNode": "n_js_codegen_rd",
+      "toNode": "n_js_codegen_inlineexpr",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_rd_js_codegen_rdbool",
+      "fromNode": "n_js_codegen_rd",
+      "toNode": "n_js_codegen_rdbool",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_rd_js_codegen_rdnum",
+      "fromNode": "n_js_codegen_rd",
+      "toNode": "n_js_codegen_rdnum",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_rd_js_codegen_secs",
+      "fromNode": "n_js_codegen_rd",
+      "toNode": "n_js_codegen_secs",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_rdbool_js_codegen_inlineexpr",
+      "fromNode": "n_js_codegen_rdbool",
+      "toNode": "n_js_codegen_inlineexpr",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_rdbool_js_codegen_outputlines",
+      "fromNode": "n_js_codegen_rdbool",
+      "toNode": "n_js_codegen_outputlines",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_rdnum_js_codegen_fbdbox",
+      "fromNode": "n_js_codegen_rdnum",
+      "toNode": "n_js_codegen_fbdbox",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_rdnum_js_codegen_inlineexpr",
+      "fromNode": "n_js_codegen_rdnum",
+      "toNode": "n_js_codegen_inlineexpr",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_rdnum_js_codegen_outputlines",
+      "fromNode": "n_js_codegen_rdnum",
+      "toNode": "n_js_codegen_outputlines",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_secs_js_codegen_fbdbox",
+      "fromNode": "n_js_codegen_secs",
+      "toNode": "n_js_codegen_fbdbox",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_secs_js_codegen_outputlines",
+      "fromNode": "n_js_codegen_secs",
+      "toNode": "n_js_codegen_outputlines",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_wt_js_codegen_fbdbox",
+      "fromNode": "n_js_codegen_wt",
+      "toNode": "n_js_codegen_fbdbox",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_wt_js_codegen_outputlines",
+      "fromNode": "n_js_codegen_wt",
+      "toNode": "n_js_codegen_outputlines",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_wt_js_codegen_setq",
+      "fromNode": "n_js_codegen_wt",
+      "toNode": "n_js_codegen_setq",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_rungpower_js_codegen_ladnetwork",
+      "fromNode": "n_js_codegen_rungpower",
+      "toNode": "n_js_codegen_ladnetwork",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_setq_js_codegen_outputlines",
+      "fromNode": "n_js_codegen_setq",
+      "toNode": "n_js_codegen_outputlines",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_setq_js_sim_notempty",
+      "fromNode": "n_js_codegen_setq",
+      "toNode": "n_js_sim_notempty",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_js_codegen_outputlines_js_codegen_calllines",
+      "fromNode": "n_js_codegen_outputlines",
+      "toNode": "n_js_codegen_calllines",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_outputlines_js_sim_notempty",
+      "fromNode": "n_js_codegen_outputlines",
+      "toNode": "n_js_sim_notempty",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_js_codegen_calllines_js_codegen_fbdbox",
+      "fromNode": "n_js_codegen_calllines",
+      "toNode": "n_js_codegen_fbdbox",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_fbdnetwork_js_codegen_topo",
+      "fromNode": "n_js_codegen_fbdnetwork",
+      "toNode": "n_js_codegen_topo",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_fbdbox_js_codegen_cvvar",
+      "fromNode": "n_js_codegen_fbdbox",
+      "toNode": "n_js_codegen_cvvar",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_fbdbox_js_sim_notempty",
+      "fromNode": "n_js_codegen_fbdbox",
+      "toNode": "n_js_sim_notempty",
+      "label": "calls [INFERRED]"
+    },
+    {
+      "id": "e_js_codegen_blockctx_js_codegen_blockbody",
+      "fromNode": "n_js_codegen_blockctx",
+      "toNode": "n_js_codegen_blockbody",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_ensuregpio_js_codegen_gpioentry",
+      "fromNode": "n_js_codegen_ensuregpio",
+      "toNode": "n_js_codegen_gpioentry",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_ensuregpio_js_codegen_setgpio",
+      "fromNode": "n_js_codegen_ensuregpio",
+      "toNode": "n_js_codegen_setgpio",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_codegen_buildpintable_js_codegen_renderrpi",
+      "fromNode": "n_js_codegen_buildpintable",
+      "toNode": "n_js_codegen_renderrpi",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_claude_md",
+      "fromNode": "n_js_core",
+      "toNode": "n_claude_md",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_index",
+      "fromNode": "n_js_core",
+      "toNode": "n_index",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_data_model",
+      "fromNode": "n_js_core",
+      "toNode": "n_data_model",
+      "label": "implements [INFERRED]"
+    },
+    {
+      "id": "e_js_core_event_bus",
+      "fromNode": "n_js_core",
+      "toNode": "n_event_bus",
+      "label": "implements [INFERRED]"
+    },
+    {
+      "id": "e_js_core_js_core_clone",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_clone",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_close",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_close",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_destroy",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_destroy",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_emit",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_emit",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_exportfile",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_exportfile",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_filter",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_filter",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_getbit",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_getbit",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_getword",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_getword",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_importfile",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_importfile",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_load",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_load",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_move",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_move",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_newblock",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_newblock",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_newbox",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_newbox",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_newbranch",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_newbranch",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_newelement",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_newelement",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_newinstancedb",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_newinstancedb",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_newinterface",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_newinterface",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_newmember",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_newmember",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_newnetwork",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_newnetwork",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_newproject",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_newproject",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_newstage",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_newstage",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_newtag",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_newtag",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_newwire",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_newwire",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_off",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_off",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_on",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_on",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_onblur",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_onblur",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_oninput",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_oninput",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_onkey",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_onkey",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_paint",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_paint",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_pick",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_pick",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_position",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_position",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_render",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_render",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_reset",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_reset",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_save",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_save",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_setbit",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_setbit",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_js_core_setword",
+      "fromNode": "n_js_core",
+      "toNode": "n_js_core_setword",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_tia_namespace",
+      "fromNode": "n_js_core",
+      "toNode": "n_tia_namespace",
+      "label": "implements [INFERRED]"
+    },
+    {
+      "id": "e_js_core_spec",
+      "fromNode": "n_js_core",
+      "toNode": "n_spec",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_clone_js_core_newbox",
+      "fromNode": "n_js_core_clone",
+      "toNode": "n_js_core_newbox",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_clone_js_core_newelement",
+      "fromNode": "n_js_core_clone",
+      "toNode": "n_js_core_newelement",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_newblock_js_core_newinterface",
+      "fromNode": "n_js_core_newblock",
+      "toNode": "n_js_core_newinterface",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_newblock_js_core_newnetwork",
+      "fromNode": "n_js_core_newblock",
+      "toNode": "n_js_core_newnetwork",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_position_js_core_render",
+      "fromNode": "n_js_core_position",
+      "toNode": "n_js_core_render",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_render_js_core_move",
+      "fromNode": "n_js_core_render",
+      "toNode": "n_js_core_move",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_render_js_core_oninput",
+      "fromNode": "n_js_core_render",
+      "toNode": "n_js_core_oninput",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_render_js_core_close",
+      "fromNode": "n_js_core_render",
+      "toNode": "n_js_core_close",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_paint_js_core_move",
+      "fromNode": "n_js_core_paint",
+      "toNode": "n_js_core_move",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_close_js_core_destroy",
+      "fromNode": "n_js_core_close",
+      "toNode": "n_js_core_destroy",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_close_js_core_onkey",
+      "fromNode": "n_js_core_close",
+      "toNode": "n_js_core_onkey",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_close_js_core_pick",
+      "fromNode": "n_js_core_close",
+      "toNode": "n_js_core_pick",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_pick_js_core_onkey",
+      "fromNode": "n_js_core_pick",
+      "toNode": "n_js_core_onkey",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_core_move_js_core_onkey",
+      "fromNode": "n_js_core_move",
+      "toNode": "n_js_core_onkey",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_details_index",
+      "fromNode": "n_js_details",
+      "toNode": "n_index",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_js_details_js_details_freshref",
+      "fromNode": "n_js_details",
+      "toNode": "n_js_details_freshref",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_details_js_details_icon",
+      "fromNode": "n_js_details",
+      "toNode": "n_js_details_icon",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_details_js_details_leafrow",
+      "fromNode": "n_js_details",
+      "toNode": "n_js_details_leafrow",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_details_js_details_memberrow",
+      "fromNode": "n_js_details",
+      "toNode": "n_js_details_memberrow",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_details_js_details_render",
+      "fromNode": "n_js_details",
+      "toNode": "n_js_details_render",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_details_js_details_tagrow",
+      "fromNode": "n_js_details",
+      "toNode": "n_js_details_tagrow",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_details_js_details_twisty",
+      "fromNode": "n_js_details",
+      "toNode": "n_js_details_twisty",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_details_icon_js_details_leafrow",
+      "fromNode": "n_js_details_icon",
+      "toNode": "n_js_details_leafrow",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_details_twisty_js_details_render",
+      "fromNode": "n_js_details_twisty",
+      "toNode": "n_js_details_render",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_details_leafrow_js_details_memberrow",
+      "fromNode": "n_js_details_leafrow",
+      "toNode": "n_js_details_memberrow",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_details_leafrow_js_details_tagrow",
+      "fromNode": "n_js_details_leafrow",
+      "toNode": "n_js_details_tagrow",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_details_freshref_js_details_render",
+      "fromNode": "n_js_details_freshref",
+      "toNode": "n_js_details_render",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_js_fbd_claude_md",
+      "fromNode": "n_js_fbd",
+      "toNode": "n_claude_md",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_js_fbd_index",
+      "fromNode": "n_js_fbd",
+      "toNode": "n_index",
+      "label": "references [EXTRACTED]"
+    },
+    {
+      "id": "e_js_fbd_event_bus",
+      "fromNode": "n_js_fbd",
+      "toNode": "n_event_bus",
+      "label": "conceptually_related_to [INFERRED]"
+    },
+    {
+      "id": "e_js_fbd_js_fbd_addnetwork",
+      "fromNode": "n_js_fbd",
+      "toNode": "n_js_fbd_addnetwork",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_fbd_js_fbd_addoperandlabel",
+      "fromNode": "n_js_fbd",
+      "toNode": "n_js_fbd_addoperandlabel",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_fbd_js_fbd_appendinput",
+      "fromNode": "n_js_fbd",
+      "toNode": "n_js_fbd_appendinput",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_fbd_js_fbd_attachpendingtracker",
+      "fromNode": "n_js_fbd",
+      "toNode": "n_js_fbd_attachpendingtracker",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_fbd_js_fbd_attachtagdrop",
+      "fromNode": "n_js_fbd",
+      "toNode": "n_js_fbd_attachtagdrop",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_fbd_js_fbd_boxgeom",
+      "fromNode": "n_js_fbd",
+      "toNode": "n_js_fbd_boxgeom",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_fbd_js_fbd_boxlabel",
+      "fromNode": "n_js_fbd",
+      "toNode": "n_js_fbd_boxlabel",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_fbd_js_fbd_buildbox",
+      "fromNode": "n_js_fbd",
+      "toNode": "n_js_fbd_buildbox",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_fbd_js_fbd_buildboxparams",
+      "fromNode": "n_js_fbd",
+      "toNode": "n_js_fbd_buildboxparams",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_fbd_js_fbd_buildpin",
+      "fromNode": "n_js_fbd",
+      "toNode": "n_js_fbd_buildpin",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_fbd_js_fbd_buildsheet",
+      "fromNode": "n_js_fbd",
+      "toNode": "n_js_fbd_buildsheet",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_fbd_js_fbd_buildwire",
+      "fromNode": "n_js_fbd",
+      "toNode": "n_js_fbd_buildwire",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_js_fbd_js_fbd_callinfo",
+      "fromNode": "n_js_fbd",
+      "toNode": "n_js_fbd_callinfo",
+      "label": "contains [EXTRACTED]"
+    }
+  ]
+}
