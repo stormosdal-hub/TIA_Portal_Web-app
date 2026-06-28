@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "graphify": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "/root/TIA_Portal_Web-app/.mcp/server.js"
+      ]
+    }
+  }
+}

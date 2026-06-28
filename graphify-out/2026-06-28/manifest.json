@@ -103,25 +103,5 @@
     "mtime": 1782643325.1350784,
     "ast_hash": "4b1cf84db6b8aec82bb343f86004b7ac",
     "semantic_hash": "4b1cf84db6b8aec82bb343f86004b7ac"
-  },
-  ".claude/settings.json": {
-    "mtime": 1782657323.9496844,
-    "ast_hash": "c23b79cbb5b3db4ddaa3b280d08f24af",
-    "semantic_hash": "c23b79cbb5b3db4ddaa3b280d08f24af"
-  },
-  ".mcp.json": {
-    "mtime": 1782657323.9236844,
-    "ast_hash": "d1bd856081d985dcf914b4eb305b197e",
-    "semantic_hash": "d1bd856081d985dcf914b4eb305b197e"
-  },
-  ".mcp/package.json": {
-    "mtime": 1782657316.6956916,
-    "ast_hash": "40b32afa3ea5ac244d0e82520042ca5b",
-    "semantic_hash": "40b32afa3ea5ac244d0e82520042ca5b"
-  },
-  ".mcp/server.js": {
-    "mtime": 1782657316.6906915,
-    "ast_hash": "04e12d47e4e384888b941f65aad2ac70",
-    "semantic_hash": "04e12d47e4e384888b941f65aad2ac70"
   }
 }
