@@ -63,6 +63,7 @@
       if (!ok) return;
       return api('/api/program', { method: 'POST', body: T.project }).then(() => {
         O.running = true;
+        buildIndex();
         T.status('Program downloaded to PLC — running on the Pi', 'ok');
         O.startMonitor();
       }).catch((e) => T.status('Download failed: ' + e.message, 'err'));
@@ -133,4 +134,5 @@
 
   // rebuild the id index if the project reloads while monitoring
   T.bus.on('project:loaded', () => { if (O.monitoring) buildIndex(); });
+  T.bus.on('tree:changed',   () => { if (O.monitoring) buildIndex(); });
 })(window.TIA);
