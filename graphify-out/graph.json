@@ -2256,7 +2256,7 @@
       "label": "renderCallBox()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L658",
+      "source_location": "L662",
       "_origin": "ast",
       "id": "js_lad_rendercallbox",
       "community": 1,
@@ -2306,7 +2306,7 @@
       "label": "addHit()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L759",
+      "source_location": "L764",
       "_origin": "ast",
       "id": "js_lad_addhit",
       "community": 1,
@@ -2316,7 +2316,7 @@
       "label": "hasTag()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L773",
+      "source_location": "L786",
       "_origin": "ast",
       "id": "js_lad_hastag",
       "community": 1,
@@ -2326,7 +2326,7 @@
       "label": "getTag()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L774",
+      "source_location": "L787",
       "_origin": "ast",
       "id": "js_lad_gettag",
       "community": 1,
@@ -2336,7 +2336,7 @@
       "label": "attachTagDrop()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L776",
+      "source_location": "L789",
       "_origin": "ast",
       "id": "js_lad_attachtagdrop",
       "community": 1,
@@ -2346,7 +2346,7 @@
       "label": "operandLabel()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L796",
+      "source_location": "L809",
       "_origin": "ast",
       "id": "js_lad_operandlabel",
       "community": 1,
@@ -2356,7 +2356,7 @@
       "label": "paramLabel()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L807",
+      "source_location": "L820",
       "_origin": "ast",
       "id": "js_lad_paramlabel",
       "community": 1,
@@ -2366,7 +2366,7 @@
       "label": "applyEditValue()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L827",
+      "source_location": "L840",
       "_origin": "ast",
       "id": "js_lad_applyeditvalue",
       "community": 1,
@@ -2376,7 +2376,7 @@
       "label": "killEditInput()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L837",
+      "source_location": "L850",
       "_origin": "ast",
       "id": "js_lad_killeditinput",
       "community": 1,
@@ -2386,7 +2386,7 @@
       "label": "openInlineEdit()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L845",
+      "source_location": "L858",
       "_origin": "ast",
       "id": "js_lad_openinlineedit",
       "community": 1,
@@ -2396,7 +2396,7 @@
       "label": "editHeaderText()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L901",
+      "source_location": "L914",
       "_origin": "ast",
       "id": "js_lad_editheadertext",
       "community": 1,
@@ -2406,7 +2406,7 @@
       "label": "select()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L925",
+      "source_location": "L938",
       "_origin": "ast",
       "id": "js_lad_select",
       "community": 1,
@@ -2416,7 +2416,7 @@
       "label": "markActiveCards()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L939",
+      "source_location": "L952",
       "_origin": "ast",
       "id": "js_lad_markactivecards",
       "community": 1,
@@ -2426,7 +2426,7 @@
       "label": "closeMenu()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L951",
+      "source_location": "L964",
       "_origin": "ast",
       "id": "js_lad_closemenu",
       "community": 1,
@@ -2436,7 +2436,7 @@
       "label": "onMenuDocDown()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L956",
+      "source_location": "L969",
       "_origin": "ast",
       "id": "js_lad_onmenudocdown",
       "community": 1,
@@ -2446,7 +2446,7 @@
       "label": "openElementMenu()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L958",
+      "source_location": "L971",
       "_origin": "ast",
       "id": "js_lad_openelementmenu",
       "community": 1,
@@ -2456,7 +2456,7 @@
       "label": "showMenu()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L973",
+      "source_location": "L986",
       "_origin": "ast",
       "id": "js_lad_showmenu",
       "community": 1,
@@ -2466,7 +2466,7 @@
       "label": "enableDrop()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L995",
+      "source_location": "L1008",
       "_origin": "ast",
       "id": "js_lad_enabledrop",
       "community": 1,
@@ -2476,7 +2476,7 @@
       "label": "hasKind()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1034",
+      "source_location": "L1047",
       "_origin": "ast",
       "id": "js_lad_haskind",
       "community": 1,
@@ -2486,7 +2486,7 @@
       "label": "getKind()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1037",
+      "source_location": "L1050",
       "_origin": "ast",
       "id": "js_lad_getkind",
       "community": 1,
@@ -2496,7 +2496,7 @@
       "label": "hasBlock()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1038",
+      "source_location": "L1051",
       "_origin": "ast",
       "id": "js_lad_hasblock",
       "community": 1,
@@ -2506,7 +2506,7 @@
       "label": "getBlockId()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1041",
+      "source_location": "L1054",
       "_origin": "ast",
       "id": "js_lad_getblockid",
       "community": 1,
@@ -2516,7 +2516,7 @@
       "label": "dropBlockCall()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1044",
+      "source_location": "L1057",
       "_origin": "ast",
       "id": "js_lad_dropblockcall",
       "community": 1,
@@ -2526,7 +2526,7 @@
       "label": "findElById()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1073",
+      "source_location": "L1086",
       "_origin": "ast",
       "id": "js_lad_findelbyid",
       "community": 1,
@@ -2536,7 +2536,7 @@
       "label": "insert()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1089",
+      "source_location": "L1102",
       "_origin": "ast",
       "id": "js_lad_insert",
       "community": 1,
@@ -2546,7 +2546,7 @@
       "label": "focusNewOperand()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1124",
+      "source_location": "L1137",
       "_origin": "ast",
       "id": "js_lad_focusnewoperand",
       "community": 1,
@@ -2556,7 +2556,7 @@
       "label": "cssEsc()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1137",
+      "source_location": "L1150",
       "_origin": "ast",
       "id": "js_lad_cssesc",
       "community": 1,
@@ -2566,7 +2566,7 @@
       "label": "deleteSelection()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1140",
+      "source_location": "L1153",
       "_origin": "ast",
       "id": "js_lad_deleteselection",
       "community": 1,
@@ -2576,7 +2576,7 @@
       "label": "openParallelBranchAt()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1177",
+      "source_location": "L1190",
       "_origin": "ast",
       "id": "js_lad_openparallelbranchat",
       "community": 1,
@@ -2586,7 +2586,7 @@
       "label": "openParallelBranch()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1193",
+      "source_location": "L1206",
       "_origin": "ast",
       "id": "js_lad_openparallelbranch",
       "community": 1,
@@ -2596,7 +2596,7 @@
       "label": "insertNetworkBelow()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1211",
+      "source_location": "L1224",
       "_origin": "ast",
       "id": "js_lad_insertnetworkbelow",
       "community": 1,
@@ -2606,7 +2606,7 @@
       "label": "deleteNetwork()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1221",
+      "source_location": "L1234",
       "_origin": "ast",
       "id": "js_lad_deletenetwork",
       "community": 1,
@@ -2616,7 +2616,7 @@
       "label": "addNetwork()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1232",
+      "source_location": "L1245",
       "_origin": "ast",
       "id": "js_lad_addnetwork",
       "community": 1,
@@ -2626,7 +2626,7 @@
       "label": "scrollToNet()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1242",
+      "source_location": "L1255",
       "_origin": "ast",
       "id": "js_lad_scrolltonet",
       "community": 1,
@@ -2636,7 +2636,7 @@
       "label": "onKeyDown()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1251",
+      "source_location": "L1264",
       "_origin": "ast",
       "id": "js_lad_onkeydown",
       "community": 1,
@@ -2646,7 +2646,7 @@
       "label": "highlight()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1269",
+      "source_location": "L1282",
       "_origin": "ast",
       "id": "js_lad_highlight",
       "community": 1,
@@ -2656,7 +2656,7 @@
       "label": "rungPowered()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1307",
+      "source_location": "L1320",
       "_origin": "ast",
       "id": "js_lad_rungpowered",
       "community": 1,
@@ -2666,7 +2666,7 @@
       "label": "clearHighlight()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1315",
+      "source_location": "L1328",
       "_origin": "ast",
       "id": "js_lad_clearhighlight",
       "community": 1,
@@ -2676,7 +2676,7 @@
       "label": "collectElements()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1321",
+      "source_location": "L1334",
       "_origin": "ast",
       "id": "js_lad_collectelements",
       "community": 1,
@@ -2686,7 +2686,7 @@
       "label": "open()",
       "file_type": "code",
       "source_file": "js/lad.js",
-      "source_location": "L1333",
+      "source_location": "L1346",
       "_origin": "ast",
       "id": "js_lad_open",
       "community": 1,
@@ -16494,9 +16494,9 @@
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "claude",
-      "target": "claude_claude_md_tia_web_practice_project_operating_manual",
-      "confidence_score": 1.0
+      "target": "claude_claude_md_tia_web_practice_project_operating_manual"
     },
     {
       "relation": "contains",
@@ -16504,9 +16504,9 @@
       "source_file": "CLAUDE.md",
       "source_location": "L81",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "claude_claude_md_tia_web_practice_project_operating_manual",
-      "target": "claude_adding_a_new_instruction_lad_fbd_the_recipe",
-      "confidence_score": 1.0
+      "target": "claude_adding_a_new_instruction_lad_fbd_the_recipe"
     },
     {
       "relation": "contains",
@@ -16514,9 +16514,9 @@
       "source_file": "CLAUDE.md",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "claude_claude_md_tia_web_practice_project_operating_manual",
-      "target": "claude_architecture_where_things_live",
-      "confidence_score": 1.0
+      "target": "claude_architecture_where_things_live"
     },
     {
       "relation": "contains",
@@ -16524,9 +16524,9 @@
       "source_file": "CLAUDE.md",
       "source_location": "L38",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "claude_claude_md_tia_web_practice_project_operating_manual",
-      "target": "claude_data_model_core_js",
-      "confidence_score": 1.0
+      "target": "claude_data_model_core_js"
     },
     {
       "relation": "contains",
@@ -16534,9 +16534,9 @@
       "source_file": "CLAUDE.md",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "claude_claude_md_tia_web_practice_project_operating_manual",
-      "target": "claude_hard_constraints_never_violate",
-      "confidence_score": 1.0
+      "target": "claude_hard_constraints_never_violate"
     },
     {
       "relation": "contains",
@@ -16544,9 +16544,9 @@
       "source_file": "CLAUDE.md",
       "source_location": "L61",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "claude_claude_md_tia_web_practice_project_operating_manual",
-      "target": "claude_known_gotchas_these_bit_us_before",
-      "confidence_score": 1.0
+      "target": "claude_known_gotchas_these_bit_us_before"
     },
     {
       "relation": "contains",
@@ -16554,9 +16554,9 @@
       "source_file": "CLAUDE.md",
       "source_location": "L92",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "claude_claude_md_tia_web_practice_project_operating_manual",
-      "target": "claude_style",
-      "confidence_score": 1.0
+      "target": "claude_style"
     },
     {
       "relation": "contains",
@@ -16564,9 +16564,9 @@
       "source_file": "CLAUDE.md",
       "source_location": "L47",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "claude_claude_md_tia_web_practice_project_operating_manual",
-      "target": "claude_verifying_changes_no_node_here_use_headless_chromium_already_installed_at_usr_bin_chromium",
-      "confidence_score": 1.0
+      "target": "claude_verifying_changes_no_node_here_use_headless_chromium_already_installed_at_usr_bin_chromium"
     },
     {
       "relation": "references",
@@ -16604,9 +16604,9 @@
       "source_file": "README.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme",
-      "target": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "confidence_score": 1.0
+      "target": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide"
     },
     {
       "relation": "references",
@@ -16624,9 +16624,9 @@
       "source_file": "README.md",
       "source_location": "L144",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "target": "readme_addresses_data_types",
-      "confidence_score": 1.0
+      "target": "readme_addresses_data_types"
     },
     {
       "relation": "contains",
@@ -16634,9 +16634,9 @@
       "source_file": "README.md",
       "source_location": "L101",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "target": "readme_analog_output_software_pwm_scaling",
-      "confidence_score": 1.0
+      "target": "readme_analog_output_software_pwm_scaling"
     },
     {
       "relation": "contains",
@@ -16644,9 +16644,9 @@
       "source_file": "README.md",
       "source_location": "L162",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "target": "readme_architecture_for_extending",
-      "confidence_score": 1.0
+      "target": "readme_architecture_for_extending"
     },
     {
       "relation": "contains",
@@ -16654,9 +16654,9 @@
       "source_file": "README.md",
       "source_location": "L40",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "target": "readme_assigning_tags_by_drag_and_drop",
-      "confidence_score": 1.0
+      "target": "readme_assigning_tags_by_drag_and_drop"
     },
     {
       "relation": "contains",
@@ -16664,9 +16664,9 @@
       "source_file": "README.md",
       "source_location": "L55",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "target": "readme_editing",
-      "confidence_score": 1.0
+      "target": "readme_editing"
     },
     {
       "relation": "contains",
@@ -16674,9 +16674,9 @@
       "source_file": "README.md",
       "source_location": "L123",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "target": "readme_online_mode_run_monitor_change_the_program_live_pi_runtime",
-      "confidence_score": 1.0
+      "target": "readme_online_mode_run_monitor_change_the_program_live_pi_runtime"
     },
     {
       "relation": "contains",
@@ -16684,9 +16684,9 @@
       "source_file": "README.md",
       "source_location": "L156",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "target": "readme_project_tree_simulation_table_tips",
-      "confidence_score": 1.0
+      "target": "readme_project_tree_simulation_table_tips"
     },
     {
       "relation": "contains",
@@ -16694,9 +16694,9 @@
       "source_file": "README.md",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "target": "readme_run_it",
-      "confidence_score": 1.0
+      "target": "readme_run_it"
     },
     {
       "relation": "contains",
@@ -16704,9 +16704,9 @@
       "source_file": "README.md",
       "source_location": "L90",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "target": "readme_run_it_on_a_raspberry_pi_export_python",
-      "confidence_score": 1.0
+      "target": "readme_run_it_on_a_raspberry_pi_export_python"
     },
     {
       "relation": "contains",
@@ -16714,9 +16714,9 @@
       "source_file": "README.md",
       "source_location": "L138",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "target": "readme_saving_your_work",
-      "confidence_score": 1.0
+      "target": "readme_saving_your_work"
     },
     {
       "relation": "contains",
@@ -16724,9 +16724,9 @@
       "source_file": "README.md",
       "source_location": "L115",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "target": "readme_scan_cycle_time_timer_blinker_speed",
-      "confidence_score": 1.0
+      "target": "readme_scan_cycle_time_timer_blinker_speed"
     },
     {
       "relation": "contains",
@@ -16734,9 +16734,9 @@
       "source_file": "README.md",
       "source_location": "L84",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "target": "readme_simulation_view_online_style",
-      "confidence_score": 1.0
+      "target": "readme_simulation_view_online_style"
     },
     {
       "relation": "contains",
@@ -16744,9 +16744,9 @@
       "source_file": "README.md",
       "source_location": "L149",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "target": "readme_supported_instructions",
-      "confidence_score": 1.0
+      "target": "readme_supported_instructions"
     },
     {
       "relation": "contains",
@@ -16754,9 +16754,9 @@
       "source_file": "README.md",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "target": "readme_the_demo_project_conveyor_demo",
-      "confidence_score": 1.0
+      "target": "readme_the_demo_project_conveyor_demo"
     },
     {
       "relation": "contains",
@@ -16764,9 +16764,9 @@
       "source_file": "README.md",
       "source_location": "L50",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "target": "readme_typing_with_autocomplete",
-      "confidence_score": 1.0
+      "target": "readme_typing_with_autocomplete"
     },
     {
       "relation": "contains",
@@ -16774,9 +16774,9 @@
       "source_file": "README.md",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
-      "target": "readme_what_s_included",
-      "confidence_score": 1.0
+      "target": "readme_what_s_included"
     },
     {
       "relation": "contains",
@@ -16784,9 +16784,9 @@
       "source_file": "README.md",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "readme_the_demo_project_conveyor_demo",
-      "target": "readme_try_it",
-      "confidence_score": 1.0
+      "target": "readme_try_it"
     },
     {
       "relation": "semantically_similar_to",
@@ -16844,9 +16844,9 @@
       "source_file": "SPEC.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "spec",
-      "target": "spec_tia_like_browser_plc_ide_module_interface_contract_spec",
-      "confidence_score": 1.0
+      "target": "spec_tia_like_browser_plc_ide_module_interface_contract_spec"
     },
     {
       "relation": "contains",
@@ -16854,9 +16854,9 @@
       "source_file": "SPEC.md",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "spec_tia_like_browser_plc_ide_module_interface_contract_spec",
-      "target": "spec_core_api_recap_already_implemented_in_core_js_do_not_reimplement",
-      "confidence_score": 1.0
+      "target": "spec_core_api_recap_already_implemented_in_core_js_do_not_reimplement"
     },
     {
       "relation": "contains",
@@ -16864,9 +16864,9 @@
       "source_file": "SPEC.md",
       "source_location": "L68",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "spec_tia_like_browser_plc_ide_module_interface_contract_spec",
-      "target": "spec_cross_module_contracts",
-      "confidence_score": 1.0
+      "target": "spec_cross_module_contracts"
     },
     {
       "relation": "contains",
@@ -16874,9 +16874,9 @@
       "source_file": "SPEC.md",
       "source_location": "L37",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "spec_tia_like_browser_plc_ide_module_interface_contract_spec",
-      "target": "spec_data_model_from_core_js_reference",
-      "confidence_score": 1.0
+      "target": "spec_data_model_from_core_js_reference"
     },
     {
       "relation": "contains",
@@ -16884,9 +16884,9 @@
       "source_file": "SPEC.md",
       "source_location": "L154",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "spec_tia_like_browser_plc_ide_module_interface_contract_spec",
-      "target": "spec_definition_of_done_for_each_module",
-      "confidence_score": 1.0
+      "target": "spec_definition_of_done_for_each_module"
     },
     {
       "relation": "contains",
@@ -16894,9 +16894,9 @@
       "source_file": "SPEC.md",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "spec_tia_like_browser_plc_ide_module_interface_contract_spec",
-      "target": "spec_hard_rules",
-      "confidence_score": 1.0
+      "target": "spec_hard_rules"
     },
     {
       "relation": "contains",
@@ -16904,9 +16904,9 @@
       "source_file": "SPEC.md",
       "source_location": "L142",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "spec_tia_like_browser_plc_ide_module_interface_contract_spec",
-      "target": "spec_visual_fidelity_notes",
-      "confidence_score": 1.0
+      "target": "spec_visual_fidelity_notes"
     },
     {
       "relation": "contains",
@@ -16914,9 +16914,9 @@
       "source_file": "SPEC.md",
       "source_location": "L60",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "spec_data_model_from_core_js_reference",
-      "target": "spec_lad_power_flow_semantics_the_simulator_follows_this_editors_must_build_this_shape",
-      "confidence_score": 1.0
+      "target": "spec_lad_power_flow_semantics_the_simulator_follows_this_editors_must_build_this_shape"
     },
     {
       "relation": "contains",
@@ -16924,9 +16924,9 @@
       "source_file": "SPEC.md",
       "source_location": "L70",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "spec_cross_module_contracts",
-      "target": "spec_active_editor_set_by_lad_js_fbd_js_when_a_block_opens",
-      "confidence_score": 1.0
+      "target": "spec_active_editor_set_by_lad_js_fbd_js_when_a_block_opens"
     },
     {
       "relation": "contains",
@@ -16934,9 +16934,9 @@
       "source_file": "SPEC.md",
       "source_location": "L87",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "spec_cross_module_contracts",
-      "target": "spec_instruction_tree_instructions_js",
-      "confidence_score": 1.0
+      "target": "spec_instruction_tree_instructions_js"
     },
     {
       "relation": "contains",
@@ -16944,9 +16944,9 @@
       "source_file": "SPEC.md",
       "source_location": "L95",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "spec_cross_module_contracts",
-      "target": "spec_project_tree_tree_js",
-      "confidence_score": 1.0
+      "target": "spec_project_tree_tree_js"
     },
     {
       "relation": "contains",
@@ -16954,9 +16954,9 @@
       "source_file": "SPEC.md",
       "source_location": "L111",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "spec_cross_module_contracts",
-      "target": "spec_simulator_sim_js",
-      "confidence_score": 1.0
+      "target": "spec_simulator_sim_js"
     },
     {
       "relation": "contains",
@@ -16964,9 +16964,9 @@
       "source_file": "SPEC.md",
       "source_location": "L105",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "spec_cross_module_contracts",
-      "target": "spec_tag_table_tags_js",
-      "confidence_score": 1.0
+      "target": "spec_tag_table_tags_js"
     },
     {
       "relation": "contains",
@@ -16974,9 +16974,9 @@
       "source_file": "SPEC.md",
       "source_location": "L139",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "spec_cross_module_contracts",
-      "target": "spec_toolbar_toolbar_js_and_bootstrap_app_js_are_implemented_separately_not_by_you",
-      "confidence_score": 1.0
+      "target": "spec_toolbar_toolbar_js_and_bootstrap_app_js_are_implemented_separately_not_by_you"
     },
     {
       "relation": "references",
@@ -17030,5 +17030,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "af0ca2df1a3931b5fea0bb1127cd6e030c22e40e"
+  "built_at_commit": "7175ddd847365b75c30b1c854907a6c2df5d2cfb"
 }

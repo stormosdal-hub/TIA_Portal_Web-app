@@ -145,7 +145,7 @@
     .fbd-add-in:hover circle { fill: var(--tia-hover); }
 
     /* live (energized) flow — toggled by highlight() without rebuilding SVG */
-    .fbd-wire.fbd-live { stroke: var(--tia-live); stroke-width: 2.2; }
+    .fbd-wire.fbd-live { stroke: var(--tia-live); stroke-width: 2.4; }
     .fbd-stub.fbd-live { stroke: var(--tia-live); }
     .fbd-pin-dot.fbd-live { fill: var(--tia-live); }
     .fbd-box.fbd-live .fbd-box-rect { stroke: var(--tia-live); }
@@ -154,7 +154,7 @@
 
     /* low (de-energized while sim runs) — dashed blue wires/stubs, solid blue
        symbols/pins (mirrors the *-live rules but using --tia-low) */
-    .fbd-wire.fbd-low { stroke: var(--tia-low); stroke-width: 1.9; stroke-dasharray: 5 3; }
+    .fbd-wire.fbd-low { stroke: var(--tia-low); stroke-width: 1.7; stroke-dasharray: 5 3; }
     .fbd-stub.fbd-low { stroke: var(--tia-low); stroke-dasharray: 5 3; }
     .fbd-pin-dot.fbd-low { fill: var(--tia-low); }
     .fbd-box.fbd-low .fbd-box-rect { stroke: var(--tia-low); }

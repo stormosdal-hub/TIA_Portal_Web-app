@@ -109,12 +109,12 @@
       stroke-width: 1.4; stroke-dasharray: 3 2; rx: 3; }
 
     /* live (energized) flow — toggled by highlight() without rebuilding SVG */
-    .lad-live.lad-wire, .lad-live .lad-wire { stroke: var(--tia-live); }
-    .lad-live.lad-rail  { stroke: var(--tia-live); }
+    .lad-live.lad-wire, .lad-live .lad-wire { stroke: var(--tia-live); stroke-width: 2.4; }
+    .lad-live.lad-rail  { stroke: var(--tia-live); stroke-width: 3; }
     .lad-el.lad-live .lad-sym { stroke: var(--tia-live); }
     .lad-el.lad-live .lad-box { stroke: var(--tia-live); }
     .lad-el.lad-live .lad-sym-letter { fill: var(--tia-live); }
-    .lad-seg.lad-live { stroke: var(--tia-live); }
+    .lad-seg.lad-live { stroke: var(--tia-live); stroke-width: 2.4; }
 
     /* low (de-energized while sim runs) flow — dashed blue wires/segments,
        solid blue rails/symbols/boxes. Mirrors the .lad-live rules above. */
@@ -650,6 +650,10 @@
       class: 'lad-operand lad-operand-hit' + (val ? '' : ' empty'),
       x: x, y: y, 'text-anchor': anchor || 'start', 'data-arg-of': el.id, 'data-arg-name': name,
     }, (val != null && val !== '') ? String(val) : '???');
+    // .lad-operand sets text-anchor:middle in CSS (for centered operands), which would
+    // override the attribute above and center the arg over the pin name. Pin the anchor
+    // via inline style so call args stay end/start-aligned and clear of the pin labels.
+    t.style.textAnchor = anchor || 'start';
     t.addEventListener('click', (e) => { e.stopPropagation(); select(el, true); openInlineEdit(t, el, { kind: 'arg', argName: name }); });
     attachTagDrop(t, (tagName) => { el.args = el.args || {}; el.args[name] = tagName; });
     g.appendChild(t);
@@ -709,12 +713,8 @@
     });
 
     addHit(g, x, y, w, h, el, net);
-
-    // double-click opens the called block (shared decision #3)
-    g.addEventListener('dblclick', (e) => {
-      e.preventDefault(); e.stopPropagation();
-      openCalledBlock(el);
-    });
+    // double-click navigation is handled in addHit (a native dblclick can't fire
+    // here: select()'s re-render detaches this node between the two clicks).
   }
 
   // Open the block referenced by a call element (guard if missing).
@@ -755,10 +755,23 @@
     return g;
   }
 
+  // Manual double-click tracking. select() re-renders and detaches the clicked
+  // SVG node, so a native 'dblclick' never lands on a stable target. We key on the
+  // element id (stable across re-render) to recognise the second press ourselves.
+  let lastHitId = null, lastHitT = 0;
+
   // After building a group we know its hit area; size the selection rect to it.
   function addHit(g, x, y, w, h, el, net) {
     const hit = T.svg('rect', { class: 'lad-hit', x, y, width: w, height: h });
-    hit.addEventListener('mousedown', (e) => { e.stopPropagation(); select(el); });
+    hit.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      const now = Date.now();
+      const dbl = (lastHitId === el.id) && (now - lastHitT < 400);
+      lastHitId = el.id; lastHitT = now;
+      // double-click a call box -> open the called block (decision #3)
+      if (dbl && el.kind === 'call') { openCalledBlock(el); return; }
+      select(el);
+    });
     hit.addEventListener('contextmenu', (e) => { e.preventDefault(); e.stopPropagation(); select(el); openElementMenu(e, el, net); });
     // dropping a tag anywhere on an operand-bearing symbol (contact/coil/edge) sets its operand
     const def = T.catalog[el.kind];
