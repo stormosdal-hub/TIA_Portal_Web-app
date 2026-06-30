@@ -201,8 +201,10 @@ window.TIA = window.TIA || {};
   // Ordered groups for the instruction tree.
   T.catalogGroups = ['Bit logic', 'Comparator', 'Timers', 'Counters', 'Move operations', 'Math functions', 'Conversion'];
   T.catalogFor = function (lang) {
-    // returns array of {kind, def} available in the given language ('LAD'|'FBD')
+    // returns array of {kind, def} available in the given language ('LAD'|'FBD').
+    // SCL (and any non-graphical language) has no drag-and-drop instructions.
     const out = [];
+    if (lang !== 'LAD' && lang !== 'FBD') return out;
     for (const kind in T.catalog) {
       const def = T.catalog[kind];
       const ok = lang === 'LAD' ? def.lad !== false : def.fbd !== false;
@@ -231,7 +233,11 @@ window.TIA = window.TIA || {};
     newBlock(type, name, number, lang) {
       const b = { id: T.uid('blk'), type: type || 'OB', name: name || 'Block', number: number || 1,
                   lang: lang || 'LAD', comment: '', networks: [] };
-      if (b.type !== 'DB') b.networks.push(T.model.newNetwork());
+      // DB holds no logic; SCL holds a single text body (`code`) instead of
+      // graphical networks; LAD/FBD start with one empty network.
+      if (b.type === 'DB') { /* no logic */ }
+      else if (b.lang === 'SCL') { b.code = ''; }
+      else b.networks.push(T.model.newNetwork());
       b.iface = T.model.newInterface(b.type);
       return b;
     },

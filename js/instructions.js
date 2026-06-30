@@ -212,6 +212,9 @@
     const blk = T.getActiveBlock();
     const lang = (blk && blk.lang) || 'LAD';
 
+    // SCL is text, not drag-and-drop instructions — show a syntax reference instead.
+    if (lang === 'SCL') { renderSclReference(host); return; }
+
     // Available instructions for this language, indexed by group.
     const available = T.catalogFor(lang);   // [{kind, def}]
     const byGroup = Object.create(null);
@@ -299,6 +302,43 @@
 
     const empty = T.$('.tia-ins-empty', list);
     if (empty) empty.style.display = anyVisible ? 'none' : '';
+  }
+
+  /* --------------------------------------------------------- SCL reference */
+  // A compact syntax cheat-sheet shown in the instruction pane for SCL blocks
+  // (SCL is typed, so there is nothing to drag onto a network).
+  T.injectCSS('tia-ins-scl-css', `
+    .tia-scl-ref { padding:8px 10px; font:12px/1.5 var(--tia-font, sans-serif); color:var(--tia-text); }
+    .tia-scl-ref h4 { margin:10px 0 4px; font-size:11px; text-transform:uppercase;
+      letter-spacing:.04em; color:var(--tia-muted); }
+    .tia-scl-ref pre { margin:0 0 4px; padding:6px 8px; background:var(--tia-panel, #f4f7fa);
+      border:1px solid var(--tia-border); border-radius:4px; overflow:auto;
+      font:12px/1.45 ui-monospace, Consolas, monospace; white-space:pre; }
+    .tia-scl-ref code { background:var(--tia-panel, #eef3f7); padding:0 3px; border-radius:3px;
+      font:12px ui-monospace, Consolas, monospace; }
+  `);
+  function renderSclReference(host) {
+    const ref = T.el('div', { class: 'tia-scl-ref' });
+    const h = (t) => ref.appendChild(T.el('h4', {}, t));
+    const pre = (t) => ref.appendChild(T.el('pre', {}, t));
+    const p = (t) => ref.appendChild(T.el('div', {}, t));
+
+    h('SCL reference');
+    p('Assign tags & interface members with ":=". Statements end with ";".');
+    h('Assignment & operators');
+    pre('Motor := Start AND NOT Stop;\nSpeed := (Setpoint * 100) / 255;');
+    p('Logic: AND OR XOR NOT · Math: + - * / MOD · Compare: = <> < > <= >=');
+    h('IF / ELSIF / ELSE');
+    pre('IF Level > 80 THEN\n    Pump := FALSE;\nELSIF Level < 20 THEN\n    Pump := TRUE;\nEND_IF;');
+    h('CASE');
+    pre('CASE Step OF\n    0:   Lamp := FALSE;\n    1..3: Lamp := TRUE;\n    ELSE Lamp := FALSE;\nEND_CASE;');
+    h('Loops');
+    pre('FOR i := 1 TO 10 BY 1 DO\n    Sum := Sum + i;\nEND_FOR;\n\nWHILE Run DO\n    // ...\nEND_WHILE;');
+    h('Built-in functions');
+    p('ABS, SQRT, MIN, MAX, LIMIT(min,in,max), TRUNC, ROUND, SIN, COS …');
+    h('Comments');
+    p('Line: // …    Block: (* … *)');
+    host.appendChild(ref);
   }
 
   /* ====================================================================== */

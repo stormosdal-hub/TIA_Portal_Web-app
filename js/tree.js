@@ -437,7 +437,8 @@
     );
     const langSel = T.el('select', { class: 'tia-input' },
       T.el('option', { value: 'LAD' }, 'LAD — Ladder logic'),
-      T.el('option', { value: 'FBD' }, 'FBD — Function block diagram')
+      T.el('option', { value: 'FBD' }, 'FBD — Function block diagram'),
+      T.el('option', { value: 'SCL' }, 'SCL — Structured Control Language')
     );
 
     // suggest a default name that tracks the chosen type — but stop once the user

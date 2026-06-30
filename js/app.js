@@ -198,7 +198,8 @@
           host.appendChild(ifaceMount);
           host.appendChild(codeMount);
           if (T.editors.iface && T.editors.iface.render) T.editors.iface.render(ifaceMount, block);
-          const ed = block.lang === 'FBD' ? T.editors.fbd : T.editors.lad;
+          const ed = block.lang === 'SCL' ? T.editors.scl
+                   : block.lang === 'FBD' ? T.editors.fbd : T.editors.lad;
           if (ed && ed.open) ed.open(codeMount, block);
           else codeMount.appendChild(T.el('div', { class: 'tia-empty' }, block.lang + ' editor not available'));
         }

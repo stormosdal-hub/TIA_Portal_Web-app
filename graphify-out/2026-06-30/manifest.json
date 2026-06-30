@@ -1,18 +1,18 @@
 {
   "js/app.js": {
-    "mtime": 1782811743.3249617,
-    "ast_hash": "76f86870a04e8ad6f8c110ea541d3b58",
-    "semantic_hash": ""
+    "mtime": 1782643325.1350784,
+    "ast_hash": "fae79598102e9080d12690d204f87864",
+    "semantic_hash": "fae79598102e9080d12690d204f87864"
   },
   "js/codegen.js": {
-    "mtime": 1782811923.4038904,
-    "ast_hash": "7a04872b9e4ec51a8ba9f64f8b84d98a",
-    "semantic_hash": ""
+    "mtime": 1782643325.1360784,
+    "ast_hash": "cc8bbec2b87154792ddd226f0edcfacf",
+    "semantic_hash": "cc8bbec2b87154792ddd226f0edcfacf"
   },
   "js/core.js": {
-    "mtime": 1782811733.552965,
-    "ast_hash": "96c748689baa74d929c32acbe3b09d39",
-    "semantic_hash": ""
+    "mtime": 1782643325.1360784,
+    "ast_hash": "98bc76eae4fa2be4265c91d4aaa13c6b",
+    "semantic_hash": "98bc76eae4fa2be4265c91d4aaa13c6b"
   },
   "js/details.js": {
     "mtime": 1782643325.1360784,
@@ -30,9 +30,9 @@
     "semantic_hash": "73fd90254df11e516e9185261d161af2"
   },
   "js/instructions.js": {
-    "mtime": 1782811783.5919468,
-    "ast_hash": "71a3a040057ad22406f2a5f322310831",
-    "semantic_hash": ""
+    "mtime": 1782643325.1370783,
+    "ast_hash": "d944297b8479dec7512e056cfaae35da",
+    "semantic_hash": "d944297b8479dec7512e056cfaae35da"
   },
   "js/lad.js": {
     "mtime": 1782723869.9112067,
@@ -50,9 +50,9 @@
     "semantic_hash": "339edd9a5d7ef9786db7c7083549cb07"
   },
   "js/sim.js": {
-    "mtime": 1782811749.6379592,
-    "ast_hash": "2eccf4e364714afa745e94d8bd91cc7d",
-    "semantic_hash": ""
+    "mtime": 1782643325.1370783,
+    "ast_hash": "2c5cf2de69a1368f2ab1f8153d8bf689",
+    "semantic_hash": "2c5cf2de69a1368f2ab1f8153d8bf689"
   },
   "js/tags.js": {
     "mtime": 1782643325.1380785,
@@ -65,9 +65,9 @@
     "semantic_hash": "5a693bb89faa54bba1591ab003e5b641"
   },
   "js/tree.js": {
-    "mtime": 1782811738.5469632,
-    "ast_hash": "87d51cfcb4efd47f96f4f5d601fa93a1",
-    "semantic_hash": ""
+    "mtime": 1782643325.1380785,
+    "ast_hash": "51167907f7a8d321c4b238628d85e077",
+    "semantic_hash": "51167907f7a8d321c4b238628d85e077"
   },
   "plc_engine.py": {
     "mtime": 1782643325.1380785,
@@ -100,9 +100,9 @@
     "semantic_hash": "bd8ba625858c68aa4b8d0f6240493cf4"
   },
   "index.html": {
-    "mtime": 1782811754.3299575,
-    "ast_hash": "d2b9083ac45e65a893467cf15f2135d2",
-    "semantic_hash": ""
+    "mtime": 1782643325.1350784,
+    "ast_hash": "4b1cf84db6b8aec82bb343f86004b7ac",
+    "semantic_hash": "4b1cf84db6b8aec82bb343f86004b7ac"
   },
   ".claude/settings.json": {
     "mtime": 1782657323.9496844,
@@ -123,10 +123,5 @@
     "mtime": 1782657316.6906915,
     "ast_hash": "04e12d47e4e384888b941f65aad2ac70",
     "semantic_hash": "04e12d47e4e384888b941f65aad2ac70"
-  },
-  "js/scl.js": {
-    "mtime": 1782812208.4697564,
-    "ast_hash": "e13cd833a5604dfd623f136e8a352803",
-    "semantic_hash": ""
   }
 }

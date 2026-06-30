@@ -815,13 +815,17 @@
         if (inVals[i] === undefined || inVals[i] === null) return;  // unconnected -> keep default
         writeMember(instanceId, m, inVals[i]);
       });
-      // run the body
-      const nets = blk.networks || [];
-      for (let ni = 0; ni < nets.length; ni++) {
-        const net = nets[ni];
-        if (!net) continue;
-        try { (blk.lang === 'FBD' ? evalFbdNetwork : evalLadNetwork)(net); }
-        catch (e) { console.error('[sim] network eval error', e); }
+      // run the body — SCL is one text program; LAD/FBD are graphical networks
+      if (blk.lang === 'SCL') {
+        if (T.scl) { try { T.scl.exec(blk); } catch (e) { console.error('[sim] scl eval error', e); } }
+      } else {
+        const nets = blk.networks || [];
+        for (let ni = 0; ni < nets.length; ni++) {
+          const net = nets[ni];
+          if (!net) continue;
+          try { (blk.lang === 'FBD' ? evalFbdNetwork : evalLadNetwork)(net); }
+          catch (e) { console.error('[sim] network eval error', e); }
+        }
       }
     } finally {
       _scanCtx.stack.pop();

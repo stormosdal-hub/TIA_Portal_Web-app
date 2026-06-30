@@ -226,7 +226,7 @@
       "label": "openBlock()",
       "file_type": "code",
       "source_file": "js/app.js",
-      "source_location": "L211",
+      "source_location": "L210",
       "_origin": "ast",
       "id": "js_app_openblock",
       "community": 6,
@@ -236,7 +236,7 @@
       "label": "openTags()",
       "file_type": "code",
       "source_file": "js/app.js",
-      "source_location": "L218",
+      "source_location": "L217",
       "_origin": "ast",
       "id": "js_app_opentags",
       "community": 6,
@@ -246,7 +246,7 @@
       "label": "openRpi()",
       "file_type": "code",
       "source_file": "js/app.js",
-      "source_location": "L225",
+      "source_location": "L224",
       "_origin": "ast",
       "id": "js_app_openrpi",
       "community": 6,
@@ -256,7 +256,7 @@
       "label": "closeTab()",
       "file_type": "code",
       "source_file": "js/app.js",
-      "source_location": "L232",
+      "source_location": "L231",
       "_origin": "ast",
       "id": "js_app_closetab",
       "community": 6,
@@ -266,7 +266,7 @@
       "label": "renderInspectorTabs()",
       "file_type": "code",
       "source_file": "js/app.js",
-      "source_location": "L257",
+      "source_location": "L256",
       "_origin": "ast",
       "id": "js_app_renderinspectortabs",
       "community": 6,
@@ -276,7 +276,7 @@
       "label": "renderInspector()",
       "file_type": "code",
       "source_file": "js/app.js",
-      "source_location": "L266",
+      "source_location": "L265",
       "_origin": "ast",
       "id": "js_app_renderinspector",
       "community": 6,
@@ -286,7 +286,7 @@
       "label": "renderProperties()",
       "file_type": "code",
       "source_file": "js/app.js",
-      "source_location": "L280",
+      "source_location": "L279",
       "_origin": "ast",
       "id": "js_app_renderproperties",
       "community": 6,
@@ -296,7 +296,7 @@
       "label": "buildMenu()",
       "file_type": "code",
       "source_file": "js/app.js",
-      "source_location": "L324",
+      "source_location": "L323",
       "_origin": "ast",
       "id": "js_app_buildmenu",
       "community": 6,
@@ -306,7 +306,7 @@
       "label": "showDropdown()",
       "file_type": "code",
       "source_file": "js/app.js",
-      "source_location": "L352",
+      "source_location": "L351",
       "_origin": "ast",
       "id": "js_app_showdropdown",
       "community": 6,
@@ -316,7 +316,7 @@
       "label": "closeDropdown()",
       "file_type": "code",
       "source_file": "js/app.js",
-      "source_location": "L365",
+      "source_location": "L364",
       "_origin": "ast",
       "id": "js_app_closedropdown",
       "community": 6,
@@ -326,7 +326,7 @@
       "label": "showHelp()",
       "file_type": "code",
       "source_file": "js/app.js",
-      "source_location": "L369",
+      "source_location": "L368",
       "_origin": "ast",
       "id": "js_app_showhelp",
       "community": 6,
@@ -336,7 +336,7 @@
       "label": "initSplitters()",
       "file_type": "code",
       "source_file": "js/app.js",
-      "source_location": "L432",
+      "source_location": "L431",
       "_origin": "ast",
       "id": "js_app_initsplitters",
       "community": 6,
@@ -346,7 +346,7 @@
       "label": "initAutosave()",
       "file_type": "code",
       "source_file": "js/app.js",
-      "source_location": "L467",
+      "source_location": "L466",
       "_origin": "ast",
       "id": "js_app_initautosave",
       "community": 6,
@@ -356,7 +356,7 @@
       "label": "switchLeftPanel()",
       "file_type": "code",
       "source_file": "js/app.js",
-      "source_location": "L475",
+      "source_location": "L474",
       "_origin": "ast",
       "id": "js_app_switchleftpanel",
       "community": 6,
@@ -366,7 +366,7 @@
       "label": "initLeftPanelTabs()",
       "file_type": "code",
       "source_file": "js/app.js",
-      "source_location": "L480",
+      "source_location": "L479",
       "_origin": "ast",
       "id": "js_app_initleftpaneltabs",
       "community": 6,
@@ -376,7 +376,7 @@
       "label": "boot()",
       "file_type": "code",
       "source_file": "js/app.js",
-      "source_location": "L484",
+      "source_location": "L483",
       "_origin": "ast",
       "id": "js_app_boot",
       "community": 6,
@@ -596,7 +596,7 @@
       "label": "collectKeys()",
       "file_type": "code",
       "source_file": "js/codegen.js",
-      "source_location": "L310",
+      "source_location": "L303",
       "_origin": "ast",
       "id": "js_codegen_collectkeys",
       "community": 4,
@@ -606,7 +606,7 @@
       "label": "gpioMap()",
       "file_type": "code",
       "source_file": "js/codegen.js",
-      "source_location": "L317",
+      "source_location": "L310",
       "_origin": "ast",
       "id": "js_codegen_gpiomap",
       "community": 4,
@@ -616,7 +616,7 @@
       "label": "collectCalled()",
       "file_type": "code",
       "source_file": "js/codegen.js",
-      "source_location": "L505",
+      "source_location": "L498",
       "_origin": "ast",
       "id": "js_codegen_collectcalled",
       "community": 4,
@@ -626,7 +626,7 @@
       "label": "ensureGpio()",
       "file_type": "code",
       "source_file": "js/codegen.js",
-      "source_location": "L517",
+      "source_location": "L510",
       "_origin": "ast",
       "id": "js_codegen_ensuregpio",
       "community": 4,
@@ -636,7 +636,7 @@
       "label": "gpioEntry()",
       "file_type": "code",
       "source_file": "js/codegen.js",
-      "source_location": "L518",
+      "source_location": "L511",
       "_origin": "ast",
       "id": "js_codegen_gpioentry",
       "community": 4,
@@ -646,7 +646,7 @@
       "label": "setGpio()",
       "file_type": "code",
       "source_file": "js/codegen.js",
-      "source_location": "L519",
+      "source_location": "L512",
       "_origin": "ast",
       "id": "js_codegen_setgpio",
       "community": 4,
@@ -656,7 +656,7 @@
       "label": "defaultDir()",
       "file_type": "code",
       "source_file": "js/codegen.js",
-      "source_location": "L526",
+      "source_location": "L519",
       "_origin": "ast",
       "id": "js_codegen_defaultdir",
       "community": 4,
@@ -666,7 +666,7 @@
       "label": "sel()",
       "file_type": "code",
       "source_file": "js/codegen.js",
-      "source_location": "L528",
+      "source_location": "L521",
       "_origin": "ast",
       "id": "js_codegen_sel",
       "community": 4,
@@ -676,7 +676,7 @@
       "label": "buildPinTable()",
       "file_type": "code",
       "source_file": "js/codegen.js",
-      "source_location": "L551",
+      "source_location": "L544",
       "_origin": "ast",
       "id": "js_codegen_buildpintable",
       "community": 4,
@@ -686,7 +686,7 @@
       "label": "downloadPy()",
       "file_type": "code",
       "source_file": "js/codegen.js",
-      "source_location": "L600",
+      "source_location": "L593",
       "_origin": "ast",
       "id": "js_codegen_downloadpy",
       "community": 4,
@@ -696,7 +696,7 @@
       "label": "copyPy()",
       "file_type": "code",
       "source_file": "js/codegen.js",
-      "source_location": "L610",
+      "source_location": "L603",
       "_origin": "ast",
       "id": "js_codegen_copypy",
       "community": 4,
@@ -706,7 +706,7 @@
       "label": "renderRpi()",
       "file_type": "code",
       "source_file": "js/codegen.js",
-      "source_location": "L618",
+      "source_location": "L611",
       "_origin": "ast",
       "id": "js_codegen_renderrpi",
       "community": 4,
@@ -756,7 +756,7 @@
       "label": "clone()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L217",
+      "source_location": "L215",
       "_origin": "ast",
       "id": "js_core_clone",
       "community": 3,
@@ -766,7 +766,7 @@
       "label": "newProject()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L219",
+      "source_location": "L217",
       "_origin": "ast",
       "id": "js_core_newproject",
       "community": 3,
@@ -776,7 +776,7 @@
       "label": "newTag()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L230",
+      "source_location": "L228",
       "_origin": "ast",
       "id": "js_core_newtag",
       "community": 3,
@@ -786,7 +786,7 @@
       "label": "newBlock()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L233",
+      "source_location": "L231",
       "_origin": "ast",
       "id": "js_core_newblock",
       "community": 3,
@@ -796,7 +796,7 @@
       "label": "newInterface()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L249",
+      "source_location": "L243",
       "_origin": "ast",
       "id": "js_core_newinterface",
       "community": 3,
@@ -806,7 +806,7 @@
       "label": "newMember()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L254",
+      "source_location": "L248",
       "_origin": "ast",
       "id": "js_core_newmember",
       "community": 3,
@@ -816,7 +816,7 @@
       "label": "newInstanceDB()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L259",
+      "source_location": "L253",
       "_origin": "ast",
       "id": "js_core_newinstancedb",
       "community": 3,
@@ -826,7 +826,7 @@
       "label": "newNetwork()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L264",
+      "source_location": "L258",
       "_origin": "ast",
       "id": "js_core_newnetwork",
       "community": 3,
@@ -836,7 +836,7 @@
       "label": "newStage()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L273",
+      "source_location": "L267",
       "_origin": "ast",
       "id": "js_core_newstage",
       "community": 3,
@@ -846,7 +846,7 @@
       "label": "newBranch()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L274",
+      "source_location": "L268",
       "_origin": "ast",
       "id": "js_core_newbranch",
       "community": 3,
@@ -856,7 +856,7 @@
       "label": "newElement()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L275",
+      "source_location": "L269",
       "_origin": "ast",
       "id": "js_core_newelement",
       "community": 3,
@@ -866,7 +866,7 @@
       "label": "newBox()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L281",
+      "source_location": "L275",
       "_origin": "ast",
       "id": "js_core_newbox",
       "community": 3,
@@ -876,7 +876,7 @@
       "label": "newWire()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L291",
+      "source_location": "L285",
       "_origin": "ast",
       "id": "js_core_newwire",
       "community": 3,
@@ -886,7 +886,7 @@
       "label": "filter()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L393",
+      "source_location": "L387",
       "_origin": "ast",
       "id": "js_core_filter",
       "community": 3,
@@ -896,7 +896,7 @@
       "label": "position()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L405",
+      "source_location": "L399",
       "_origin": "ast",
       "id": "js_core_position",
       "community": 3,
@@ -906,7 +906,7 @@
       "label": "render()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L412",
+      "source_location": "L406",
       "_origin": "ast",
       "id": "js_core_render",
       "community": 3,
@@ -916,7 +916,7 @@
       "label": "paint()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L428",
+      "source_location": "L422",
       "_origin": "ast",
       "id": "js_core_paint",
       "community": 3,
@@ -926,7 +926,7 @@
       "label": "close()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L432",
+      "source_location": "L426",
       "_origin": "ast",
       "id": "js_core_close",
       "community": 3,
@@ -936,7 +936,7 @@
       "label": "pick()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L433",
+      "source_location": "L427",
       "_origin": "ast",
       "id": "js_core_pick",
       "community": 3,
@@ -946,7 +946,7 @@
       "label": "move()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L434",
+      "source_location": "L428",
       "_origin": "ast",
       "id": "js_core_move",
       "community": 3,
@@ -956,7 +956,7 @@
       "label": "onKey()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L436",
+      "source_location": "L430",
       "_origin": "ast",
       "id": "js_core_onkey",
       "community": 3,
@@ -966,7 +966,7 @@
       "label": "onInput()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L443",
+      "source_location": "L437",
       "_origin": "ast",
       "id": "js_core_oninput",
       "community": 3,
@@ -976,7 +976,7 @@
       "label": "onBlur()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L444",
+      "source_location": "L438",
       "_origin": "ast",
       "id": "js_core_onblur",
       "community": 3,
@@ -986,7 +986,7 @@
       "label": "destroy()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L454",
+      "source_location": "L448",
       "_origin": "ast",
       "id": "js_core_destroy",
       "community": 3,
@@ -996,7 +996,7 @@
       "label": "reset()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L482",
+      "source_location": "L476",
       "_origin": "ast",
       "id": "js_core_reset",
       "community": 3,
@@ -1006,7 +1006,7 @@
       "label": "getBit()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L483",
+      "source_location": "L477",
       "_origin": "ast",
       "id": "js_core_getbit",
       "community": 3,
@@ -1016,7 +1016,7 @@
       "label": "setBit()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L484",
+      "source_location": "L478",
       "_origin": "ast",
       "id": "js_core_setbit",
       "community": 3,
@@ -1026,7 +1026,7 @@
       "label": "getWord()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L485",
+      "source_location": "L479",
       "_origin": "ast",
       "id": "js_core_getword",
       "community": 3,
@@ -1036,7 +1036,7 @@
       "label": "setWord()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L486",
+      "source_location": "L480",
       "_origin": "ast",
       "id": "js_core_setword",
       "community": 3,
@@ -1046,7 +1046,7 @@
       "label": "save()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L585",
+      "source_location": "L579",
       "_origin": "ast",
       "id": "js_core_save",
       "community": 3,
@@ -1056,7 +1056,7 @@
       "label": "load()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L589",
+      "source_location": "L583",
       "_origin": "ast",
       "id": "js_core_load",
       "community": 3,
@@ -1066,7 +1066,7 @@
       "label": "exportFile()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L595",
+      "source_location": "L589",
       "_origin": "ast",
       "id": "js_core_exportfile",
       "community": 3,
@@ -1076,7 +1076,7 @@
       "label": "importFile()",
       "file_type": "code",
       "source_file": "js/core.js",
-      "source_location": "L603",
+      "source_location": "L597",
       "_origin": "ast",
       "id": "js_core_importfile",
       "community": 3,
@@ -1989,7 +1989,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "js_instructions",
-      "community": 28,
+      "community": 3,
       "norm_label": "instructions.js"
     },
     {
@@ -1999,7 +1999,7 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "js_instructions_glyphfor",
-      "community": 28,
+      "community": 3,
       "norm_label": "glyphfor()"
     },
     {
@@ -2009,7 +2009,7 @@
       "source_location": "L167",
       "_origin": "ast",
       "id": "js_instructions_kindtoken",
-      "community": 28,
+      "community": 3,
       "norm_label": "kindtoken()"
     },
     {
@@ -2019,7 +2019,7 @@
       "source_location": "L176",
       "_origin": "ast",
       "id": "js_instructions_doinsert",
-      "community": 28,
+      "community": 3,
       "norm_label": "doinsert()"
     },
     {
@@ -2029,7 +2029,7 @@
       "source_location": "L185",
       "_origin": "ast",
       "id": "js_instructions_builditem",
-      "community": 28,
+      "community": 3,
       "norm_label": "builditem()"
     },
     {
@@ -2039,28 +2039,18 @@
       "source_location": "L206",
       "_origin": "ast",
       "id": "js_instructions_render",
-      "community": 28,
+      "community": 3,
       "norm_label": "render()"
     },
     {
       "label": "applyFilter()",
       "file_type": "code",
       "source_file": "js/instructions.js",
-      "source_location": "L284",
+      "source_location": "L281",
       "_origin": "ast",
       "id": "js_instructions_applyfilter",
-      "community": 28,
+      "community": 3,
       "norm_label": "applyfilter()"
-    },
-    {
-      "label": "renderSclReference()",
-      "file_type": "code",
-      "source_file": "js/instructions.js",
-      "source_location": "L320",
-      "_origin": "ast",
-      "id": "js_instructions_rendersclreference",
-      "community": 28,
-      "norm_label": "rendersclreference()"
     },
     {
       "label": "lad.js",
@@ -2903,216 +2893,6 @@
       "norm_label": "render()"
     },
     {
-      "label": "scl.js",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "js_scl",
-      "community": 18,
-      "norm_label": "scl.js"
-    },
-    {
-      "label": "tokenize()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L36",
-      "_origin": "ast",
-      "id": "js_scl_tokenize",
-      "community": 18,
-      "norm_label": "tokenize()"
-    },
-    {
-      "label": "parse()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L113",
-      "_origin": "ast",
-      "id": "js_scl_parse",
-      "community": 18,
-      "norm_label": "parse()"
-    },
-    {
-      "label": "toNum()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L313",
-      "_origin": "ast",
-      "id": "js_scl_tonum",
-      "community": 18,
-      "norm_label": "tonum()"
-    },
-    {
-      "label": "toBool()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L314",
-      "_origin": "ast",
-      "id": "js_scl_tobool",
-      "community": 18,
-      "norm_label": "tobool()"
-    },
-    {
-      "label": "opIsBit()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L340",
-      "_origin": "ast",
-      "id": "js_scl_opisbit",
-      "community": 18,
-      "norm_label": "opisbit()"
-    },
-    {
-      "label": "readVar()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L341",
-      "_origin": "ast",
-      "id": "js_scl_readvar",
-      "community": 18,
-      "norm_label": "readvar()"
-    },
-    {
-      "label": "writeVar()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L344",
-      "_origin": "ast",
-      "id": "js_scl_writevar",
-      "community": 18,
-      "norm_label": "writevar()"
-    },
-    {
-      "label": "evalExpr()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L349",
-      "_origin": "ast",
-      "id": "js_scl_evalexpr",
-      "community": 18,
-      "norm_label": "evalexpr()"
-    },
-    {
-      "label": "runStmts()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L389",
-      "_origin": "ast",
-      "id": "js_scl_runstmts",
-      "community": 18,
-      "norm_label": "runstmts()"
-    },
-    {
-      "label": "runStmt()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L396",
-      "_origin": "ast",
-      "id": "js_scl_runstmt",
-      "community": 18,
-      "norm_label": "runstmt()"
-    },
-    {
-      "label": "compile()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L466",
-      "_origin": "ast",
-      "id": "js_scl_compile",
-      "community": 18,
-      "norm_label": "compile()"
-    },
-    {
-      "label": "exec()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L479",
-      "_origin": "ast",
-      "id": "js_scl_exec",
-      "community": 18,
-      "norm_label": "exec()"
-    },
-    {
-      "label": "check()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L487",
-      "_origin": "ast",
-      "id": "js_scl_check",
-      "community": 18,
-      "norm_label": "check()"
-    },
-    {
-      "label": "invalidate()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L489",
-      "_origin": "ast",
-      "id": "js_scl_invalidate",
-      "community": 18,
-      "norm_label": "invalidate()"
-    },
-    {
-      "label": "lineCount()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L623",
-      "_origin": "ast",
-      "id": "js_scl_linecount",
-      "community": 18,
-      "norm_label": "linecount()"
-    },
-    {
-      "label": "renderGutter()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L625",
-      "_origin": "ast",
-      "id": "js_scl_rendergutter",
-      "community": 18,
-      "norm_label": "rendergutter()"
-    },
-    {
-      "label": "recompile()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L634",
-      "_origin": "ast",
-      "id": "js_scl_recompile",
-      "community": 18,
-      "norm_label": "recompile()"
-    },
-    {
-      "label": "onInput()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L649",
-      "_origin": "ast",
-      "id": "js_scl_oninput",
-      "community": 18,
-      "norm_label": "oninput()"
-    },
-    {
-      "label": "onKeyDown()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L657",
-      "_origin": "ast",
-      "id": "js_scl_onkeydown",
-      "community": 18,
-      "norm_label": "onkeydown()"
-    },
-    {
-      "label": "open()",
-      "file_type": "code",
-      "source_file": "js/scl.js",
-      "source_location": "L667",
-      "_origin": "ast",
-      "id": "js_scl_open",
-      "community": 18,
-      "norm_label": "open()"
-    },
-    {
       "label": "sim.js",
       "file_type": "code",
       "source_file": "js/sim.js",
@@ -3486,7 +3266,7 @@
       "label": "blockOrder()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L842",
+      "source_location": "L838",
       "_origin": "ast",
       "id": "js_sim_blockorder",
       "community": 2,
@@ -3496,7 +3276,7 @@
       "label": "scanOnce()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L853",
+      "source_location": "L849",
       "_origin": "ast",
       "id": "js_sim_scanonce",
       "community": 2,
@@ -3506,7 +3286,7 @@
       "label": "clearLiveFlags()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L880",
+      "source_location": "L876",
       "_origin": "ast",
       "id": "js_sim_clearliveflags",
       "community": 2,
@@ -3516,7 +3296,7 @@
       "label": "reset()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L903",
+      "source_location": "L899",
       "_origin": "ast",
       "id": "js_sim_reset",
       "community": 2,
@@ -3526,7 +3306,7 @@
       "label": "start()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L911",
+      "source_location": "L907",
       "_origin": "ast",
       "id": "js_sim_start",
       "community": 2,
@@ -3536,7 +3316,7 @@
       "label": "stop()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L927",
+      "source_location": "L923",
       "_origin": "ast",
       "id": "js_sim_stop",
       "community": 2,
@@ -3546,7 +3326,7 @@
       "label": "toggle()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L937",
+      "source_location": "L933",
       "_origin": "ast",
       "id": "js_sim_toggle",
       "community": 2,
@@ -3556,7 +3336,7 @@
       "label": "renderTable()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L941",
+      "source_location": "L937",
       "_origin": "ast",
       "id": "js_sim_rendertable",
       "community": 2,
@@ -3566,7 +3346,7 @@
       "label": "collectRows()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L986",
+      "source_location": "L982",
       "_origin": "ast",
       "id": "js_sim_collectrows",
       "community": 2,
@@ -3576,7 +3356,7 @@
       "label": "groupRows()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L1016",
+      "source_location": "L1012",
       "_origin": "ast",
       "id": "js_sim_grouprows",
       "community": 2,
@@ -3586,7 +3366,7 @@
       "label": "writeBitRow()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L1033",
+      "source_location": "L1029",
       "_origin": "ast",
       "id": "js_sim_writebitrow",
       "community": 2,
@@ -3596,7 +3376,7 @@
       "label": "writeWordRow()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L1037",
+      "source_location": "L1033",
       "_origin": "ast",
       "id": "js_sim_writewordrow",
       "community": 2,
@@ -3606,7 +3386,7 @@
       "label": "boolCell()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L1042",
+      "source_location": "L1038",
       "_origin": "ast",
       "id": "js_sim_boolcell",
       "community": 2,
@@ -3616,7 +3396,7 @@
       "label": "momentaryButton()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L1064",
+      "source_location": "L1060",
       "_origin": "ast",
       "id": "js_sim_momentarybutton",
       "community": 2,
@@ -3626,7 +3406,7 @@
       "label": "numCell()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L1091",
+      "source_location": "L1087",
       "_origin": "ast",
       "id": "js_sim_numcell",
       "community": 2,
@@ -3636,7 +3416,7 @@
       "label": "refreshValues()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L1166",
+      "source_location": "L1162",
       "_origin": "ast",
       "id": "js_sim_refreshvalues",
       "community": 2,
@@ -3646,7 +3426,7 @@
       "label": "needsRebuild()",
       "file_type": "code",
       "source_file": "js/sim.js",
-      "source_location": "L1193",
+      "source_location": "L1189",
       "_origin": "ast",
       "id": "js_sim_needsrebuild",
       "community": 2,
@@ -4136,7 +3916,7 @@
       "label": "openRenameModal()",
       "file_type": "code",
       "source_file": "js/tree.js",
-      "source_location": "L484",
+      "source_location": "L483",
       "_origin": "ast",
       "id": "js_tree_openrenamemodal",
       "community": 7,
@@ -4146,7 +3926,7 @@
       "label": "nameClash()",
       "file_type": "code",
       "source_file": "js/tree.js",
-      "source_location": "L505",
+      "source_location": "L504",
       "_origin": "ast",
       "id": "js_tree_nameclash",
       "community": 7,
@@ -4159,7 +3939,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "plc_engine",
-      "community": 21,
+      "community": 8,
       "norm_label": "plc_engine.py"
     },
     {
@@ -4169,7 +3949,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "plc_engine_num",
-      "community": 21,
+      "community": 8,
       "norm_label": "num()"
     },
     {
@@ -4179,7 +3959,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "plc_engine_idiv",
-      "community": 21,
+      "community": 8,
       "norm_label": "idiv()"
     },
     {
@@ -4189,7 +3969,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "plc_engine_norm_x",
-      "community": 21,
+      "community": 8,
       "norm_label": "norm_x()"
     },
     {
@@ -4209,7 +3989,7 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "plc_engine_not_empty",
-      "community": 26,
+      "community": 8,
       "norm_label": "_not_empty()"
     },
     {
@@ -4219,7 +3999,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "plc_engine_parse_time_ms",
-      "community": 21,
+      "community": 8,
       "norm_label": "parse_time_ms()"
     },
     {
@@ -4229,7 +4009,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "plc_engine_parse_time_s",
-      "community": 21,
+      "community": 8,
       "norm_label": "parse_time_s()"
     },
     {
@@ -4309,7 +4089,7 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "plc_engine_engine",
-      "community": 25,
+      "community": 8,
       "norm_label": "engine"
     },
     {
@@ -4319,7 +4099,7 @@
       "source_location": "L175",
       "_origin": "ast",
       "id": "plc_engine_engine_init",
-      "community": 30,
+      "community": 8,
       "norm_label": ".__init__()"
     },
     {
@@ -4329,7 +4109,7 @@
       "source_location": "L183",
       "_origin": "ast",
       "id": "plc_engine_engine_now",
-      "community": 25,
+      "community": 8,
       "norm_label": ".now()"
     },
     {
@@ -4339,7 +4119,7 @@
       "source_location": "L187",
       "_origin": "ast",
       "id": "plc_engine_engine_reset_runtime_state",
-      "community": 30,
+      "community": 8,
       "norm_label": "._reset_runtime_state()"
     },
     {
@@ -4349,7 +4129,7 @@
       "source_location": "L200",
       "_origin": "ast",
       "id": "plc_engine_engine_set_program",
-      "community": 30,
+      "community": 8,
       "norm_label": ".set_program()"
     },
     {
@@ -4359,7 +4139,7 @@
       "source_location": "L226",
       "_origin": "ast",
       "id": "plc_engine_engine_seed_memory",
-      "community": 30,
+      "community": 8,
       "norm_label": "._seed_memory()"
     },
     {
@@ -4369,7 +4149,7 @@
       "source_location": "L240",
       "_origin": "ast",
       "id": "plc_engine_engine_find_block",
-      "community": 26,
+      "community": 8,
       "norm_label": "._find_block()"
     },
     {
@@ -4389,7 +4169,7 @@
       "source_location": "L301",
       "_origin": "ast",
       "id": "plc_engine_engine_gpiozero_available",
-      "community": 21,
+      "community": 13,
       "norm_label": "._gpiozero_available()"
     },
     {
@@ -4429,7 +4209,7 @@
       "source_location": "L328",
       "_origin": "ast",
       "id": "plc_engine_engine_read_inputs",
-      "community": 25,
+      "community": 8,
       "norm_label": ".read_inputs()"
     },
     {
@@ -4439,7 +4219,7 @@
       "source_location": "L333",
       "_origin": "ast",
       "id": "plc_engine_engine_write_outputs",
-      "community": 21,
+      "community": 8,
       "norm_label": ".write_outputs()"
     },
     {
@@ -4449,7 +4229,7 @@
       "source_location": "L349",
       "_origin": "ast",
       "id": "plc_engine_engine_resolve",
-      "community": 29,
+      "community": 8,
       "norm_label": "._resolve()"
     },
     {
@@ -4489,7 +4269,7 @@
       "source_location": "L380",
       "_origin": "ast",
       "id": "plc_engine_engine_secs",
-      "community": 29,
+      "community": 8,
       "norm_label": "._secs()"
     },
     {
@@ -4499,7 +4279,7 @@
       "source_location": "L387",
       "_origin": "ast",
       "id": "plc_engine_engine_wkey",
-      "community": 29,
+      "community": 8,
       "norm_label": "._wkey()"
     },
     {
@@ -4509,7 +4289,7 @@
       "source_location": "L394",
       "_origin": "ast",
       "id": "plc_engine_engine_write",
-      "community": 29,
+      "community": 8,
       "norm_label": "._write()"
     },
     {
@@ -4519,7 +4299,7 @@
       "source_location": "L403",
       "_origin": "ast",
       "id": "plc_engine_engine_ton",
-      "community": 25,
+      "community": 8,
       "norm_label": "._ton()"
     },
     {
@@ -4529,7 +4309,7 @@
       "source_location": "L412",
       "_origin": "ast",
       "id": "plc_engine_engine_tof",
-      "community": 25,
+      "community": 8,
       "norm_label": "._tof()"
     },
     {
@@ -4539,7 +4319,7 @@
       "source_location": "L424",
       "_origin": "ast",
       "id": "plc_engine_engine_tp",
-      "community": 25,
+      "community": 8,
       "norm_label": "._tp()"
     },
     {
@@ -4619,7 +4399,7 @@
       "source_location": "L499",
       "_origin": "ast",
       "id": "plc_engine_engine_rung_power",
-      "community": 31,
+      "community": 8,
       "norm_label": "._rung_power()"
     },
     {
@@ -4639,7 +4419,7 @@
       "source_location": "L626",
       "_origin": "ast",
       "id": "plc_engine_engine_set_q",
-      "community": 29,
+      "community": 8,
       "norm_label": "._set_q()"
     },
     {
@@ -4649,7 +4429,7 @@
       "source_location": "L634",
       "_origin": "ast",
       "id": "plc_engine_engine_math",
-      "community": 21,
+      "community": 8,
       "norm_label": "._math()"
     },
     {
@@ -4659,7 +4439,7 @@
       "source_location": "L647",
       "_origin": "ast",
       "id": "plc_engine_engine_eval_lad_network",
-      "community": 31,
+      "community": 8,
       "norm_label": "._eval_lad_network()"
     },
     {
@@ -4669,7 +4449,7 @@
       "source_location": "L654",
       "_origin": "ast",
       "id": "plc_engine_engine_call_lad",
-      "community": 26,
+      "community": 8,
       "norm_label": "._call_lad()"
     },
     {
@@ -4679,7 +4459,7 @@
       "source_location": "L678",
       "_origin": "ast",
       "id": "plc_engine_engine_eval_fbd_network",
-      "community": 25,
+      "community": 8,
       "norm_label": "._eval_fbd_network()"
     },
     {
@@ -4699,7 +4479,7 @@
       "source_location": "L859",
       "_origin": "ast",
       "id": "plc_engine_engine_call_fbd",
-      "community": 26,
+      "community": 8,
       "norm_label": "._call_fbd()"
     },
     {
@@ -4709,7 +4489,7 @@
       "source_location": "L890",
       "_origin": "ast",
       "id": "plc_engine_engine_topo",
-      "community": 25,
+      "community": 8,
       "norm_label": "._topo()"
     },
     {
@@ -4719,7 +4499,7 @@
       "source_location": "L926",
       "_origin": "ast",
       "id": "plc_engine_engine_iface_sections",
-      "community": 25,
+      "community": 8,
       "norm_label": "._iface_sections()"
     },
     {
@@ -4729,7 +4509,7 @@
       "source_location": "L933",
       "_origin": "ast",
       "id": "plc_engine_engine_iface_members",
-      "community": 25,
+      "community": 8,
       "norm_label": "._iface_members()"
     },
     {
@@ -4739,7 +4519,7 @@
       "source_location": "L943",
       "_origin": "ast",
       "id": "plc_engine_engine_iface_call_inputs",
-      "community": 26,
+      "community": 8,
       "norm_label": "._iface_call_inputs()"
     },
     {
@@ -4749,7 +4529,7 @@
       "source_location": "L947",
       "_origin": "ast",
       "id": "plc_engine_engine_iface_call_outputs",
-      "community": 26,
+      "community": 8,
       "norm_label": "._iface_call_outputs()"
     },
     {
@@ -4759,7 +4539,7 @@
       "source_location": "L951",
       "_origin": "ast",
       "id": "plc_engine_engine_instance_id",
-      "community": 26,
+      "community": 8,
       "norm_label": "._instance_id()"
     },
     {
@@ -4769,7 +4549,7 @@
       "source_location": "L961",
       "_origin": "ast",
       "id": "plc_engine_engine_block_ctx",
-      "community": 25,
+      "community": 8,
       "norm_label": "._block_ctx()"
     },
     {
@@ -4779,7 +4559,7 @@
       "source_location": "L971",
       "_origin": "ast",
       "id": "plc_engine_engine_run_block",
-      "community": 26,
+      "community": 8,
       "norm_label": "._run_block()"
     },
     {
@@ -4789,7 +4569,7 @@
       "source_location": "L992",
       "_origin": "ast",
       "id": "plc_engine_engine_collect_called",
-      "community": 26,
+      "community": 8,
       "norm_label": "._collect_called()"
     },
     {
@@ -4799,7 +4579,7 @@
       "source_location": "L1013",
       "_origin": "ast",
       "id": "plc_engine_engine_scan",
-      "community": 26,
+      "community": 8,
       "norm_label": ".scan()"
     },
     {
@@ -4809,7 +4589,7 @@
       "source_location": "L1044",
       "_origin": "ast",
       "id": "plc_engine_engine_force",
-      "community": 25,
+      "community": 8,
       "norm_label": ".force()"
     },
     {
@@ -4819,7 +4599,7 @@
       "source_location": "L1067",
       "_origin": "ast",
       "id": "plc_engine_engine_snapshot",
-      "community": 21,
+      "community": 8,
       "norm_label": ".snapshot()"
     },
     {
@@ -4829,7 +4609,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "plc_engine_rationale_37",
-      "community": 21,
+      "community": 8,
       "norm_label": "coerce any memory value to a number. bool -> int; none/'' -> 0."
     },
     {
@@ -4839,7 +4619,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "plc_engine_rationale_52",
-      "community": 21,
+      "community": 8,
       "norm_label": "divide-by-zero-guarded division (mirrors codegen.js idiv / sim.js mathop)."
     },
     {
@@ -4849,7 +4629,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "plc_engine_rationale_58",
-      "community": 21,
+      "community": 8,
       "norm_label": "norm_x: out = (value-min)/(max-min); 0 if max==min. not clamped (matches sim.js)"
     },
     {
@@ -4869,7 +4649,7 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "plc_engine_rationale_105",
-      "community": 21,
+      "community": 8,
       "norm_label": "time literal -> seconds (codegen.js uses seconds for the pt argument)."
     },
     {
@@ -4899,7 +4679,7 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "plc_engine_rationale_155",
-      "community": 25,
+      "community": 8,
       "norm_label": "interprets a tia-web project (lad/fbd), drives gpio, exposes live state.      pu"
     },
     {
@@ -4909,7 +4689,7 @@
       "source_location": "L201",
       "_origin": "ast",
       "id": "plc_engine_rationale_201",
-      "community": 30,
+      "community": 8,
       "norm_label": "load or replace the running program. resets all state, seeds memory         with"
     },
     {
@@ -4919,7 +4699,7 @@
       "source_location": "L227",
       "_origin": "ast",
       "id": "plc_engine_rationale_227",
-      "community": 30,
+      "community": 8,
       "norm_label": "initialise m with every declared tag by its name (bool->false, num->0)."
     },
     {
@@ -4929,7 +4709,7 @@
       "source_location": "L241",
       "_origin": "ast",
       "id": "plc_engine_rationale_241",
-      "community": 26,
+      "community": 8,
       "norm_label": "resolve a block reference (id preferred, then name)."
     },
     {
@@ -4949,7 +4729,7 @@
       "source_location": "L329",
       "_origin": "ast",
       "id": "plc_engine_rationale_329",
-      "community": 25,
+      "community": 8,
       "norm_label": "read every mapped gpio input into m (by tag name)."
     },
     {
@@ -4959,7 +4739,7 @@
       "source_location": "L334",
       "_origin": "ast",
       "id": "plc_engine_rationale_334",
-      "community": 21,
+      "community": 8,
       "norm_label": "write m (by tag name) to every mapped gpio output. digital outputs         take"
     },
     {
@@ -4979,7 +4759,7 @@
       "source_location": "L381",
       "_origin": "ast",
       "id": "plc_engine_rationale_381",
-      "community": 29,
+      "community": 8,
       "norm_label": "resolve a pt operand to seconds: literal (already seconds) or num(value)."
     },
     {
@@ -4989,7 +4769,7 @@
       "source_location": "L388",
       "_origin": "ast",
       "id": "plc_engine_rationale_388",
-      "community": 29,
+      "community": 8,
       "norm_label": "l-value memory key for writing an operand, or none if not writable."
     },
     {
@@ -5009,7 +4789,7 @@
       "source_location": "L500",
       "_origin": "ast",
       "id": "plc_engine_rationale_500",
-      "community": 31,
+      "community": 8,
       "norm_label": "and over stages ( or over branches ( and over inline element values ) )."
     },
     {
@@ -5029,7 +4809,7 @@
       "source_location": "L627",
       "_origin": "ast",
       "id": "plc_engine_rationale_627",
-      "community": 29,
+      "community": 8,
       "norm_label": "write a q result to operand if set; the result is discarded otherwise         (t"
     },
     {
@@ -5039,7 +4819,7 @@
       "source_location": "L655",
       "_origin": "ast",
       "id": "plc_engine_rationale_655",
-      "community": 26,
+      "community": 8,
       "norm_label": "execute a call element: copy wired args into the callee instance,         run it"
     },
     {
@@ -5059,7 +4839,7 @@
       "source_location": "L860",
       "_origin": "ast",
       "id": "plc_engine_rationale_860",
-      "community": 26,
+      "community": 8,
       "norm_label": "execute an fbd call box. returns output-pin values (eno + members)."
     },
     {
@@ -5069,7 +4849,7 @@
       "source_location": "L891",
       "_origin": "ast",
       "id": "plc_engine_rationale_891",
-      "community": 25,
+      "community": 8,
       "norm_label": "topological order of boxes by wires; back-edges (cycles) are skipped         (mi"
     },
     {
@@ -5079,7 +4859,7 @@
       "source_location": "L952",
       "_origin": "ast",
       "id": "plc_engine_rationale_952",
-      "community": 26,
+      "community": 8,
       "norm_label": "instance name used to key member storage. mirrors codegen.js:         the instan"
     },
     {
@@ -5089,7 +4869,7 @@
       "source_location": "L962",
       "_origin": "ast",
       "id": "plc_engine_rationale_962",
-      "community": 25,
+      "community": 8,
       "norm_label": "build a per-block evaluation context: member-name (lowercase) -> member"
     },
     {
@@ -5099,7 +4879,7 @@
       "source_location": "L972",
       "_origin": "ast",
       "id": "plc_engine_rationale_972",
-      "community": 26,
+      "community": 8,
       "norm_label": "execute every network of a block under its own member context."
     },
     {
@@ -5109,7 +4889,7 @@
       "source_location": "L993",
       "_origin": "ast",
       "id": "plc_engine_rationale_993",
-      "community": 26,
+      "community": 8,
       "norm_label": "block ids/names referenced by any kind:'call' element/box."
     },
     {
@@ -5119,7 +4899,7 @@
       "source_location": "L1014",
       "_origin": "ast",
       "id": "plc_engine_rationale_1014",
-      "community": 26,
+      "community": 8,
       "norm_label": "run exactly one plc scan (no i/o). mirrors sim.js scanonce():         run every"
     },
     {
@@ -5129,7 +4909,7 @@
       "source_location": "L1045",
       "_origin": "ast",
       "id": "plc_engine_rationale_1045",
-      "community": 25,
+      "community": 8,
       "norm_label": "set m[key] = value (input/memory forcing from the app). booleans stay         bo"
     },
     {
@@ -5139,7 +4919,7 @@
       "source_location": "L1068",
       "_origin": "ast",
       "id": "plc_engine_rationale_1068",
-      "community": 21,
+      "community": 8,
       "norm_label": "live state for the browser monitor. mem includes every project tag by         na"
     },
     {
@@ -5149,7 +4929,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "plc_server",
-      "community": 21,
+      "community": 8,
       "norm_label": "plc_server.py"
     },
     {
@@ -5159,7 +4939,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "plc_server_runtime",
-      "community": 27,
+      "community": 13,
       "norm_label": "runtime"
     },
     {
@@ -5169,7 +4949,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "plc_server_runtime_init",
-      "community": 27,
+      "community": 13,
       "norm_label": ".__init__()"
     },
     {
@@ -5179,7 +4959,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "plc_server_runtime_loop",
-      "community": 27,
+      "community": 13,
       "norm_label": "._loop()"
     },
     {
@@ -5189,7 +4969,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "plc_server_runtime_shutdown",
-      "community": 27,
+      "community": 13,
       "norm_label": ".shutdown()"
     },
     {
@@ -5199,7 +4979,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "plc_server_runtime_set_program",
-      "community": 27,
+      "community": 13,
       "norm_label": ".set_program()"
     },
     {
@@ -5209,7 +4989,7 @@
       "source_location": "L95",
       "_origin": "ast",
       "id": "plc_server_runtime_force",
-      "community": 27,
+      "community": 13,
       "norm_label": ".force()"
     },
     {
@@ -5219,7 +4999,7 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "plc_server_runtime_set_running",
-      "community": 27,
+      "community": 13,
       "norm_label": ".set_running()"
     },
     {
@@ -5229,7 +5009,7 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "plc_server_runtime_info",
-      "community": 27,
+      "community": 13,
       "norm_label": ".info()"
     },
     {
@@ -5239,7 +5019,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "plc_server_runtime_state",
-      "community": 27,
+      "community": 13,
       "norm_label": ".state()"
     },
     {
@@ -5379,7 +5159,7 @@
       "source_location": "L247",
       "_origin": "ast",
       "id": "plc_server_main",
-      "community": 21,
+      "community": 13,
       "norm_label": "main()"
     },
     {
@@ -5389,7 +5169,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "plc_server_rationale_47",
-      "community": 27,
+      "community": 13,
       "norm_label": "holds the engine, the running flag, and the scan thread. all engine access     i"
     },
     {
@@ -5399,7 +5179,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "plc_server_rationale_63",
-      "community": 27,
+      "community": 13,
       "norm_label": "background thread: read inputs, scan, write outputs at ~scan_hz while         ru"
     },
     {
@@ -5905,7 +5685,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 3,
       "norm_label": "t.bus \u2014 cross-module event bus (on/off/emit)",
       "id": "event_bus"
     },
@@ -9938,16 +9718,6 @@
       "target": "js_instructions_render"
     },
     {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/instructions.js",
-      "source_location": "L320",
-      "weight": 1.0,
-      "source": "js_instructions",
-      "target": "js_instructions_rendersclreference",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -9979,17 +9749,6 @@
       "confidence_score": 1.0,
       "source": "js_instructions_render",
       "target": "js_instructions_applyfilter"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/instructions.js",
-      "source_location": "L216",
-      "weight": 1.0,
-      "source": "js_instructions_render",
-      "target": "js_instructions_rendersclreference",
-      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -11882,492 +11641,6 @@
       "confidence_score": 1.0,
       "source": "js_outline_render",
       "target": "js_outline_buckettags"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L487",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_check",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L466",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_compile",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L349",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_evalexpr",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L479",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_exec",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L489",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_invalidate",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L623",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_linecount",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L649",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_oninput",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L657",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_onkeydown",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L667",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_open",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L340",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_opisbit",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L113",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_parse",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L341",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_readvar",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L634",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_recompile",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L625",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_rendergutter",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L396",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_runstmt",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L389",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_runstmts",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L314",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_tobool",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L36",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_tokenize",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L313",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_tonum",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L344",
-      "weight": 1.0,
-      "source": "js_scl",
-      "target": "js_scl_writevar",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L114",
-      "weight": 1.0,
-      "source": "js_scl_parse",
-      "target": "js_scl_tokenize",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L471",
-      "weight": 1.0,
-      "source": "js_scl_compile",
-      "target": "js_scl_parse",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L361",
-      "weight": 1.0,
-      "source": "js_scl_evalexpr",
-      "target": "js_scl_tonum",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L407",
-      "weight": 1.0,
-      "source": "js_scl_runstmt",
-      "target": "js_scl_tonum",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L314",
-      "weight": 1.0,
-      "source": "js_scl_tobool",
-      "target": "js_scl_tonum",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L346",
-      "weight": 1.0,
-      "source": "js_scl_writevar",
-      "target": "js_scl_tonum",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L360",
-      "weight": 1.0,
-      "source": "js_scl_evalexpr",
-      "target": "js_scl_tobool",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L401",
-      "weight": 1.0,
-      "source": "js_scl_runstmt",
-      "target": "js_scl_tobool",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L345",
-      "weight": 1.0,
-      "source": "js_scl_writevar",
-      "target": "js_scl_tobool",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L342",
-      "weight": 1.0,
-      "source": "js_scl_readvar",
-      "target": "js_scl_opisbit",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L345",
-      "weight": 1.0,
-      "source": "js_scl_writevar",
-      "target": "js_scl_opisbit",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L353",
-      "weight": 1.0,
-      "source": "js_scl_evalexpr",
-      "target": "js_scl_readvar",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L398",
-      "weight": 1.0,
-      "source": "js_scl_runstmt",
-      "target": "js_scl_writevar",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L398",
-      "weight": 1.0,
-      "source": "js_scl_runstmt",
-      "target": "js_scl_evalexpr",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L483",
-      "weight": 1.0,
-      "source": "js_scl_exec",
-      "target": "js_scl_runstmts",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L401",
-      "weight": 1.0,
-      "source": "js_scl_runstmt",
-      "target": "js_scl_runstmts",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L487",
-      "weight": 1.0,
-      "source": "js_scl_check",
-      "target": "js_scl_compile",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L481",
-      "weight": 1.0,
-      "source": "js_scl_exec",
-      "target": "js_scl_compile",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L637",
-      "weight": 1.0,
-      "source": "js_scl_recompile",
-      "target": "js_scl_check",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L636",
-      "weight": 1.0,
-      "source": "js_scl_recompile",
-      "target": "js_scl_invalidate",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L627",
-      "weight": 1.0,
-      "source": "js_scl_rendergutter",
-      "target": "js_scl_linecount",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L651",
-      "weight": 1.0,
-      "source": "js_scl_oninput",
-      "target": "js_scl_rendergutter",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L693",
-      "weight": 1.0,
-      "source": "js_scl_open",
-      "target": "js_scl_rendergutter",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L641",
-      "weight": 1.0,
-      "source": "js_scl_recompile",
-      "target": "js_scl_rendergutter",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L694",
-      "weight": 1.0,
-      "source": "js_scl_open",
-      "target": "js_scl_recompile",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "js/scl.js",
-      "source_location": "L663",
-      "weight": 1.0,
-      "source": "js_scl_onkeydown",
-      "target": "js_scl_oninput",
-      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -17757,5 +17030,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "2989fa428fff2e887c790803818b805e71f6ea32"
+  "built_at_commit": "7175ddd847365b75c30b1c854907a6c2df5d2cfb"
 }
