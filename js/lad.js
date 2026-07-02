@@ -411,7 +411,7 @@
     const outStartX = condEndX + G.railGap;
     // Output boxes (timers/counters/move/math) draw their out-pin tag labels (Q, ET, CV,
     // OUT) to the right of the box, so reserve extra room before the right rail.
-    const hasOutBox = outputs.some((e) => /^(ton|tof|tp|ctu|ctd|move|add|sub|mul|div|norm_x|scale_x)$/.test(e.kind));
+    const hasOutBox = outputs.some((e) => /^(ton|tof|tp|ctu|ctd|ctud|move|add|sub|mul|div|norm_x|scale_x)$/.test(e.kind));
     // Call boxes are wider (block name + %TYPEn) and have an ENO pin to the right.
     const hasCallBox = outputs.some((e) => e.kind === 'call');
     const reservedOut = outputs.length
@@ -658,7 +658,7 @@
     g.appendChild(T.svg('rect', { class: 'lad-box', x, y, width: w, height: h, rx: 2 }));
     // instruction title bar
     const titleMap = {
-      ton: 'TON', tof: 'TOF', tp: 'TP', ctu: 'CTU', ctd: 'CTD',
+      ton: 'TON', tof: 'TOF', tp: 'TP', ctu: 'CTU', ctd: 'CTD', ctud: 'CTUD',
       move: 'MOVE', add: 'ADD', sub: 'SUB', mul: 'MUL', div: 'DIV',
       norm_x: 'NORM_X', scale_x: 'SCALE_X',
       sr: 'SR', rs: 'RS', p_trig: 'P_TRIG', n_trig: 'N_TRIG', r_trig: 'R_TRIG', f_trig: 'F_TRIG',
@@ -671,8 +671,8 @@
     // operand line above the box: timers/counters show an instance name; SR/RS show
     // the stored bit (Q); edge triggers show their edge-memory bit.
     if (el.kind === 'ton' || el.kind === 'tof' || el.kind === 'tp' ||
-        el.kind === 'ctu' || el.kind === 'ctd') {
-      const instName = (el.kind === 'ctu' || el.kind === 'ctd') ? '"IEC_Counter_DB"' : '"IEC_Timer_DB"';
+        el.kind === 'ctu' || el.kind === 'ctd' || el.kind === 'ctud') {
+      const instName = (el.kind === 'ton' || el.kind === 'tof' || el.kind === 'tp') ? '"IEC_Timer_DB"' : '"IEC_Counter_DB"';
       operandLabel(g, el, x + w / 2, y - 4, 'operand', instName);
     } else if (el.kind === 'sr' || el.kind === 'rs') {
       operandLabel(g, el, x + w / 2, y - 4, 'operand', '<bit>');
@@ -711,6 +711,7 @@
       case 'ton': case 'tof': case 'tp': return { PT: 'pt' };
       case 'ctu': return { PV: 'pv', R: 'r' };    // R = reset condition operand
       case 'ctd': return { PV: 'pv', LD: 'r' };   // LD = load condition (stored in params.r)
+      case 'ctud': return { CD: 'cd', R: 'r', LD: 'ld', PV: 'pv' };   // CU = rung power
       case 'move': return { IN: 'in' };
       case 'add': case 'sub': case 'mul': case 'div': return { in1: 'in1', in2: 'in2' };
       case 'norm_x': case 'scale_x': return { MIN: 'min', VALUE: 'val', MAX: 'max' };
@@ -724,9 +725,10 @@
     switch (kind) {
       case 'ton': case 'tof': case 'tp': return { Q: 'q', ET: 'et' };
       case 'ctu': case 'ctd': return { Q: 'q', CV: 'cv' };
+      case 'ctud': return { QU: 'qu', QD: 'qd', CV: 'cv' };
       case 'move': return { OUT: 'out' };
-      case 'add': case 'sub': case 'mul': case 'div': return { OUT: 'out' };
-      case 'norm_x': case 'scale_x': return { OUT: 'out' };
+      case 'add': case 'sub': case 'mul': case 'div': return { OUT: 'out', ENO: 'eno' };
+      case 'norm_x': case 'scale_x': return { OUT: 'out', ENO: 'eno' };
       case 'p_trig': case 'n_trig': case 'r_trig': case 'f_trig': return { Q: 'q' };
       default: return {};
     }

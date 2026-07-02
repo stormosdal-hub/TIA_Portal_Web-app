@@ -196,26 +196,38 @@
       /* ---- counters ---- */
       case 'ctu': evalCTU(el.id, p, par); el._live = p; break;
       case 'ctd': evalCTD(el.id, p, par); el._live = p; break;
+      case 'ctud': evalCTUD(el.id, p, T.readBit(par.cd), par); el._live = p; break;
 
-      /* ---- move / math ---- */
+      /* ---- move / math (ENO = EN && no numeric error) ---- */
       case 'move':
         if (p) T.writeNum(par.out, T.readNum(par.in));
         el._live = p;
         break;
-      case 'add': case 'sub': case 'mul': case 'div':
-        if (p) T.writeNum(par.out, mathOp(k, T.readNum(par.in1), T.readNum(par.in2)));
+      case 'add': case 'sub': case 'mul': case 'div': {
+        const b = num(T.readNum(par.in2));
+        const r = mathOp(k, T.readNum(par.in1), b);
+        if (p) T.writeNum(par.out, r);
+        if (notEmpty(par.eno)) T.writeBit(par.eno, p && !(k === 'div' && b === 0) && isFinite(r));
         el._live = p;
         break;
+      }
 
       /* ---- conversion / scaling ---- */
-      case 'norm_x':
-        if (p) T.writeNum(par.out, normX(T.readNum(par.min), T.readNum(par.val), T.readNum(par.max)));
+      case 'norm_x': {
+        const mn = num(T.readNum(par.min)), mx = num(T.readNum(par.max));
+        const r = normX(mn, T.readNum(par.val), mx);
+        if (p) T.writeNum(par.out, r);
+        if (notEmpty(par.eno)) T.writeBit(par.eno, p && mx !== mn && isFinite(r));
         el._live = p;
         break;
-      case 'scale_x':
-        if (p) T.writeNum(par.out, scaleX(T.readNum(par.min), T.readNum(par.val), T.readNum(par.max)));
+      }
+      case 'scale_x': {
+        const r = scaleX(T.readNum(par.min), T.readNum(par.val), T.readNum(par.max));
+        if (p) T.writeNum(par.out, r);
+        if (notEmpty(par.eno)) T.writeBit(par.eno, p && isFinite(r));
         el._live = p;
         break;
+      }
 
       /* ---- latches (S = rung power; the other input is a referenced bit) ---- */
       case 'sr': {                      // reset dominant
@@ -302,7 +314,7 @@
   function resolvePT(raw) {
     const s = raw == null ? '' : String(raw).trim();
     if (s === '') return 0;
-    const ms = (/^t#/i.test(s) || /^-?\d+(\.\d+)?$/.test(s)) ? T.parseTime(s) : num(T.readNum(s));
+    const ms = (T.TIME_LIT.test(s) || /^-?\d+(\.\d+)?$/.test(s)) ? T.parseTime(s) : num(T.readNum(s));
     return Math.max(0, ms);
   }
 
@@ -416,6 +428,27 @@
     return q;
   }
 
+  // CTUD: count up on rising CU, down on rising CD; R (dominant) clears, LD
+  // loads PV; simultaneous edges cancel. QU = CV>=PV, QD = CV<=0.
+  function evalCTUD(id, cu, cd, par, extR, extLD, extPV) {
+    const s = inst(id);
+    if (s.count == null) s.count = 0;
+    const reset = (extR != null) ? !!extR : T.readBit(par.r);
+    const load = (extLD != null) ? !!extLD : T.readBit(par.ld);
+    const PV = (extPV != null) ? num(extPV) : num(T.readNum(par.pv));
+    const eu = cu && !s.prevCU, ed = cd && !s.prevCD;
+    if (reset) s.count = 0;
+    else if (load) s.count = PV;
+    else if (eu && !ed) s.count = Math.min(s.count + 1, CMAX);
+    else if (ed && !eu) s.count = Math.max(s.count - 1, -CMAX);
+    s.prevCU = cu; s.prevCD = cd;
+    const qu = s.count >= PV, qd = s.count <= 0;
+    if (notEmpty(par.cv)) T.writeNum(par.cv, s.count);
+    if (notEmpty(par.qu)) T.writeBit(par.qu, qu);
+    if (notEmpty(par.qd)) T.writeBit(par.qd, qd);
+    return { qu, qd, cv: s.count };
+  }
+
   // Evaluate one LAD network: compute rung power, drive each output.
   function evalLadNetwork(net) {
     const p = rungPower(net);
@@ -436,7 +469,7 @@
     switch (kind) {
       case 'compare': if (pinName === 'in1') return 'in1'; if (pinName === 'in2') return 'in2'; break;
       case 'ton': case 'tof': case 'tp': if (pinName === 'PT') return 'pt'; break;
-      case 'ctu': case 'ctd': if (pinName === 'PV') return 'pv'; break;
+      case 'ctu': case 'ctd': case 'ctud': if (pinName === 'PV') return 'pv'; break;
       case 'move': if (pinName === 'IN') return 'in'; break;
       case 'add': case 'sub': case 'mul': case 'div':
         if (pinName === 'in1') return 'in1'; if (pinName === 'in2') return 'in2'; break;
@@ -529,6 +562,7 @@
 
     let outVal = false;          // primary boolean/numeric result
     let live = false;
+    let outMap = null;           // optional per-OUTPUT-pin values, keyed by pin NAME
 
     switch (k) {
       case 'fb_and':
@@ -611,6 +645,15 @@
         live = outVal;
         break;
       }
+      case 'ctud': {
+        // pins [CU, CD, R, LD, PV]
+        const pv = num(unwiredNum(net, box, 'pv', inVals, ins, 'PV'));
+        const r = evalCTUD(box.id, !!inVals[0], !!inVals[1], par, !!inVals[2], !!inVals[3], pv);
+        outVal = r.qu;
+        outMap = { QU: r.qu, QD: r.qd, CV: r.cv };
+        live = r.qu;
+        break;
+      }
 
       case 'move': {
         // MOVE in FBD has a single IN pin (the value); it moves unconditionally.
@@ -625,7 +668,10 @@
         const b = num(unwiredNum(net, box, 'in2', inVals, ins));
         const r = mathOp(k, a, b);
         if (notEmpty(par.out)) T.writeNum(par.out, r);
+        const eno = !(k === 'div' && b === 0) && isFinite(r);   // no EN pin in FBD
+        if (notEmpty(par.eno)) T.writeBit(par.eno, eno);
         outVal = r;
+        outMap = { ENO: eno };
         live = true;
         break;
       }
@@ -637,7 +683,10 @@
         const mx = num(unwiredNum(net, box, 'max', inVals, ins, 'MAX'));
         const r = (k === 'norm_x') ? normX(mn, vl, mx) : scaleX(mn, vl, mx);
         if (notEmpty(par.out)) T.writeNum(par.out, r);
+        const eno = (k !== 'norm_x' || mx !== mn) && isFinite(r);
+        if (notEmpty(par.eno)) T.writeBit(par.eno, eno);
         outVal = r;
+        outMap = { ENO: eno };
         live = true;
         break;
       }
@@ -685,7 +734,9 @@
       const op = outs[i];
       let pv = outVal;
       // timers/counters expose Q (bool) on first out pin and ET/CV (num) on 2nd
-      if ((k === 'ton' || k === 'tof' || k === 'tp')) {
+      if (outMap && Object.prototype.hasOwnProperty.call(outMap, op.name)) {
+        pv = outMap[op.name];
+      } else if ((k === 'ton' || k === 'tof' || k === 'tp')) {
         if (op.name === 'ET') pv = T.readNum(par.et);
         else pv = outVal;        // Q
       } else if (k === 'ctu' || k === 'ctd') {
@@ -1063,6 +1114,7 @@
     // include any extra memory keys touched by the running program / forces
     Object.keys(T.mem.bits).forEach((k) => add('', k, 'Bool', true));
     Object.keys(T.mem.words).forEach((k) => add('', k, 'Word', false));
+    T.mem.areaKeys().forEach((k) => add('', k, k.indexOf('.') >= 0 ? 'Bool' : 'Word', k.indexOf('.') >= 0));
 
     return rows;
   }
@@ -1260,6 +1312,8 @@
     if (!_rowKeys) return true;
     for (const k in T.mem.bits) if (!_rowKeys.has(k)) return true;
     for (const k in T.mem.words) if (!_rowKeys.has(k)) return true;
+    const ak = T.mem.areaKeys();
+    for (let i = 0; i < ak.length; i++) if (!_rowKeys.has(ak[i])) return true;
     return false;
   }
 

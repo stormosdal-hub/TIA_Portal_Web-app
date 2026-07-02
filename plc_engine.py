@@ -27,8 +27,8 @@
 
 import math
 import re
+import struct
 import time
-from collections import defaultdict
 
 
 # --------------------------------------------------------------------------
@@ -74,8 +74,86 @@ def _not_empty(s):
     return s is not None and str(s).strip() != ''
 
 
+def _fin(x):
+    return isinstance(x, (int, float)) and math.isfinite(x)
+
+
+# --------------------------------------------------------------------------
+# Memory: S7-style byte overlap for I/Q/M addresses (mirrors core.js T.mem).
+# Storage keys are tag ADDRESSES when set (else names), so %M0.3 really is
+# bit 3 of %MB0 and %MW0 overlaps %M0.0..%M1.7 (big-endian). W = signed int16,
+# B = unsigned byte, D = signed int32 — or IEEE-754 float32 for Real tags.
+# --------------------------------------------------------------------------
+_AB = re.compile(r'^([IQM])(\d+)\.(\d+)$', re.IGNORECASE)
+_AW = re.compile(r'^([IQM])([BWD])(\d+)$', re.IGNORECASE)
+
+
+class Mem(dict):
+    def __init__(self, real_addrs=()):
+        super().__init__()
+        self._by = {'I': {}, 'Q': {}, 'M': {}}
+        self._real = set(str(a).upper() for a in real_addrs)
+        self._touch = set()
+
+    def touched(self):
+        return sorted(self._touch)
+
+    def __getitem__(self, k):
+        ks = str(k)
+        m = _AB.match(ks)
+        if m:
+            return bool((self._by[m.group(1).upper()].get(int(m.group(2)), 0) >> int(m.group(3))) & 1)
+        m = _AW.match(ks)
+        if m:
+            a, sz, off = self._by[m.group(1).upper()], m.group(2).upper(), int(m.group(3))
+            if sz == 'B':
+                return a.get(off, 0)
+            if sz == 'W':
+                v = (a.get(off, 0) << 8) | a.get(off + 1, 0)
+                return v - 0x10000 if v >= 0x8000 else v
+            bs = bytes((a.get(off, 0), a.get(off + 1, 0), a.get(off + 2, 0), a.get(off + 3, 0)))
+            if ks.upper() in self._real:
+                return float('%.7g' % struct.unpack('>f', bs)[0])
+            return struct.unpack('>i', bs)[0]
+        return dict.get(self, ks, 0)
+
+    def __setitem__(self, k, v):
+        ks = str(k)
+        m = _AB.match(ks)
+        if m:
+            a, by, bi = self._by[m.group(1).upper()], int(m.group(2)), int(m.group(3))
+            cur = a.get(by, 0)
+            a[by] = (cur | (1 << bi)) if v else (cur & ~(1 << bi) & 0xFF)
+            self._touch.add(ks.upper())
+            return
+        m = _AW.match(ks)
+        if m:
+            a, sz, off = self._by[m.group(1).upper()], m.group(2).upper(), int(m.group(3))
+            self._touch.add(ks.upper())
+            x = num(v)
+            if not _fin(x):
+                x = 0
+            if sz == 'B':
+                a[off] = int(math.floor(x + 0.5)) & 0xFF
+            elif sz == 'W':
+                n = int(math.floor(x + 0.5)) & 0xFFFF
+                a[off] = n >> 8
+                a[off + 1] = n & 0xFF
+            else:
+                if ks.upper() in self._real or (isinstance(x, float) and not float(x).is_integer()):
+                    bs = struct.pack('>f', float(x))
+                else:
+                    bs = struct.pack('>I', int(math.floor(x + 0.5)) & 0xFFFFFFFF)
+                a[off], a[off + 1], a[off + 2], a[off + 3] = bs[0], bs[1], bs[2], bs[3]
+            return
+        super().__setitem__(ks, v)
+
+
 # IEC time literal "T#5s" / "T#1m30s" / "500ms" -> milliseconds (port of T.parseTime).
 _TIME_RE = re.compile(r'(\d+(?:\.\d+)?)\s*(ms|s|m|h|d)', re.IGNORECASE)
+
+
+_TIME_LIT = re.compile(r'^(s5)?t(ime)?#', re.IGNORECASE)   # T# / TIME# / S5T# / S5TIME#
 
 
 def parse_time_ms(s):
@@ -88,7 +166,7 @@ def parse_time_ms(s):
         return round(float(s))
     ms = 0.0
     matched = False
-    body = re.sub(r'^t#', '', s, flags=re.IGNORECASE)
+    body = _TIME_LIT.sub('', s)
     for m in _TIME_RE.finditer(body):
         matched = True
         v = float(m.group(1))
@@ -218,7 +296,7 @@ def _scl_tokenize(src):
                     rest += src[state['i']]
                     adv(1)
                 up = s.upper()
-                if up in ('T', 'TIME'):
+                if up in ('T', 'TIME', 'S5T', 'S5TIME'):
                     val = parse_time_ms('T#' + rest) or 0
                 else:
                     try:
@@ -680,7 +758,8 @@ class Engine:
 
     # ---- (re)initialise everything that is per-program ---------------------
     def _reset_runtime_state(self):
-        self.M = defaultdict(int)     # memory: keyed by tag name / address / symbol
+        self.M = Mem()                # memory: keyed by storage key (address or name)
+        self._store = {}              # tag name -> storage key (address if set)
         self.ST = {}                  # timer/counter/edge state, keyed "<inst>:<element id>"
         self.FBP = {}                 # FBD cross-scan pin cache (feedback / latches), key "<inst>:box|pin"
         self.live = {}                # element_id -> bool
@@ -741,19 +820,29 @@ class Engine:
         self._tags = list(self.project.get('tags') or [])
         self._alias = {}
         self._tag_bits = set()
+        self._store = {}
+        # Real values at D addresses are stored as IEEE-754 float32 bytes
+        real_addrs = []
+        for t in self._tags:
+            addr = str(t.get('address') or '').strip().upper()
+            if t.get('dataType') == 'Real' and re.match(r'^[IQM]D\d+$', addr):
+                real_addrs.append(addr)
+        self.M = Mem(real_addrs)
         for t in self._tags:
             name = t.get('name')
             if not _not_empty(name):
                 continue
+            addr = str(t.get('address') or '').strip().upper()
+            key = addr if addr else name        # storage key (byte-overlap for addresses)
+            self._store[name] = key
             if t.get('dataType') == 'Bool':
-                self.M[name] = False
-                self._tag_bits.add(str(name).lower())
+                self.M[key] = False
+                self._tag_bits.add(key.lower())
             else:
-                self.M[name] = 0
-            self._alias.setdefault(str(name).lower(), name)
-            addr = str(t.get('address') or '').strip()
+                self.M[key] = 0
+            self._alias.setdefault(str(name).lower(), key)
             if addr:
-                self._alias.setdefault(addr.lower(), name)
+                self._alias.setdefault(addr.lower(), key)
 
     # ---- block lookups (codegen.js T.findBlock equivalents) ---------------
     def _find_block(self, ref):
@@ -798,25 +887,26 @@ class Engine:
                     direction = 'out'
             pull = m.get('pull') or 'down'
             active_low = bool(m.get('activeLow'))
+            key = self._store.get(tag, tag)     # GPIO reads/writes the storage cell
             try:
                 if direction == 'pwm':
                     freq = m.get('freq')
                     freq = 100 if (freq is None or freq == '') else int(freq)
-                    self.pwms[tag] = self._make_pwm(bcm, freq, use_real)
+                    self.pwms[key] = self._make_pwm(bcm, freq, use_real)
                 elif direction == 'in':
                     deb = m.get('debounce')
                     bounce_s = (int(deb) / 1000.0) if deb not in (None, '', 0, '0') else None
-                    self.inputs[tag] = self._make_input(bcm, pull, active_low, use_real, bounce_s)
+                    self.inputs[key] = self._make_input(bcm, pull, active_low, use_real, bounce_s)
                 else:
-                    self.outputs[tag] = self._make_output(bcm, active_low, use_real)
+                    self.outputs[key] = self._make_output(bcm, active_low, use_real)
             except Exception:
                 # any hardware-init failure -> fall back to a mock device for this tag
                 if direction == 'pwm':
-                    self.pwms[tag] = _MockAnalog(0.0)
+                    self.pwms[key] = _MockAnalog(0.0)
                 elif direction == 'in':
-                    self.inputs[tag] = _MockPin(False)
+                    self.inputs[key] = _MockPin(False)
                 else:
-                    self.outputs[tag] = _MockPin(False)
+                    self.outputs[key] = _MockPin(False)
 
     @staticmethod
     def _gpiozero_available():
@@ -879,7 +969,7 @@ class Engine:
             return ('lit', int(f) if f.is_integer() else f)
         if re.match(r'^(true|false)$', raw, re.IGNORECASE):
             return ('lit', raw.lower() == 'true')
-        if re.match(r'^t#', raw, re.IGNORECASE):
+        if _TIME_LIT.match(raw):
             return ('lit', parse_time_ms(raw))      # time literal -> ms (app-native, sim parity)
         # block-local interface member (shadows global tags), keyed "<inst>.<member>"
         if ctx and ctx.get('members') and raw.lower() in ctx['members']:
@@ -917,7 +1007,7 @@ class Engine:
             return 0
         if re.match(r'^-?\d+(\.\d+)?$', raw):
             return max(0.0, float(raw))
-        if re.match(r'^t#', raw, re.IGNORECASE):
+        if _TIME_LIT.match(raw):
             return max(0, parse_time_ms(raw))
         return max(0, num(self._rd(raw, ctx)))
 
@@ -1016,6 +1106,23 @@ class Engine:
             s['c'] = max(s['c'] - 1, -32767)
         s['prev'] = cd
         return (s['c'] <= 0, s['c'])
+
+    def _ctud(self, i, cu, cd, pv, reset, load):
+        # up on rising CU, down on rising CD; R dominant; simultaneous edges cancel
+        s = self.ST.setdefault(i, {'c': 0, 'pu': False, 'pd': False})
+        eu = cu and not s['pu']
+        ed = cd and not s['pd']
+        if reset:
+            s['c'] = 0
+        elif load:
+            s['c'] = pv
+        elif eu and not ed:
+            s['c'] = min(s['c'] + 1, 32767)
+        elif ed and not eu:
+            s['c'] = max(s['c'] - 1, -32767)
+        s['pu'] = cu
+        s['pd'] = cd
+        return (s['c'] >= pv, s['c'] <= 0, s['c'])
 
     def _redge(self, i, clk):
         s = self.ST.setdefault(i, {'p': False})
@@ -1142,31 +1249,50 @@ class Engine:
             if _not_empty(par.get('q')):
                 self._write(par.get('q'), ctx, q)
             self.live[eid] = bool(p)
+        elif k == 'ctud':
+            qu, qd, cv = self._ctud(self._stid(ctx, eid), p,
+                                    self._rd_bool(par.get('cd') or '', ctx),
+                                    self._rd_num(par.get('pv'), ctx),
+                                    self._rd_bool(par.get('r') or '', ctx),
+                                    self._rd_bool(par.get('ld') or '', ctx))
+            if _not_empty(par.get('cv')):
+                self._write(par.get('cv'), ctx, cv)
+            if _not_empty(par.get('qu')):
+                self._write(par.get('qu'), ctx, qu)
+            if _not_empty(par.get('qd')):
+                self._write(par.get('qd'), ctx, qd)
+            self.live[eid] = bool(p)
 
         elif k == 'move':
             if p:
                 self._write(par.get('out'), ctx, self._rd_num(par.get('in'), ctx))
             self.live[eid] = bool(p)
         elif k in ('add', 'sub', 'mul', 'div'):
+            b = self._rd_num(par.get('in2'), ctx)
+            r = self._math(k, self._rd_num(par.get('in1'), ctx), b)
             if p:
-                self._write(par.get('out'), ctx,
-                            self._math(k, self._rd_num(par.get('in1'), ctx),
-                                       self._rd_num(par.get('in2'), ctx)))
+                self._write(par.get('out'), ctx, r)
+            if _not_empty(par.get('eno')):    # ENO = EN && no numeric error
+                self._write(par.get('eno'), ctx, bool(p and not (k == 'div' and b == 0) and _fin(r)))
             self.live[eid] = bool(p)
 
         elif k == 'norm_x':
+            mn = self._rd_num(par.get('min'), ctx)
+            mx = self._rd_num(par.get('max'), ctx)
+            r = norm_x(mn, self._rd_num(par.get('val'), ctx), mx)
             if p:
-                self._write(par.get('out'), ctx,
-                            norm_x(self._rd_num(par.get('min'), ctx),
-                                   self._rd_num(par.get('val'), ctx),
-                                   self._rd_num(par.get('max'), ctx)))
+                self._write(par.get('out'), ctx, r)
+            if _not_empty(par.get('eno')):
+                self._write(par.get('eno'), ctx, bool(p and mx != mn and _fin(r)))
             self.live[eid] = bool(p)
         elif k == 'scale_x':
+            r = scale_x(self._rd_num(par.get('min'), ctx),
+                        self._rd_num(par.get('val'), ctx),
+                        self._rd_num(par.get('max'), ctx))
             if p:
-                self._write(par.get('out'), ctx,
-                            scale_x(self._rd_num(par.get('min'), ctx),
-                                    self._rd_num(par.get('val'), ctx),
-                                    self._rd_num(par.get('max'), ctx)))
+                self._write(par.get('out'), ctx, r)
+            if _not_empty(par.get('eno')):
+                self._write(par.get('eno'), ctx, bool(p and _fin(r)))
             self.live[eid] = bool(p)
 
         elif k == 'sr':                     # reset dominant; operand stores Q
@@ -1373,6 +1499,22 @@ class Engine:
             if n_out > 1:
                 out_vals[1] = cv
             live = q
+        elif k == 'ctud':
+            # pins in [CU, CD, R, LD, PV]; out pins matched by name
+            pvi = next((i for i, pp in enumerate(box.get('inputs') or []) if pp.get('name') == 'PV'), None)
+            pv = num(in_e[pvi]) if (pvi is not None and pvi < len(in_e)) else self._rd_num(p.get('pv'), ctx)
+            gv = lambda i: bool(in_e[i]) if i < len(in_e) else False
+            qu, qd, cv = self._ctud(self._stid(ctx, bid), gv(0), gv(1), pv, gv(2), gv(3))
+            if _not_empty(p.get('cv')):
+                self._write(p.get('cv'), ctx, cv)
+            if _not_empty(p.get('qu')):
+                self._write(p.get('qu'), ctx, qu)
+            if _not_empty(p.get('qd')):
+                self._write(p.get('qd'), ctx, qd)
+            for i, pp in enumerate(outs):
+                nm = pp.get('name')
+                out_vals[i] = qu if nm == 'QU' else (qd if nm == 'QD' else cv)
+            live = qu
         elif k == 'move':
             v = num(in_e[0] if in_e else 0)
             if _not_empty(p.get('out')):
@@ -1385,7 +1527,11 @@ class Engine:
             v = self._math(k, a, b)
             if _not_empty(p.get('out')):
                 self._write(p.get('out'), ctx, v)
-            out_vals[0] = v
+            eno = bool(not (k == 'div' and b == 0) and _fin(v))   # no EN pin in FBD
+            if _not_empty(p.get('eno')):
+                self._write(p.get('eno'), ctx, eno)
+            for i, pp in enumerate(outs):
+                out_vals[i] = eno if pp.get('name') == 'ENO' else v
             live = True
         elif k in ('norm_x', 'scale_x'):
             mn = num(in_e[0] if len(in_e) > 0 else 0)   # MIN
@@ -1394,7 +1540,11 @@ class Engine:
             v = norm_x(mn, vl, mx) if k == 'norm_x' else scale_x(mn, vl, mx)
             if _not_empty(p.get('out')):
                 self._write(p.get('out'), ctx, v)
-            out_vals[0] = v
+            eno = bool((k != 'norm_x' or mx != mn) and _fin(v))
+            if _not_empty(p.get('eno')):
+                self._write(p.get('eno'), ctx, eno)
+            for i, pp in enumerate(outs):
+                out_vals[i] = eno if pp.get('name') == 'ENO' else v
             live = True
         elif k == 'sr':                 # reset dominant; in pins [S, R1]
             qk = self._stid(ctx, bid) + '|q'
@@ -1844,8 +1994,12 @@ class Engine:
                     v = int(f) if f.is_integer() else f
                 except ValueError:
                     v = value
-        self.M[key] = v
-        dev = self.inputs.get(key)
+        # resolve name / address / % / case to the canonical storage key
+        kind, k = self._resolve(str(key), None)
+        if kind != 'key':
+            return {'ok': False}
+        self.M[k] = v
+        dev = self.inputs.get(k)
         if isinstance(dev, _MockPin):
             dev.value = bool(v)
         return {'ok': True}
@@ -1866,7 +2020,7 @@ class Engine:
             name = t.get('name')
             if not _not_empty(name):
                 continue
-            v = self.M.get(name, False if t.get('dataType') == 'Bool' else 0)
+            v = self.M[self._store.get(name, name)]
             if t.get('dataType') == 'Bool':
                 mem[name] = bool(v)
             else:
@@ -1875,6 +2029,10 @@ class Engine:
         for k, v in self.M.items():
             if k not in mem:
                 mem[k] = (bool(v) if isinstance(v, bool) else safe(v))
+        # ...and touched I/Q/M addresses (byte-overlap cells live outside the dict)
+        for a in self.M.touched():
+            if a not in mem:
+                mem[a] = safe(self.M[a])
         return {
             'running': bool(running),
             'scan': self.scan_count,

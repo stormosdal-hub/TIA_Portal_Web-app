@@ -172,24 +172,29 @@ window.TIA = window.TIA || {};
            defParams: { pv: '5', q: '', cv: '' }, pins: { in: ['CU', 'R', 'PV'], out: ['Q', 'CV'] } },
     ctd: { name: 'CTD — Count down', group: 'Counters', area: 'output', box: true,
            defParams: { pv: '5', q: '', cv: '' }, pins: { in: ['CD', 'LD', 'PV'], out: ['Q', 'CV'] } },
+    ctud: { name: 'CTUD — Count up and down', group: 'Counters', area: 'output', box: true,
+            defParams: { pv: '5', cd: '', r: '', ld: '', qu: '', qd: '', cv: '' },
+            pins: { in: ['CU', 'CD', 'R', 'LD', 'PV'], out: ['QU', 'QD', 'CV'] } },
 
     /* ---- Move & Math ---- */
     move: { name: 'MOVE — Move value', group: 'Move operations', area: 'output', box: true,
             defParams: { in: '0', out: '' }, pins: { in: ['IN'], out: ['OUT'] } },
     add:  { name: 'ADD — Add', group: 'Math functions', area: 'output', box: true,
-            defParams: { in1: '0', in2: '0', out: '' }, pins: { in: ['in1', 'in2'], out: ['OUT'] }, expand: 'in' },
+            defParams: { in1: '0', in2: '0', out: '', eno: '' }, pins: { in: ['in1', 'in2'], out: ['OUT', 'ENO'] }, expand: 'in' },
     sub:  { name: 'SUB — Subtract', group: 'Math functions', area: 'output', box: true,
-            defParams: { in1: '0', in2: '0', out: '' }, pins: { in: ['in1', 'in2'], out: ['OUT'] } },
+            defParams: { in1: '0', in2: '0', out: '', eno: '' }, pins: { in: ['in1', 'in2'], out: ['OUT', 'ENO'] } },
     mul:  { name: 'MUL — Multiply', group: 'Math functions', area: 'output', box: true,
-            defParams: { in1: '0', in2: '0', out: '' }, pins: { in: ['in1', 'in2'], out: ['OUT'] }, expand: 'in' },
+            defParams: { in1: '0', in2: '0', out: '', eno: '' }, pins: { in: ['in1', 'in2'], out: ['OUT', 'ENO'] }, expand: 'in' },
     div:  { name: 'DIV — Divide', group: 'Math functions', area: 'output', box: true,
-            defParams: { in1: '0', in2: '0', out: '' }, pins: { in: ['in1', 'in2'], out: ['OUT'] } },
+            defParams: { in1: '0', in2: '0', out: '', eno: '' }, pins: { in: ['in1', 'in2'], out: ['OUT', 'ENO'] } },
 
-    /* ---- Conversion (scaling) — OUT = (VALUE-MIN)/(MAX-MIN) ; SCALE = VALUE*(MAX-MIN)+MIN ---- */
+    /* ---- Conversion (scaling) — OUT = (VALUE-MIN)/(MAX-MIN) ; SCALE = VALUE*(MAX-MIN)+MIN.
+       ENO = EN && no error (div by zero / MAX==MIN / numeric overflow); wire a
+       bit operand to ENO to chain error status like TIA. ---- */
     norm_x:  { name: 'NORM_X — Normalize', group: 'Conversion', area: 'output', box: true,
-               defParams: { min: '0', val: '0', max: '1', out: '' }, pins: { in: ['MIN', 'VALUE', 'MAX'], out: ['OUT'] } },
+               defParams: { min: '0', val: '0', max: '1', out: '', eno: '' }, pins: { in: ['MIN', 'VALUE', 'MAX'], out: ['OUT', 'ENO'] } },
     scale_x: { name: 'SCALE_X — Scale', group: 'Conversion', area: 'output', box: true,
-               defParams: { min: '0', val: '0', max: '1', out: '' }, pins: { in: ['MIN', 'VALUE', 'MAX'], out: ['OUT'] } },
+               defParams: { min: '0', val: '0', max: '1', out: '', eno: '' }, pins: { in: ['MIN', 'VALUE', 'MAX'], out: ['OUT', 'ENO'] } },
 
     /* ---- Block call (created by dragging a block from the project tree onto a
        network; NOT shown in the instruction tree because group 'Calls' is not in
@@ -476,23 +481,108 @@ window.TIA = window.TIA || {};
    *   words : "MW0","IW64", numeric values for Int/Real/Word/Time
    * resolve(operand) understands: a tag name, a raw address, or a numeric/T# literal.
    * ======================================================================*/
+  /* I/Q/M addresses are backed by a BYTE array per area (S7 semantics), so
+   * %M0.3 really is bit 3 of %MB0 and %MW0 overlaps %M0.0..%M1.7 (big-endian:
+   * MW0 = MB0<<8 | MB1). W is a signed 16-bit word, B an unsigned byte, D a
+   * signed 32-bit dword — or an IEEE-754 float32 when the address carries a
+   * Real tag (or a non-integer is written). Symbolic '@NAME' cells stay flat. */
+  const MEM_BIT = /^([IQM])(\d+)\.(\d+)$/;
+  const MEM_WBD = /^([IQM])([BWD])(\d+)$/;
+  const _f32 = new DataView(new ArrayBuffer(4));
+  function isRealAddr(k) {
+    const t = T.tagByAddress && T.project ? T.tagByAddress(k) : null;
+    return !!(t && t.dataType === 'Real');
+  }
   T.mem = {
-    bits: Object.create(null),
-    words: Object.create(null),
-    reset() { this.bits = Object.create(null); this.words = Object.create(null); },
-    getBit(addr) { return !!this.bits[String(addr).toUpperCase()]; },
-    setBit(addr, v) { this.bits[String(addr).toUpperCase()] = !!v; },
-    getWord(addr) { return +this.words[String(addr).toUpperCase()] || 0; },
-    setWord(addr, v) { const n = +v; this.words[String(addr).toUpperCase()] = isFinite(n) ? n : 0; },
+    bits: Object.create(null),      // non-area (symbolic) bit cells
+    words: Object.create(null),     // non-area numeric cells
+    bytes: null,                    // area byte stores, built in reset()
+    _touched: null,                 // area addresses seen (for the sim table)
+    reset() {
+      this.bits = Object.create(null);
+      this.words = Object.create(null);
+      this.bytes = { I: Object.create(null), Q: Object.create(null), M: Object.create(null) };
+      this._touched = Object.create(null);
+    },
+    areaKeys() { return Object.keys(this._touched); },
+    getBit(addr) {
+      const k = String(addr).toUpperCase();
+      const m = MEM_BIT.exec(k);
+      if (m) return !!(((this.bytes[m[1]][+m[2]] || 0) >> +m[3]) & 1);
+      return !!this.bits[k];
+    },
+    setBit(addr, v) {
+      const k = String(addr).toUpperCase();
+      const m = MEM_BIT.exec(k);
+      if (m) {
+        const a = this.bytes[m[1]], by = +m[2], bi = +m[3];
+        const cur = a[by] || 0;
+        a[by] = v ? (cur | (1 << bi)) : (cur & ~(1 << bi) & 0xFF);
+        this._touched[k] = true;
+        return;
+      }
+      this.bits[k] = !!v;
+    },
+    getWord(addr) {
+      const k = String(addr).toUpperCase();
+      const m = MEM_WBD.exec(k);
+      if (m) {
+        const a = this.bytes[m[1]], off = +m[3];
+        const g = (i) => a[i] || 0;
+        if (m[2] === 'B') return g(off);
+        if (m[2] === 'W') {
+          const v = (g(off) << 8) | g(off + 1);
+          return v >= 0x8000 ? v - 0x10000 : v;
+        }
+        if (isRealAddr(k)) {
+          _f32.setUint8(0, g(off)); _f32.setUint8(1, g(off + 1));
+          _f32.setUint8(2, g(off + 2)); _f32.setUint8(3, g(off + 3));
+          const f = _f32.getFloat32(0);
+          return f === 0 ? 0 : parseFloat(f.toPrecision(7));   // hide float32 noise
+        }
+        return ((g(off) << 24) | (g(off + 1) << 16) | (g(off + 2) << 8) | g(off + 3)) | 0;
+      }
+      return +this.words[k] || 0;
+    },
+    setWord(addr, v) {
+      const k = String(addr).toUpperCase();
+      let n = +v;
+      if (!isFinite(n)) n = 0;
+      const m = MEM_WBD.exec(k);
+      if (m) {
+        const a = this.bytes[m[1]], off = +m[3];
+        this._touched[k] = true;
+        if (m[2] === 'B') {
+          a[off] = Math.floor(n + 0.5) & 0xFF;
+        } else if (m[2] === 'W') {
+          const w = Math.floor(n + 0.5) & 0xFFFF;
+          a[off] = w >>> 8; a[off + 1] = w & 0xFF;
+        } else if (isRealAddr(k) || !Number.isInteger(n)) {
+          _f32.setFloat32(0, n);
+          a[off] = _f32.getUint8(0); a[off + 1] = _f32.getUint8(1);
+          a[off + 2] = _f32.getUint8(2); a[off + 3] = _f32.getUint8(3);
+        } else {
+          const d = n | 0;   // wrap to signed 32-bit like the hardware
+          a[off] = (d >>> 24) & 0xFF; a[off + 1] = (d >>> 16) & 0xFF;
+          a[off + 2] = (d >>> 8) & 0xFF; a[off + 3] = d & 0xFF;
+        }
+        return;
+      }
+      this.words[k] = n;
+    },
   };
+  T.mem.reset();
 
+  // Time-literal prefix: T#, TIME#, S5T#, S5TIME# (S5TIME parses like TIME here;
+  // the real S5 granularity/range limits are not enforced).
+  T.TIME_LIT = /^(s5)?t(ime)?#/i;
   // Parse IEC time literal "T#5s","T#1m30s","500ms" -> milliseconds. Also accepts plain ms number.
   T.parseTime = function (s) {
     if (s == null) return 0;
     if (typeof s === 'number') return s;
     s = String(s).trim();
     if (/^\d+(\.\d+)?$/.test(s)) return Math.round(parseFloat(s));   // plain ms
-    let ms = 0; const body = s.replace(/^t#/i, '');
+    let ms = 0; const body = s.replace(T.TIME_LIT, '');
     const re = /(\d+(?:\.\d+)?)\s*(ms|s|m|h|d)/gi; let m, matched = false;
     while ((m = re.exec(body))) {
       matched = true; const v = parseFloat(m[1]);
@@ -519,7 +609,7 @@ window.TIA = window.TIA || {};
    * returns { type:'bit'|'word'|'const'|'time'|'none', addr, value, tag }
    */
   const ADDR_BIT = /^[IQM]\d+\.\d+$/i;
-  const ADDR_WORD = /^[IQM]W\d+$/i;
+  const ADDR_WORD = /^[IQM][BWD]\d+$/i;
   T.resolve = function (operand, expect) {
     let raw = (operand == null ? '' : String(operand)).trim();
     if (raw === '') return { type: 'none', raw };
@@ -529,8 +619,8 @@ window.TIA = window.TIA || {};
     if (/^-?\d+(\.\d+)?$/.test(raw)) return { type: 'const', value: parseFloat(raw), raw };
     // boolean literal
     if (/^(true|false|1|0)$/i.test(raw) && expect === 'bit') return { type: 'const', value: /^(true|1)$/i.test(raw), raw };
-    // time literal
-    if (/^t#/i.test(raw)) return { type: 'time', value: T.parseTime(raw), raw };
+    // time literal (T# / TIME# / S5T# / S5TIME#)
+    if (T.TIME_LIT.test(raw)) return { type: 'time', value: T.parseTime(raw), raw };
     // raw address
     if (ADDR_BIT.test(raw)) return { type: 'bit', addr: raw.toUpperCase(), raw };
     if (ADDR_WORD.test(raw)) return { type: 'word', addr: raw.toUpperCase(), raw };

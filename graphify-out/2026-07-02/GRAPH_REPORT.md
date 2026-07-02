@@ -1,11 +1,11 @@
 # Graph Report - TIA_Portal_Web-app  (2026-07-02)
 
 ## Corpus Check
-- 25 files · ~68,062 words
+- 25 files · ~70,628 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 649 nodes · 1263 edges · 32 communities (29 shown, 3 thin omitted)
+- 665 nodes · 1323 edges · 32 communities (29 shown, 3 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 21 edges (avg confidence: 0.82)
 - Token cost: 0 input · 0 output
 
@@ -50,15 +50,15 @@
 
 ## God Nodes (most connected - your core abstractions)
 1. `Engine` - 66 edges
-2. `render()` - 19 edges
-3. `render()` - 19 edges
+2. `render()` - 23 edges
+3. `render()` - 22 edges
 4. `evalBox()` - 17 edges
 5. `TIA Web Practice — a browser-based TIA-Portal-style PLC IDE` - 17 edges
 6. `index.html — App Entry Point` - 16 edges
-7. `num()` - 14 edges
+7. `renderNet()` - 14 edges
 8. `num()` - 14 edges
-9. `Handler` - 14 edges
-10. `notEmpty()` - 13 edges
+9. `num()` - 14 edges
+10. `Handler` - 14 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Handler` --uses--> `Engine`  [INFERRED]
@@ -79,19 +79,19 @@
 
 ### Community 0 - "PLC Scan Engine"
 Cohesion: 0.06
-Nodes (62): addNetwork(), addOperandLabel(), appendInput(), applySnap(), attachPendingTracker(), attachTagDrop(), boxGeom(), boxLabel() (+54 more)
+Nodes (69): addNetwork(), addOperandLabel(), appendInput(), applySnap(), applyZoom(), attachPendingTracker(), attachTagDrop(), boxGeom() (+61 more)
 
 ### Community 1 - "FBD Editor"
 Cohesion: 0.07
-Nodes (55): addHit(), addNetwork(), applyEditValue(), applySnap(), attachTagDrop(), buildNetworkSVG(), callArgLabel(), callBoxRows() (+47 more)
+Nodes (61): addHit(), addNetwork(), applyEditValue(), applySnap(), applyZoom(), attachTagDrop(), buildNetworkSVG(), callArgLabel() (+53 more)
 
 ### Community 2 - "Ladder (LAD) Editor"
 Cohesion: 0.08
 Nodes (45): Cyclic Scan Simulator — scan loop evaluating all networks per LAD/FBD semantics, applyOutput(), branchValue(), buildScope(), clearLiveFlags(), cmp(), collectCalledIds(), collectRows() (+37 more)
 
 ### Community 3 - "Simulation Engine"
-Cohesion: 0.06
-Nodes (26): CLAUDE.md — Contributor / Agent Guide, TIA Data Model — Project / Block / Network / Stage / Branch / Element / Box / Wire, file:// Constraint — no ES modules, no fetch, no CDN, no bundler, IIFE Module Pattern — (function(T){...})(window.TIA) — no ES modules, file:// safe, index.html — App Entry Point, clone(), close(), destroy() (+18 more)
+Cohesion: 0.05
+Nodes (29): CLAUDE.md — Contributor / Agent Guide, TIA Data Model — Project / Block / Network / Stage / Branch / Element / Box / Wire, file:// Constraint — no ES modules, no fetch, no CDN, no bundler, IIFE Module Pattern — (function(T){...})(window.TIA) — no ES modules, file:// safe, index.html — App Entry Point, clone(), close(), destroy() (+21 more)
 
 ### Community 4 - "Core Architecture & Data Model"
 Cohesion: 0.11
@@ -102,8 +102,8 @@ Cohesion: 0.26
 Nodes (3): BaseHTTPRequestHandler, Handler, Serve files from STATIC_DIR. GET / -> index.html. Path traversal is         prev
 
 ### Community 6 - "HTTP / PLC Server"
-Cohesion: 0.18
-Nodes (19): activateTab(), adoptProject(), boot(), buildDemoProject(), buildMenu(), closeDropdown(), closeTab(), initAutosave() (+11 more)
+Cohesion: 0.15
+Nodes (20): activateTab(), adoptProject(), boot(), buildDemoProject(), buildMenu(), closeDropdown(), closeTab(), initAutosave() (+12 more)
 
 ### Community 7 - "App Bootstrap & UI Shell"
 Cohesion: 0.18
@@ -202,16 +202,16 @@ Nodes (4): Exception, Load or replace the running program. Resets all state, see
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `index.html — App Entry Point` connect `Simulation Engine` to `PLC Scan Engine`, `FBD Editor`, `Ladder (LAD) Editor`, `Core Architecture & Data Model`, `HTTP / PLC Server`, `App Bootstrap & UI Shell`, `Toolbar & Ribbon`, `Tree Details View`, `Online PLC Monitor`, `PLC Launcher Script`, `Community 17`, `Community 19`, `Community 28`?**
-  _High betweenness centrality (0.280) - this node is a cross-community bridge._
+  _High betweenness centrality (0.283) - this node is a cross-community bridge._
 - **Why does `CLAUDE.md — Contributor / Agent Guide` connect `Simulation Engine` to `PLC Scan Engine`, `FBD Editor`, `Ladder (LAD) Editor`, `HTTP / PLC Server`, `Toolbar & Ribbon`?**
-  _High betweenness centrality (0.084) - this node is a cross-community bridge._
-- **Why does `Engine` connect `Project Tree Panel` to `Python Code Generator`, `Tag Table Editor`, `Community 21`, `Community 25`, `Community 26`, `Community 27`, `Community 29`, `Community 30`, `Community 31`?**
-  _High betweenness centrality (0.041) - this node is a cross-community bridge._
+  _High betweenness centrality (0.088) - this node is a cross-community bridge._
+- **Why does `T.bus — Cross-Module Event Bus (on/off/emit)` connect `Community 28` to `PLC Scan Engine`, `FBD Editor`, `Ladder (LAD) Editor`, `Simulation Engine`?**
+  _High betweenness centrality (0.042) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `Engine` (e.g. with `Handler` and `Runtime`) actually correct?**
   _`Engine` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `node`, `name`, `version` to the rest of the system?**
   _89 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `PLC Scan Engine` be split into smaller, more focused modules?**
-  _Cohesion score 0.059298245614035086 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06049382716049383 - nodes in this community are weakly interconnected._
 - **Should `FBD Editor` be split into smaller, more focused modules?**
-  _Cohesion score 0.06599597585513078 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06702702702702702 - nodes in this community are weakly interconnected._

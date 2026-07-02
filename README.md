@@ -156,16 +156,25 @@ Files: `plc_engine.py` interprets the program (a faithful Python port of the sim
   move projects between machines (local storage is per-browser).
 
 ## Addresses & data types
-- Bits: `I0.0` (input), `Q0.0` (output), `M0.0` (memory flag). Words: `MW0`, `IW64`…
-- Data types: `Bool`, `Int`, `Real`, `Word`, `Time` (time literals like `T#5s`, `T#1m30s`).
+- Bits: `I0.0` (input), `Q0.0` (output), `M0.0` (memory flag). Bytes/words/dwords: `MB0`, `MW0`, `MD0`, `IW64`…
+- **I/Q/M addresses overlap like a real S7** (big-endian): `%MW0` is `%MB0<<8 | %MB1`, so
+  `%M0.3` really is bit 3 of MW0's high byte and writing `MW0 := 255` sets `M1.0..M1.7`.
+  `MW` is a signed 16-bit word; `MD` holds a 32-bit int — or an IEEE-754 float32 when the
+  tag there is `Real`. **Don't place a word tag over bytes used by bit tags** — Compile
+  warns about overlapping tag addresses.
+- Data types: `Bool`, `Int`, `Real`, `Word`, `Time` (time literals `T#5s`, `T#1m30s`,
+  `TIME#…`, and S5 style `S5T#2s` / `S5TIME#…`).
 - A symbolic tag with no address still simulates (it gets its own memory slot).
 
 ## Supported instructions
 Bit logic (`contact NO/NC`, `P/N edge`, `coil`, `negated coil`, `set/reset`),
 **`SR`/`RS` latches**, **edge triggers** `P_TRIG`/`N_TRIG`/`R_TRIG`/`F_TRIG`,
 `AND/OR/XOR/NOT` (FBD) + assignment, `compare` (`== <> > < >= <=`),
-timers `TON/TOF/TP`, counters `CTU/CTD`, `MOVE`, math `ADD/SUB/MUL/DIV`,
-and block **calls** (drag a block from the tree onto a network).
+timers `TON/TOF/TP`, counters `CTU/CTD/CTUD` (up/down with `R`, `LD`, `QU`, `QD`),
+`MOVE`, math `ADD/SUB/MUL/DIV`, and block **calls** (drag a block from the tree onto
+a network). Math and conversion boxes expose **ENO** (= EN and no numeric error —
+divide-by-zero, `NORM_X` with MAX=MIN, overflow): wire a bit operand to it to chain
+error status like TIA.
 
 Blocks can also be written in **SCL** (structured text: `IF/CASE/FOR/WHILE/REPEAT`,
 `EXIT/CONTINUE`, math functions) — SCL runs in the in-app simulator, on the online Pi

@@ -476,6 +476,33 @@
       const a = (t.address || '').trim().toUpperCase();
       if (a) { if (seenAddr[a]) warn('Tag table: two tags share address ' + a); seenAddr[a] = 1; }
     });
+    // overlapping addresses: I/Q/M bytes are SHARED (S7 semantics — %MW0 covers
+    // %M0.0..%M1.7), so a word tag silently clobbers bit tags in its bytes
+    const addrRange = (a) => {
+      let m = /^([IQM])(\d+)\.(\d+)$/.exec(a);
+      if (m) return { area: m[1], start: +m[2], len: 1, bit: true };
+      m = /^([IQM])([BWD])(\d+)$/.exec(a);
+      if (m) return { area: m[1], start: +m[3], len: m[2] === 'B' ? 1 : m[2] === 'W' ? 2 : 4, bit: false };
+      return null;
+    };
+    const ranges = [];
+    (T.project.tags || []).forEach((t) => {
+      const a = (t.address || '').trim().toUpperCase();
+      const r = a && addrRange(a);
+      if (r) ranges.push(Object.assign(r, { name: t.name || a, addr: a }));
+    });
+    for (let i = 0; i < ranges.length; i++) {
+      for (let j = i + 1; j < ranges.length; j++) {
+        const A = ranges[i], Bb = ranges[j];
+        if (A.area !== Bb.area) continue;
+        if (A.bit && Bb.bit) continue;               // two bits only clash on the exact address (dup check)
+        if (A.addr === Bb.addr) continue;            // exact dup already warned
+        if (A.start < Bb.start + Bb.len && Bb.start < A.start + A.len) {
+          warn('Tag table: "' + A.name + '" (' + A.addr + ') and "' + Bb.name + '" (' + Bb.addr +
+            ') OVERLAP — they share memory bytes and will corrupt each other');
+        }
+      }
+    }
 
     // Operand check: literals / addresses / tags / the block's own interface
     // members are fine; anything else is a typo-shaped unknown reading FALSE/0.

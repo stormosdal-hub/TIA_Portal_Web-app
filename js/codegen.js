@@ -27,6 +27,14 @@ window.TIA = window.TIA || {};
   function fnName(blk) { return 'block_' + pyId(blk.name) + '_' + (blk.type || 'B') + (blk.number || 0); }
   const CMP = { '==': '==', '<>': '!=', '>': '>', '<': '<', '>=': '>=', '<=': '<=' };
   const ADDR_RE = /^[IQM](\d+\.\d+|W\d+|B\d+|D\d+)$/i;
+  const TIME_LIT = /^(s5)?t(ime)?#/i;   // T# / TIME# / S5T# / S5TIME#
+  // Storage key for a tag: its ADDRESS when it has one — the generated Mem
+  // class overlaps bit/byte/word/dword access on the same bytes (S7 style) —
+  // else the tag name (flat cell).
+  function storeKey(tag) {
+    const a = (tag.address || '').trim();
+    return a ? a.toUpperCase() : tag.name;
+  }
 
   // resolve an operand (in a block ctx) -> { lit } literal expr | { key } global | { local } member
   // Mirrors T.resolve's aliasing: a tag's name, its ADDRESS, and any case
@@ -37,7 +45,7 @@ window.TIA = window.TIA || {};
     if (raw.charAt(0) === '%') raw = raw.slice(1).trim();   // %I0.0 ≡ I0.0
     if (/^-?\d+(\.\d+)?$/.test(raw)) return { lit: raw };
     if (/^(true|false)$/i.test(raw)) return { lit: /^true$/i.test(raw) ? 'True' : 'False' };
-    if (/^t#/i.test(raw)) return { lit: String(T.parseTime(raw) / 1000) };   // time literal -> seconds
+    if (TIME_LIT.test(raw)) return { lit: String(T.parseTime(raw) / 1000) };   // time literal -> seconds
     if (ctx && ctx.members && Object.prototype.hasOwnProperty.call(ctx.members, raw.toLowerCase())) {
       return { local: ctx.members[raw.toLowerCase()] };
     }
@@ -45,7 +53,7 @@ window.TIA = window.TIA || {};
     const tag = tags.find((t) => t.name === raw)
       || tags.find((t) => t.name && t.name.toLowerCase() === raw.toLowerCase())
       || tags.find((t) => (t.address || '').toUpperCase() === raw.toUpperCase());
-    if (tag) return { key: tag.name };
+    if (tag) return { key: storeKey(tag) };
     return { key: ADDR_RE.test(raw) ? raw.toUpperCase() : raw };
   }
   // Python expression that READS an operand's value
@@ -63,7 +71,7 @@ window.TIA = window.TIA || {};
     const raw = (op == null ? '' : String(op)).trim();
     if (raw === '') return '0';
     if (/^-?\d+(\.\d+)?$/.test(raw)) return String(Math.max(0, parseFloat(raw)));
-    if (/^t#/i.test(raw)) return String(Math.max(0, T.parseTime(raw)));
+    if (TIME_LIT.test(raw)) return String(Math.max(0, T.parseTime(raw)));
     return 'num(' + rd(raw, ctx) + ')';
   }
   // PT for the generated timer helpers, which take SECONDS
@@ -144,13 +152,37 @@ window.TIA = window.TIA || {};
         if (notEmpty(p.q)) lines.push(wt(p.q, ctx) + ' = q');
         return lines;
       }
+      case 'ctud': {
+        const lines = ['qu, qd, cv = ctud(' + stId(el.id) + ', p, ' + rdBool(p.cd || '', ctx) + ', '
+          + rdNum(p.pv, ctx) + ', ' + rdBool(p.r || '', ctx) + ', ' + rdBool(p.ld || '', ctx) + ')'];
+        if (notEmpty(p.cv)) lines.push(wt(p.cv, ctx) + ' = cv');
+        if (notEmpty(p.qu)) lines.push(wt(p.qu, ctx) + ' = qu');
+        if (notEmpty(p.qd)) lines.push(wt(p.qd, ctx) + ' = qd');
+        return lines;
+      }
       case 'move': return ['if p: ' + wt(p.out, ctx) + ' = ' + rdNum(p.in, ctx)];
-      case 'add': return ['if p: ' + wt(p.out, ctx) + ' = ' + rdNum(p.in1, ctx) + ' + ' + rdNum(p.in2, ctx)];
-      case 'sub': return ['if p: ' + wt(p.out, ctx) + ' = ' + rdNum(p.in1, ctx) + ' - ' + rdNum(p.in2, ctx)];
-      case 'mul': return ['if p: ' + wt(p.out, ctx) + ' = ' + rdNum(p.in1, ctx) + ' * ' + rdNum(p.in2, ctx)];
-      case 'div': return ['if p: ' + wt(p.out, ctx) + ' = idiv(' + rdNum(p.in1, ctx) + ', ' + rdNum(p.in2, ctx) + ')'];
-      case 'norm_x': return ['if p: ' + wt(p.out, ctx) + ' = norm_x(' + rdNum(p.min, ctx) + ', ' + rdNum(p.val, ctx) + ', ' + rdNum(p.max, ctx) + ')'];
-      case 'scale_x': return ['if p: ' + wt(p.out, ctx) + ' = scale_x(' + rdNum(p.min, ctx) + ', ' + rdNum(p.val, ctx) + ', ' + rdNum(p.max, ctx) + ')'];
+      case 'add': case 'sub': case 'mul': case 'div': {
+        const OPS = { add: ' + ', sub: ' - ', mul: ' * ' };
+        const a = rdNum(p.in1, ctx), b = rdNum(p.in2, ctx);
+        const lines = ['r = ' + (el.kind === 'div' ? 'idiv(' + a + ', ' + b + ')' : '(' + a + OPS[el.kind] + b + ')')];
+        if (notEmpty(p.out)) lines.push('if p: ' + wt(p.out, ctx) + ' = r');
+        if (notEmpty(p.eno)) lines.push(wt(p.eno, ctx) + ' = bool(p'
+          + (el.kind === 'div' ? ' and ' + b + ' != 0' : '') + ' and _fin(r))');
+        return lines;
+      }
+      case 'norm_x': {
+        const mn = rdNum(p.min, ctx), mx = rdNum(p.max, ctx);
+        const lines = ['r = norm_x(' + mn + ', ' + rdNum(p.val, ctx) + ', ' + mx + ')'];
+        if (notEmpty(p.out)) lines.push('if p: ' + wt(p.out, ctx) + ' = r');
+        if (notEmpty(p.eno)) lines.push(wt(p.eno, ctx) + ' = bool(p and ' + mx + ' != ' + mn + ' and _fin(r))');
+        return lines;
+      }
+      case 'scale_x': {
+        const lines = ['r = scale_x(' + rdNum(p.min, ctx) + ', ' + rdNum(p.val, ctx) + ', ' + rdNum(p.max, ctx) + ')'];
+        if (notEmpty(p.out)) lines.push('if p: ' + wt(p.out, ctx) + ' = r');
+        if (notEmpty(p.eno)) lines.push(wt(p.eno, ctx) + ' = bool(p and _fin(r))');
+        return lines;
+      }
       case 'sr': return [target + ' = sr(' + target + ', p, ' + rdBool(p.r || '', ctx) + ')'];
       case 'rs': return [target + ' = rs(' + target + ', p, ' + rdBool(p.s || '', ctx) + ')'];
       case 'p_trig': case 'r_trig': return [setQ(p.q, 'redge(' + stId(el.id) + ', p)', ctx)];
@@ -207,7 +239,7 @@ window.TIA = window.TIA || {};
     switch (kind) {
       case 'compare': if (pinName === 'in1') return 'in1'; if (pinName === 'in2') return 'in2'; break;
       case 'ton': case 'tof': case 'tp': if (pinName === 'PT') return 'pt'; break;
-      case 'ctu': case 'ctd': if (pinName === 'PV') return 'pv'; break;
+      case 'ctu': case 'ctd': case 'ctud': if (pinName === 'PV') return 'pv'; break;
       case 'move': if (pinName === 'IN') return 'in'; break;
       case 'add': case 'sub': case 'mul': case 'div':
         if (pinName === 'in1') return 'in1'; if (pinName === 'in2') return 'in2'; break;
@@ -305,13 +337,40 @@ window.TIA = window.TIA || {};
         if (notEmpty(p.q)) lines.push(wt(p.q, ctx) + ' = ' + O(0));
         break;
       }
+      case 'ctud': {
+        // pins in [CU, CD, R, LD, PV]; out [QU, QD, CV] (matched by name)
+        const pvi = (box.inputs || []).findIndex((pp) => pp.name === 'PV');
+        const pv = pvi >= 0 ? 'num(' + inE[pvi] + ')' : rdNum(p.pv, ctx);
+        const byName = (nm, fb) => { const i = (box.outputs || []).findIndex((pp) => pp.name === nm); return i >= 0 ? O(i) : fb; };
+        const quV = byName('QU', '_qu'), qdV = byName('QD', '_qd'), cvV = byName('CV', '_cv');
+        lines.push(quV + ', ' + qdV + ', ' + cvV + ' = ctud(' + stId(box.id) + ', bool(' + (inE[0] || 'False') + '), bool(' + (inE[1] || 'False') + '), ' + pv + ', bool(' + (inE[2] || 'False') + '), bool(' + (inE[3] || 'False') + '))');
+        if (notEmpty(p.cv)) lines.push(wt(p.cv, ctx) + ' = ' + cvV);
+        if (notEmpty(p.qu)) lines.push(wt(p.qu, ctx) + ' = ' + quV);
+        if (notEmpty(p.qd)) lines.push(wt(p.qd, ctx) + ' = ' + qdV);
+        break;
+      }
       case 'move': setMain('num(' + (inE[0] || '0') + ')'); if (notEmpty(p.out)) lines.push(wt(p.out, ctx) + ' = ' + O(0)); break;
-      case 'add': setMain('num(' + (inE[0] || '0') + ') + num(' + (inE[1] || '0') + ')'); if (notEmpty(p.out)) lines.push(wt(p.out, ctx) + ' = ' + O(0)); break;
-      case 'sub': setMain('num(' + (inE[0] || '0') + ') - num(' + (inE[1] || '0') + ')'); if (notEmpty(p.out)) lines.push(wt(p.out, ctx) + ' = ' + O(0)); break;
-      case 'mul': setMain('num(' + (inE[0] || '0') + ') * num(' + (inE[1] || '0') + ')'); if (notEmpty(p.out)) lines.push(wt(p.out, ctx) + ' = ' + O(0)); break;
-      case 'div': setMain('idiv(num(' + (inE[0] || '0') + '), num(' + (inE[1] || '0') + '))'); if (notEmpty(p.out)) lines.push(wt(p.out, ctx) + ' = ' + O(0)); break;
-      case 'norm_x': setMain('norm_x(num(' + (inE[0] || '0') + '), num(' + (inE[1] || '0') + '), num(' + (inE[2] || '0') + '))'); if (notEmpty(p.out)) lines.push(wt(p.out, ctx) + ' = ' + O(0)); break;
-      case 'scale_x': setMain('scale_x(num(' + (inE[0] || '0') + '), num(' + (inE[1] || '0') + '), num(' + (inE[2] || '0') + '))'); if (notEmpty(p.out)) lines.push(wt(p.out, ctx) + ' = ' + O(0)); break;
+      case 'add': case 'sub': case 'mul': case 'div': {
+        const a = 'num(' + (inE[0] || '0') + ')', b = 'num(' + (inE[1] || '0') + ')';
+        const OPS = { add: ' + ', sub: ' - ', mul: ' * ' };
+        setMain(k === 'div' ? 'idiv(' + a + ', ' + b + ')' : '(' + a + OPS[k] + b + ')');
+        if (notEmpty(p.out)) lines.push(wt(p.out, ctx) + ' = ' + O(0));
+        const enoE = '(' + (k === 'div' ? b + ' != 0 and ' : '') + '_fin(' + O(0) + '))';
+        if (notEmpty(p.eno)) lines.push(wt(p.eno, ctx) + ' = ' + enoE);
+        const ei = (box.outputs || []).findIndex((pp) => pp.name === 'ENO');
+        if (ei >= 0) lines.push(O(ei) + ' = ' + enoE);
+        break;
+      }
+      case 'norm_x': case 'scale_x': {
+        const mn = 'num(' + (inE[0] || '0') + ')', vl = 'num(' + (inE[1] || '0') + ')', mx = 'num(' + (inE[2] || '0') + ')';
+        setMain(k + '(' + mn + ', ' + vl + ', ' + mx + ')');
+        if (notEmpty(p.out)) lines.push(wt(p.out, ctx) + ' = ' + O(0));
+        const enoE = '(' + (k === 'norm_x' ? mx + ' != ' + mn + ' and ' : '') + '_fin(' + O(0) + '))';
+        if (notEmpty(p.eno)) lines.push(wt(p.eno, ctx) + ' = ' + enoE);
+        const ei = (box.outputs || []).findIndex((pp) => pp.name === 'ENO');
+        if (ei >= 0) lines.push(O(ei) + ' = ' + enoE);
+        break;
+      }
       case 'sr': {
         const qk = 'inst + ' + pyStr(':' + box.id + '|q');
         const cur = notEmpty(box.operand) ? wt(box.operand, ctx) : 'FBP.get(' + qk + ', False)';
@@ -400,9 +459,15 @@ window.TIA = window.TIA || {};
 
   /* =================================================== collect memory keys */
   function collectKeys(project) {
-    const bits = {}, words = {};
-    (project.tags || []).forEach((t) => { (t.dataType === 'Bool' ? bits : words)[t.name] = true; });
-    return { bits, words };
+    const bits = {}, words = {}, realAddrs = [];
+    (project.tags || []).forEach((t) => {
+      if (!t.name && !(t.address || '').trim()) return;
+      const k = storeKey(t);
+      (t.dataType === 'Bool' ? bits : words)[k] = true;
+      // Real values at D addresses are stored as IEEE-754 float32 bytes
+      if (t.dataType === 'Real' && /^[IQM]D\d+$/i.test(k)) realAddrs.push(k);
+    });
+    return { bits, words, realAddrs };
   }
 
   /* ====================================================== gpio pin mapping */
@@ -412,13 +477,14 @@ window.TIA = window.TIA || {};
     map.forEach((m) => {
       if (m.bcm == null || m.bcm === '') return;
       const tag = (project.tags || []).find((t) => t.name === m.tag);
+      const key = tag ? storeKey(tag) : m.tag;    // GPIO reads/writes the storage cell
       const dir = m.dir || (tag && /^I/i.test(tag.address || '') ? 'in' : (tag && /^Q/i.test(tag.address || '') ? 'out' : 'out'));
       if (dir === 'pwm') {                          // analog (software-PWM) output for a numeric tag
         const freq = (m.freq == null || m.freq === '') ? 100 : (parseInt(m.freq, 10) || 100);
-        pwms.push({ tag: m.tag, bcm: m.bcm, freq: freq });
+        pwms.push({ tag: key, bcm: m.bcm, freq: freq });
         return;
       }
-      (dir === 'in' ? ins : outs).push({ tag: m.tag, bcm: m.bcm, pull: m.pull || 'down',
+      (dir === 'in' ? ins : outs).push({ tag: key, bcm: m.bcm, pull: m.pull || 'down',
         activeLow: !!m.activeLow, debounce: (m.debounce == null || m.debounce === '') ? 0 : (parseInt(m.debounce, 10) || 0) });
     });
     return { ins, outs, pwms };
@@ -445,8 +511,7 @@ window.TIA = window.TIA || {};
     push('# Generated by TIA Web Practice  --  Raspberry Pi PLC runtime');
     push('# Project: ' + cmt(project.name || 'PLC') + '   Device: ' + cmt((project.device && project.device.type) || ''));
     push('# Real hardware: gpiozero (Raspberry Pi 5 / BCM).  Test off-Pi:  python3 ' + pyId(project.name || 'plc') + '.py --mock');
-    push('import sys, time, math');
-    push('from collections import defaultdict');
+    push('import math, re, struct, sys, time');
     push('');
     push('SCAN_S = ' + ((Math.max(1, +project.scanMs || 50)) / 1000) + '            # scan cycle time (s) — set in the app');
     push("MOCK = '--mock' in sys.argv");
@@ -466,6 +531,67 @@ window.TIA = window.TIA || {};
     push('    return 0 if d == 0 else (num(v) - num(mn)) / d');
     push('def scale_x(mn, v, mx):');
     push('    return num(v) * (num(mx) - num(mn)) + num(mn)');
+    push('def _fin(x):');
+    push('    return isinstance(x, (int, float)) and math.isfinite(x)');
+    push('');
+    push('# ---- memory: S7-style byte overlap for I/Q/M addresses ----');
+    push('_AB = re.compile(r"^([IQM])(\\d+)\\.(\\d+)$", re.I)');
+    push('_AW = re.compile(r"^([IQM])([BWD])(\\d+)$", re.I)');
+    push('class Mem(dict):');
+    push('    """M0.0..M1.7 alias MW0 (big-endian); MB=byte, MW=int16, MD=int32 or');
+    push('    float32 for Real-tagged addresses. Non-address keys act like a dict."""');
+    push('    def __init__(self, real_addrs=()):');
+    push('        super().__init__()');
+    push('        self._by = {"I": {}, "Q": {}, "M": {}}');
+    push('        self._real = set(str(a).upper() for a in real_addrs)');
+    push('        self._touch = set()');
+    push('    def touched(self):');
+    push('        return sorted(self._touch)');
+    push('    def __getitem__(self, k):');
+    push('        ks = str(k)');
+    push('        m = _AB.match(ks)');
+    push('        if m:');
+    push('            return bool((self._by[m.group(1).upper()].get(int(m.group(2)), 0) >> int(m.group(3))) & 1)');
+    push('        m = _AW.match(ks)');
+    push('        if m:');
+    push('            a, sz, off = self._by[m.group(1).upper()], m.group(2).upper(), int(m.group(3))');
+    push('            if sz == "B": return a.get(off, 0)');
+    push('            if sz == "W":');
+    push('                v = (a.get(off, 0) << 8) | a.get(off + 1, 0)');
+    push('                return v - 0x10000 if v >= 0x8000 else v');
+    push('            bs = bytes((a.get(off, 0), a.get(off + 1, 0), a.get(off + 2, 0), a.get(off + 3, 0)))');
+    push('            if ks.upper() in self._real:');
+    push('                return float("%.7g" % struct.unpack(">f", bs)[0])');
+    push('            return struct.unpack(">i", bs)[0]');
+    push('        return dict.get(self, ks, 0)');
+    push('    def __setitem__(self, k, v):');
+    push('        ks = str(k)');
+    push('        m = _AB.match(ks)');
+    push('        if m:');
+    push('            a, by, bi = self._by[m.group(1).upper()], int(m.group(2)), int(m.group(3))');
+    push('            cur = a.get(by, 0)');
+    push('            a[by] = (cur | (1 << bi)) if v else (cur & ~(1 << bi) & 0xFF)');
+    push('            self._touch.add(ks.upper())');
+    push('            return');
+    push('        m = _AW.match(ks)');
+    push('        if m:');
+    push('            a, sz, off = self._by[m.group(1).upper()], m.group(2).upper(), int(m.group(3))');
+    push('            self._touch.add(ks.upper())');
+    push('            x = num(v)');
+    push('            if not _fin(x): x = 0');
+    push('            if sz == "B":');
+    push('                a[off] = int(math.floor(x + 0.5)) & 0xFF');
+    push('            elif sz == "W":');
+    push('                n = int(math.floor(x + 0.5)) & 0xFFFF');
+    push('                a[off] = n >> 8; a[off + 1] = n & 0xFF');
+    push('            else:');
+    push('                if ks.upper() in self._real or (isinstance(x, float) and not float(x).is_integer()):');
+    push('                    bs = struct.pack(">f", float(x))');
+    push('                else:');
+    push('                    bs = struct.pack(">I", int(math.floor(x + 0.5)) & 0xFFFFFFFF)');
+    push('                a[off], a[off + 1], a[off + 2], a[off + 3] = bs[0], bs[1], bs[2], bs[3]');
+    push('            return');
+    push('        super().__setitem__(ks, v)');
     push('');
     push('# ---- state for timers / counters / edges ----');
     push('ST = {}');
@@ -517,6 +643,15 @@ window.TIA = window.TIA || {};
     push('    if load: s["c"] = pv');
     push('    elif cd and not s["prev"]: s["c"] = max(s["c"] - 1, -32767)');
     push('    s["prev"] = cd; return (s["c"] <= 0, s["c"])');
+    push('def ctud(i, cu, cd, pv, reset, load):');
+    push('    s = ST.setdefault(i, {"c": 0, "pu": False, "pd": False})');
+    push('    eu = cu and not s["pu"]; ed = cd and not s["pd"]');
+    push('    if reset: s["c"] = 0');
+    push('    elif load: s["c"] = pv');
+    push('    elif eu and not ed: s["c"] = min(s["c"] + 1, 32767)');
+    push('    elif ed and not eu: s["c"] = max(s["c"] - 1, -32767)');
+    push('    s["pu"] = cu; s["pd"] = cd');
+    push('    return (s["c"] >= pv, s["c"] <= 0, s["c"])');
     push('def redge(i, clk):');
     push('    s = ST.setdefault(i, {"p": False}); q = clk and not s["p"]; s["p"] = clk; return q');
     push('def fedge(i, clk):');
@@ -524,8 +659,8 @@ window.TIA = window.TIA || {};
     push('def sr(cur, s_in, r_in):  return False if r_in else (True if s_in else cur)   # reset dominant');
     push('def rs(cur, r_in, s_in):  return True if s_in else (False if r_in else cur)   # set dominant');
     push('');
-    push('# ---- memory (tag name -> value) ----');
-    push('M = defaultdict(int)');
+    push('# ---- memory (storage key = tag address if set, else tag name) ----');
+    push('M = Mem([' + keys.realAddrs.map(pyStr).join(', ') + '])');
     const bitKeys = Object.keys(keys.bits), wordKeys = Object.keys(keys.words);
     if (bitKeys.length) push('for _k in [' + bitKeys.map(pyStr).join(', ') + ']: M[_k] = False');
     wordKeys.forEach((k) => push('M[' + pyStr(k) + '] = 0'));

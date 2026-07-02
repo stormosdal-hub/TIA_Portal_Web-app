@@ -79,8 +79,9 @@
           while (i < n && /[A-Za-z0-9_.]/.test(src[i])) { rest += src[i]; adv(1); }
           const up = s.toUpperCase();
           let val;
-          if (up === 'T' || up === 'TIME') val = (T.parseTime ? T.parseTime('T#' + rest) : parseFloat(rest)) || 0;
-          else val = parseFloat(rest) || 0;
+          if (up === 'T' || up === 'TIME' || up === 'S5T' || up === 'S5TIME') {
+            val = (T.parseTime ? T.parseTime('T#' + rest) : parseFloat(rest)) || 0;
+          } else val = parseFloat(rest) || 0;
           toks.push({ t: 'num', v: val, line: startLine, col: startCol });
           continue;
         }

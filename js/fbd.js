@@ -323,7 +323,7 @@
   // Boxes that carry a title bar (function/timer/counter/math) vs. the bare
   // gate-style boxes (&, >=1, =1, NOT, =) that show only a big centred glyph.
   function hasTitleBar(kind) {
-    return ['compare', 'ton', 'tof', 'tp', 'ctu', 'ctd', 'move', 'add', 'sub', 'mul', 'div', 'call',
+    return ['compare', 'ton', 'tof', 'tp', 'ctu', 'ctd', 'ctud', 'move', 'add', 'sub', 'mul', 'div', 'call',
             'norm_x', 'scale_x',
             'sr', 'rs', 'p_trig', 'n_trig', 'r_trig', 'f_trig'].indexOf(kind) >= 0;
   }
@@ -849,6 +849,7 @@
       case 'ton': case 'tof': case 'tp': return { PT: 'pt' };
       case 'ctu': return { PV: 'pv' };
       case 'ctd': return { PV: 'pv' };
+      case 'ctud': return { PV: 'pv' };
       case 'move': return { IN: 'in' };
       case 'add': case 'sub': case 'mul': case 'div': return { in1: 'in1', in2: 'in2' };
       case 'norm_x': case 'scale_x': return { MIN: 'min', VALUE: 'val', MAX: 'max' };
@@ -860,9 +861,10 @@
     switch (kind) {
       case 'ton': case 'tof': case 'tp': return { Q: 'q', ET: 'et' };
       case 'ctu': case 'ctd': return { Q: 'q', CV: 'cv' };
+      case 'ctud': return { QU: 'qu', QD: 'qd', CV: 'cv' };
       case 'move': return { OUT: 'out' };
-      case 'add': case 'sub': case 'mul': case 'div': return { OUT: 'out' };
-      case 'norm_x': case 'scale_x': return { OUT: 'out' };
+      case 'add': case 'sub': case 'mul': case 'div': return { OUT: 'out', ENO: 'eno' };
+      case 'norm_x': case 'scale_x': return { OUT: 'out', ENO: 'eno' };
       default: return {};
     }
   }
