@@ -15,22 +15,38 @@ window.TIA = window.TIA || {};
   T.codegen = T.codegen || {};
 
   /* ---------------------------------------------------------------- helpers */
-  function pyStr(s) { return "'" + String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'"; }
+  function pyStr(s) {
+    return "'" + String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'")
+      .replace(/\r/g, '\\r').replace(/\n/g, '\\n') + "'";
+  }
   function pyId(s) { return String(s || 'blk').replace(/[^A-Za-z0-9_]/g, '_'); }
+  // user text going into a generated COMMENT must never inject a new line of code
+  function cmt(s) { return String(s == null ? '' : s).replace(/[\r\n]+/g, ' '); }
+  // unique Python function name per block ("My Block" and "My_Block" both pyId
+  // to the same identifier — type+number disambiguates)
+  function fnName(blk) { return 'block_' + pyId(blk.name) + '_' + (blk.type || 'B') + (blk.number || 0); }
   const CMP = { '==': '==', '<>': '!=', '>': '>', '<': '<', '>=': '>=', '<=': '<=' };
+  const ADDR_RE = /^[IQM](\d+\.\d+|W\d+|B\d+|D\d+)$/i;
 
   // resolve an operand (in a block ctx) -> { lit } literal expr | { key } global | { local } member
+  // Mirrors T.resolve's aliasing: a tag's name, its ADDRESS, and any case
+  // variant all hit the SAME memory cell (read_inputs writes by tag name).
   function resolveOp(op, ctx) {
-    const raw = (op == null ? '' : String(op)).trim();
+    let raw = (op == null ? '' : String(op)).trim();
     if (raw === '') return { lit: 'False' };
+    if (raw.charAt(0) === '%') raw = raw.slice(1).trim();   // %I0.0 ≡ I0.0
     if (/^-?\d+(\.\d+)?$/.test(raw)) return { lit: raw };
     if (/^(true|false)$/i.test(raw)) return { lit: /^true$/i.test(raw) ? 'True' : 'False' };
     if (/^t#/i.test(raw)) return { lit: String(T.parseTime(raw) / 1000) };   // time literal -> seconds
     if (ctx && ctx.members && Object.prototype.hasOwnProperty.call(ctx.members, raw.toLowerCase())) {
       return { local: ctx.members[raw.toLowerCase()] };
     }
-    const tag = T.project && T.project.tags.find((t) => t.name === raw);
-    return { key: tag ? tag.name : raw };
+    const tags = (T.project && T.project.tags) || [];
+    const tag = tags.find((t) => t.name === raw)
+      || tags.find((t) => t.name && t.name.toLowerCase() === raw.toLowerCase())
+      || tags.find((t) => (t.address || '').toUpperCase() === raw.toUpperCase());
+    if (tag) return { key: tag.name };
+    return { key: ADDR_RE.test(raw) ? raw.toUpperCase() : raw };
   }
   // Python expression that READS an operand's value
   function rd(op, ctx) {
@@ -41,7 +57,20 @@ window.TIA = window.TIA || {};
   }
   function rdBool(op, ctx) { return 'bool(' + rd(op, ctx) + ')'; }
   function rdNum(op, ctx) { return 'num(' + rd(op, ctx) + ')'; }
-  function secs(op, ctx) { const r = resolveOp(op, ctx); return r.lit !== undefined ? r.lit : ('num(' + rd(op, ctx) + ')'); }
+  // operand/literal -> Python expr in MILLISECONDS (the app's native time unit:
+  // T#5s parses to 5000, a plain number is ms, a tag/member VALUE is ms)
+  function msExpr(op, ctx) {
+    const raw = (op == null ? '' : String(op)).trim();
+    if (raw === '') return '0';
+    if (/^-?\d+(\.\d+)?$/.test(raw)) return String(Math.max(0, parseFloat(raw)));
+    if (/^t#/i.test(raw)) return String(Math.max(0, T.parseTime(raw)));
+    return 'num(' + rd(raw, ctx) + ')';
+  }
+  // PT for the generated timer helpers, which take SECONDS
+  function secs(op, ctx) { return '(' + msExpr(op, ctx) + ' / 1000.0)'; }
+  // per-element runtime-state id: scoped by the executing instance so an FB's
+  // timers/counters/edges never share state between instances (parity: sim.js inst())
+  function stId(id) { return '(inst + ' + pyStr(':' + id) + ')'; }
   // Python L-value for WRITING an operand (or null if not writable)
   function wt(op, ctx) {
     const r = resolveOp(op, ctx);
@@ -56,8 +85,8 @@ window.TIA = window.TIA || {};
     switch (el.kind) {
       case 'contact_no': return rd(el.operand, ctx);
       case 'contact_nc': return '(not ' + rd(el.operand, ctx) + ')';
-      case 'edge_p': return 'redge(' + pyStr(el.id) + ', ' + rdBool(el.operand, ctx) + ')';
-      case 'edge_n': return 'fedge(' + pyStr(el.id) + ', ' + rdBool(el.operand, ctx) + ')';
+      case 'edge_p': return 'redge(' + stId(el.id) + ', ' + rdBool(el.operand, ctx) + ')';
+      case 'edge_n': return 'fedge(' + stId(el.id) + ', ' + rdBool(el.operand, ctx) + ')';
       case 'compare': {
         const op = CMP[(el.params && el.params.op) || '=='] || '==';
         return '(' + rdNum(el.params.in1, ctx) + ' ' + op + ' ' + rdNum(el.params.in2, ctx) + ')';
@@ -69,7 +98,12 @@ window.TIA = window.TIA || {};
     const stages = net.stages || [];
     if (!stages.length) return 'True';
     return stages.map((st) => {
-      const brs = (st.branches || []).map((br) => {
+      const branches = st.branches || [];
+      // an empty branch is a bare wire only when the WHOLE stage is empty;
+      // alongside a populated branch it is an unfinished arm (parity: sim.js stageValue)
+      const withEls = branches.filter((br) => (br.elements || []).length);
+      const use = withEls.length ? withEls : branches.slice(0, 1);
+      const brs = use.map((br) => {
         const els = br.elements || [];
         return els.length ? '(' + els.map((e) => inlineExpr(e, ctx)).join(' and ') + ')' : 'True';
       });
@@ -92,17 +126,17 @@ window.TIA = window.TIA || {};
       case 'coil_neg':   return [target + ' = (not p)'];
       case 'coil_set':   return ['if p: ' + target + ' = True'];
       case 'coil_reset': return ['if p: ' + target + ' = False'];
-      case 'ton': return [setQ(p.q, 'ton(' + pyStr(el.id) + ', p, ' + secs(p.pt, ctx) + ')', ctx)];
-      case 'tof': return [setQ(p.q, 'tof(' + pyStr(el.id) + ', p, ' + secs(p.pt, ctx) + ')', ctx)];
-      case 'tp':  return [setQ(p.q, 'tp('  + pyStr(el.id) + ', p, ' + secs(p.pt, ctx) + ')', ctx)];
+      case 'ton': return [setQ(p.q, 'ton(' + stId(el.id) + ', p, ' + secs(p.pt, ctx) + ')', ctx)];
+      case 'tof': return [setQ(p.q, 'tof(' + stId(el.id) + ', p, ' + secs(p.pt, ctx) + ')', ctx)];
+      case 'tp':  return [setQ(p.q, 'tp('  + stId(el.id) + ', p, ' + secs(p.pt, ctx) + ')', ctx)];
       case 'ctu': {
-        const lines = ['q, cv = ctu(' + pyStr(el.id) + ', p, ' + rdNum(p.pv, ctx) + ', ' + rdBool(p.r || '', ctx) + ')'];
+        const lines = ['q, cv = ctu(' + stId(el.id) + ', p, ' + rdNum(p.pv, ctx) + ', ' + rdBool(p.r || '', ctx) + ')'];
         if (notEmpty(p.cv)) lines.push(wt(p.cv, ctx) + ' = cv');
         if (notEmpty(p.q)) lines.push(wt(p.q, ctx) + ' = q');
         return lines;
       }
       case 'ctd': {
-        const lines = ['q, cv = ctd(' + pyStr(el.id) + ', p, ' + rdNum(p.pv, ctx) + ', ' + rdBool(p.r || '', ctx) + ')'];
+        const lines = ['q, cv = ctd(' + stId(el.id) + ', p, ' + rdNum(p.pv, ctx) + ', ' + rdBool(p.r || '', ctx) + ')'];
         if (notEmpty(p.cv)) lines.push(wt(p.cv, ctx) + ' = cv');
         if (notEmpty(p.q)) lines.push(wt(p.q, ctx) + ' = q');
         return lines;
@@ -116,19 +150,25 @@ window.TIA = window.TIA || {};
       case 'scale_x': return ['if p: ' + wt(p.out, ctx) + ' = scale_x(' + rdNum(p.min, ctx) + ', ' + rdNum(p.val, ctx) + ', ' + rdNum(p.max, ctx) + ')'];
       case 'sr': return [target + ' = sr(' + target + ', p, ' + rdBool(p.r || '', ctx) + ')'];
       case 'rs': return [target + ' = rs(' + target + ', p, ' + rdBool(p.s || '', ctx) + ')'];
-      case 'p_trig': case 'r_trig': return [setQ(p.q, 'redge(' + pyStr(el.id) + ', p)', ctx)];
-      case 'n_trig': case 'f_trig': return [setQ(p.q, 'fedge(' + pyStr(el.id) + ', p)', ctx)];
+      case 'p_trig': case 'r_trig': return [setQ(p.q, 'redge(' + stId(el.id) + ', p)', ctx)];
+      case 'n_trig': case 'f_trig': return [setQ(p.q, 'fedge(' + stId(el.id) + ', p)', ctx)];
       case 'call': return callLines(el, ctx, 'p');
       default: return ['# unsupported output: ' + el.kind];
     }
+  }
+
+  // Instance name for a call site: the instance DB's name, else a per-call-site
+  // name from the FULL element id (a truncated id can collide across call sites).
+  function callInstName(node, tb) {
+    const dbName = node.params && node.params.instanceDb && (T.findBlock(node.params.instanceDb) || {}).name;
+    return dbName || (tb.name + '_' + String(node.id));
   }
 
   // A block call (LAD element or FBD box). `enExpr` is the Python EN expression.
   function callLines(node, ctx, enExpr) {
     const tb = T.findBlock(node.params && node.params.target);
     if (!tb) return ['# call: target block not found'];
-    const dbName = node.params && node.params.instanceDb && (T.findBlock(node.params.instanceDb) || {}).name;
-    const inst = dbName || (tb.name + '_' + String(node.id).slice(-4));
+    const inst = callInstName(node, tb);
     const args = node.args || {};                       // LAD: el.args ; FBD: read from pins below
     const lines = ['if ' + enExpr + ':'];
     T.ifaceCallInputs(tb).forEach((m) => {
@@ -136,10 +176,10 @@ window.TIA = window.TIA || {};
       const src = node._fbdArg ? node._fbdArg(m.name) : (notEmpty(a) ? rd(a, ctx) : null);
       if (src != null) lines.push('    M[' + pyStr(inst + '.' + m.name) + '] = ' + src);
     });
-    lines.push('    block_' + pyId(tb.name) + '(' + pyStr(inst) + ')');
+    lines.push('    ' + fnName(tb) + '(' + pyStr(inst) + ')');
     T.ifaceCallOutputs(tb).forEach((m) => {
       const a = args[m.name];
-      if (node._fbdOut) { node._fbdOut(m.name, 'M[' + pyStr(inst + '.' + m.name) + ']'); return; }
+      if (node._fbdOut) return;                         // FBD output pins are read after the if (EN may be false)
       if (notEmpty(a)) { const t = wt(a, ctx); if (t) lines.push('    ' + t + ' = M[' + pyStr(inst + '.' + m.name) + ']'); }
     });
     return lines;
@@ -147,7 +187,7 @@ window.TIA = window.TIA || {};
 
   /* ------------------------------------------------------ a LAD network */
   function ladNetwork(net, ctx, idx) {
-    const lines = ['# Network ' + idx + (net.title ? ': ' + net.title : '')];
+    const lines = ['# Network ' + idx + (net.title ? ': ' + cmt(net.title) : '')];
     lines.push('p = ' + rungPower(net, ctx));
     (net.outputs || []).forEach((el) => { outputLines(el, ctx).forEach((l) => lines.push(l)); });
     return lines;
@@ -158,8 +198,27 @@ window.TIA = window.TIA || {};
    *  into an already-computed pin uses its value, otherwise the last scan's
    *  cached value (FBP) so latches/feedback work.
    * ==================================================================== */
+  // map a box pin NAME -> params key (parity: sim.js inParamKey — an unwired
+  // numeric pin reads its box.params literal/operand, NOT pin.operand)
+  function inParamKey(kind, pinName) {
+    switch (kind) {
+      case 'compare': if (pinName === 'in1') return 'in1'; if (pinName === 'in2') return 'in2'; break;
+      case 'ton': case 'tof': case 'tp': if (pinName === 'PT') return 'pt'; break;
+      case 'ctu': case 'ctd': if (pinName === 'PV') return 'pv'; break;
+      case 'move': if (pinName === 'IN') return 'in'; break;
+      case 'add': case 'sub': case 'mul': case 'div':
+        if (pinName === 'in1') return 'in1'; if (pinName === 'in2') return 'in2'; break;
+      case 'norm_x': case 'scale_x':
+        if (pinName === 'MIN') return 'min';
+        if (pinName === 'VALUE') return 'val';
+        if (pinName === 'MAX') return 'max';
+        break;
+    }
+    return null;
+  }
+
   function fbdNetwork(net, ctx, idx) {
-    const lines = ['# Network ' + idx + (net.title ? ': ' + net.title : '') + '  (FBD)'];
+    const lines = ['# Network ' + idx + (net.title ? ': ' + cmt(net.title) : '') + '  (FBD)'];
     const boxes = net.boxes || [], wires = net.wires || [];
     const boxById = {}; boxes.forEach((b) => { boxById[b.id] = b; });
     // wire lookups
@@ -168,6 +227,8 @@ window.TIA = window.TIA || {};
     // topo order (ignore back edges)
     const order = topo(boxes, wires);
     const outVar = (boxId, pinId) => 'o_' + pyId(boxId).slice(-6) + '_' + pyId(pinId).slice(-4);
+    // FBP cache keys are instance-scoped (parity: sim.js pinKey)
+    const fbpKey = (boxId, pinId) => 'inst + ' + pyStr(':' + boxId + '|' + pinId);
 
     // expression for an input pin's value
     function inExpr(box, pin) {
@@ -175,9 +236,12 @@ window.TIA = window.TIA || {};
       let e;
       if (src) {
         e = computed[src.box + '|' + src.pin] ? outVar(src.box, src.pin)
-          : ('FBP.get(' + pyStr(src.box + '|' + src.pin) + ', False)');   // feedback / not yet computed
+          : ('FBP.get(' + fbpKey(src.box, src.pin) + ', False)');   // feedback / not yet computed
       } else {
-        e = rd(pin.operand, ctx);
+        const pk = inParamKey(box.kind, pin.name);
+        if (pk === 'pt') e = msExpr((box.params || {})[pk], ctx);   // PT: app-native ms
+        else if (pk) e = rdNum((box.params || {})[pk], ctx);        // numeric param (PV/in1/…)
+        else e = rd(pin.operand, ctx);                              // boolean pin operand
       }
       if (pin.inverted) e = '(not ' + e + ')';
       return e;
@@ -189,7 +253,7 @@ window.TIA = window.TIA || {};
       const ov = fbdBox(box, inE, ctx, lines, outVar);   // returns map pinId->expr written into lines
       outs.forEach((p) => { computed[box.id + '|' + p.id] = true; });
       // persist output pin values for next scan (feedback)
-      outs.forEach((p, i) => { lines.push('FBP[' + pyStr(box.id + '|' + p.id) + '] = ' + outVar(box.id, p.id)); });
+      outs.forEach((p, i) => { lines.push('FBP[' + fbpKey(box.id, p.id) + '] = ' + outVar(box.id, p.id)); });
     });
     return lines;
   }
@@ -219,11 +283,22 @@ window.TIA = window.TIA || {};
         setMain('(num(' + (inE[0] || '0') + ') ' + op + ' num(' + (inE[1] || '0') + '))');
         break;
       }
-      case 'ton': setMain('ton(' + pyStr(box.id) + ', bool(' + (inE[0] || 'False') + '), ' + secs(p.pt, ctx) + ')'); break;
-      case 'tof': setMain('tof(' + pyStr(box.id) + ', bool(' + (inE[0] || 'False') + '), ' + secs(p.pt, ctx) + ')'); break;
-      case 'tp':  setMain('tp('  + pyStr(box.id) + ', bool(' + (inE[0] || 'False') + '), ' + secs(p.pt, ctx) + ')'); break;
-      case 'ctu': lines.push(O(0) + ', ' + cvVar(box, outVar) + ' = ctu(' + pyStr(box.id) + ', bool(' + (inE[0] || 'False') + '), ' + rdNum(p.pv, ctx) + ', ' + 'bool(' + (inE[1] || 'False') + '))'); break;
-      case 'ctd': lines.push(O(0) + ', ' + cvVar(box, outVar) + ' = ctd(' + pyStr(box.id) + ', bool(' + (inE[0] || 'False') + '), ' + rdNum(p.pv, ctx) + ', ' + 'bool(' + (inE[1] || 'False') + '))'); break;
+      case 'ton': case 'tof': case 'tp': {
+        // PT pin value (wired or param literal) is in app-native ms → seconds
+        const pti = (box.inputs || []).findIndex((pp) => pp.name === 'PT');
+        const pt = pti >= 0 ? '(num(' + inE[pti] + ') / 1000.0)' : secs(p.pt, ctx);
+        setMain(k + '(' + stId(box.id) + ', bool(' + (inE[0] || 'False') + '), ' + pt + ')');
+        if (notEmpty(p.q)) lines.push(wt(p.q, ctx) + ' = ' + O(0));   // sim.js writes par.q in FBD too
+        break;
+      }
+      case 'ctu': case 'ctd': {
+        const pvi = (box.inputs || []).findIndex((pp) => pp.name === 'PV');
+        const pv = pvi >= 0 ? 'num(' + inE[pvi] + ')' : rdNum(p.pv, ctx);
+        lines.push(O(0) + ', ' + cvVar(box, outVar) + ' = ' + k + '(' + stId(box.id) + ', bool(' + (inE[0] || 'False') + '), ' + pv + ', bool(' + (inE[1] || 'False') + '))');
+        if (notEmpty(p.cv)) lines.push(wt(p.cv, ctx) + ' = ' + cvVar(box, outVar));   // sim.js writes par.cv/par.q in FBD too
+        if (notEmpty(p.q)) lines.push(wt(p.q, ctx) + ' = ' + O(0));
+        break;
+      }
       case 'move': setMain('num(' + (inE[0] || '0') + ')'); if (notEmpty(p.out)) lines.push(wt(p.out, ctx) + ' = ' + O(0)); break;
       case 'add': setMain('num(' + (inE[0] || '0') + ') + num(' + (inE[1] || '0') + ')'); if (notEmpty(p.out)) lines.push(wt(p.out, ctx) + ' = ' + O(0)); break;
       case 'sub': setMain('num(' + (inE[0] || '0') + ') - num(' + (inE[1] || '0') + ')'); if (notEmpty(p.out)) lines.push(wt(p.out, ctx) + ' = ' + O(0)); break;
@@ -232,29 +307,40 @@ window.TIA = window.TIA || {};
       case 'norm_x': setMain('norm_x(num(' + (inE[0] || '0') + '), num(' + (inE[1] || '0') + '), num(' + (inE[2] || '0') + '))'); if (notEmpty(p.out)) lines.push(wt(p.out, ctx) + ' = ' + O(0)); break;
       case 'scale_x': setMain('scale_x(num(' + (inE[0] || '0') + '), num(' + (inE[1] || '0') + '), num(' + (inE[2] || '0') + '))'); if (notEmpty(p.out)) lines.push(wt(p.out, ctx) + ' = ' + O(0)); break;
       case 'sr': {
-        const cur = notEmpty(box.operand) ? wt(box.operand, ctx) : 'FBP.get(' + pyStr(box.id + '|q') + ', False)';
+        const qk = 'inst + ' + pyStr(':' + box.id + '|q');
+        const cur = notEmpty(box.operand) ? wt(box.operand, ctx) : 'FBP.get(' + qk + ', False)';
         setMain('sr(' + cur + ', bool(' + (inE[0] || 'False') + '), bool(' + (inE[1] || 'False') + '))');
         if (notEmpty(box.operand)) lines.push(wt(box.operand, ctx) + ' = ' + O(0));
-        lines.push('FBP[' + pyStr(box.id + '|q') + '] = ' + O(0));
+        lines.push('FBP[' + qk + '] = ' + O(0));
         break;
       }
       case 'rs': {
-        const cur = notEmpty(box.operand) ? wt(box.operand, ctx) : 'FBP.get(' + pyStr(box.id + '|q') + ', False)';
-        setMain('rs(' + cur + ', bool(' + (inE[1] || 'False') + '), bool(' + (inE[0] || 'False') + '))');
+        // pins are [R, S1] (catalog order): inE[0] resets, inE[1] sets — parity: sim.js
+        const qk = 'inst + ' + pyStr(':' + box.id + '|q');
+        const cur = notEmpty(box.operand) ? wt(box.operand, ctx) : 'FBP.get(' + qk + ', False)';
+        setMain('rs(' + cur + ', bool(' + (inE[0] || 'False') + '), bool(' + (inE[1] || 'False') + '))');
         if (notEmpty(box.operand)) lines.push(wt(box.operand, ctx) + ' = ' + O(0));
-        lines.push('FBP[' + pyStr(box.id + '|q') + '] = ' + O(0));
+        lines.push('FBP[' + qk + '] = ' + O(0));
         break;
       }
-      case 'p_trig': case 'r_trig': setMain('redge(' + pyStr(box.id) + ', bool(' + (inE[0] || 'False') + '))'); if (notEmpty(p.q)) lines.push(wt(p.q, ctx) + ' = ' + O(0)); break;
-      case 'n_trig': case 'f_trig': setMain('fedge(' + pyStr(box.id) + ', bool(' + (inE[0] || 'False') + '))'); if (notEmpty(p.q)) lines.push(wt(p.q, ctx) + ' = ' + O(0)); break;
+      case 'p_trig': case 'r_trig': setMain('redge(' + stId(box.id) + ', bool(' + (inE[0] || 'False') + '))'); if (notEmpty(p.q)) lines.push(wt(p.q, ctx) + ' = ' + O(0)); break;
+      case 'n_trig': case 'f_trig': setMain('fedge(' + stId(box.id) + ', bool(' + (inE[0] || 'False') + '))'); if (notEmpty(p.q)) lines.push(wt(p.q, ctx) + ' = ' + O(0)); break;
       case 'call': {
         const en = 'bool(' + (inE[0] || 'False') + ')';
-        // map member name -> input pin expr / output assignment target
+        // map member name -> input pin expr (inputs are copied only while EN)
         box._fbdArg = (mname) => { const idx = (box.inputs || []).findIndex((pp) => pp.name === mname); return idx >= 0 ? inE[idx] : null; };
-        box._fbdOut = (mname, srcMem) => { const idx = (box.outputs || []).findIndex((pp) => pp.name === mname); if (idx >= 0) lines.push('    ' + O(idx) + ' = ' + srcMem); };
-        // pre-declare output vars so they exist even when EN is false
-        outs.forEach((pp, i) => lines.push(O(i) + ' = False'));
+        box._fbdOut = true;              // marker: outputs handled below, unconditionally
         callLines(box, ctx, en).forEach((l) => lines.push(l));
+        // output pins reflect the instance's members even when EN is false
+        // (sim.js and the online engine hold last values; False-collapse diverged)
+        const tb = T.findBlock(box.params && box.params.target);
+        if (tb) {
+          const instName = callInstName(box, tb);
+          T.ifaceCallOutputs(tb).forEach((m) => {
+            const idx = (box.outputs || []).findIndex((pp) => pp.name === m.name);
+            if (idx >= 0) lines.push(O(idx) + ' = M[' + pyStr(instName + '.' + m.name) + ']');
+          });
+        }
         lines.push(O(0) + ' = ' + en);   // ENO follows EN
         break;
       }
@@ -350,7 +436,7 @@ window.TIA = window.TIA || {};
     push('#!/usr/bin/env python3');
     push('# -*- coding: utf-8 -*-');
     push('# Generated by TIA Web Practice  --  Raspberry Pi PLC runtime');
-    push('# Project: ' + (project.name || 'PLC') + '   Device: ' + ((project.device && project.device.type) || ''));
+    push('# Project: ' + cmt(project.name || 'PLC') + '   Device: ' + cmt((project.device && project.device.type) || ''));
     push('# Real hardware: gpiozero (Raspberry Pi 5 / BCM).  Test off-Pi:  python3 ' + pyId(project.name || 'plc') + '.py --mock');
     push('import sys, time, math');
     push('from collections import defaultdict');
@@ -377,6 +463,7 @@ window.TIA = window.TIA || {};
     push('# ---- state for timers / counters / edges ----');
     push('ST = {}');
     push('FBP = {}            # FBD pin cache (feedback / latches)');
+    push('_CALLSTACK = set()  # re-entrant block-call guard (parity with the simulator)');
     push('def ton(i, inp, pt):');
     push('    s = ST.setdefault(i, {"t0": None})');
     push('    if inp:');
@@ -401,12 +488,12 @@ window.TIA = window.TIA || {};
     push('def ctu(i, cu, pv, reset):');
     push('    s = ST.setdefault(i, {"c": 0, "prev": False})');
     push('    if reset: s["c"] = 0');
-    push('    elif cu and not s["prev"]: s["c"] += 1');
+    push('    elif cu and not s["prev"]: s["c"] = min(s["c"] + 1, 32767)');
     push('    s["prev"] = cu; return (s["c"] >= pv, s["c"])');
     push('def ctd(i, cd, pv, load):');
-    push('    s = ST.setdefault(i, {"c": pv, "prev": False})');
+    push('    s = ST.setdefault(i, {"c": 0, "prev": False})   # IEC: CV starts at 0 until LD');
     push('    if load: s["c"] = pv');
-    push('    elif cd and not s["prev"]: s["c"] -= 1');
+    push('    elif cd and not s["prev"]: s["c"] = max(s["c"] - 1, -32767)');
     push('    s["prev"] = cd; return (s["c"] <= 0, s["c"])');
     push('def redge(i, clk):');
     push('    s = ST.setdefault(i, {"p": False}); q = clk and not s["p"]; s["p"] = clk; return q');
@@ -466,9 +553,15 @@ window.TIA = window.TIA || {};
 
     // ---- block functions (FC/FB) ----
     fcs.concat(fbs).forEach((blk) => {
-      push('def block_' + pyId(blk.name) + "(inst=''):");
-      push('    # ' + blk.type + blk.number + '  ' + blk.name + '  (' + blk.lang + ')');
-      ind(blockBody(blk), 4);
+      const fn = fnName(blk);
+      push('def ' + fn + "(inst=''):");
+      push('    # ' + cmt(blk.type + blk.number + '  ' + blk.name + '  (' + blk.lang + ')'));
+      push('    if ' + pyStr(fn) + ' in _CALLSTACK: return   # re-entrant call blocked');
+      push('    _CALLSTACK.add(' + pyStr(fn) + ')');
+      push('    try:');
+      ind(blockBody(blk), 8);
+      push('    finally:');
+      push('        _CALLSTACK.discard(' + pyStr(fn) + ')');
       push('');
     });
 
@@ -476,22 +569,24 @@ window.TIA = window.TIA || {};
     push('def scan():');
     push("    inst = ''");
     obs.forEach((blk) => {
-      push('    # ===== ' + blk.type + blk.number + '  ' + blk.name + ' =====');
+      push('    # ===== ' + cmt(blk.type + blk.number + '  ' + blk.name) + ' =====');
       ind(blockBody(blk), 4);
     });
     // orphan FC/FB (not referenced by any call) still run, like the simulator
     const orphans = fcs.concat(fbs).filter((b) => !calledNames[b.id]);
     if (orphans.length) {
       push('    # uncalled blocks (run once per scan, like the simulator)');
-      orphans.forEach((b) => push('    block_' + pyId(b.name) + '(' + pyStr(b.name + '_inst') + ')'));
+      orphans.forEach((b) => push('    ' + fnName(b) + '(' + pyStr(b.name + '_inst') + ')'));
     }
     push('');
     push('def run(cycles=None):');
     push('    n = 0');
     push('    try:');
     push('        while cycles is None or n < cycles:');
+    push('            t0 = time.monotonic()');
     push('            read_inputs(); scan(); write_outputs()');
-    push('            time.sleep(SCAN_S); n += 1');
+    push('            time.sleep(max(0.0, SCAN_S - (time.monotonic() - t0)))');
+    push('            n += 1');
     push('    except KeyboardInterrupt:');
     push('        pass');
     push('');

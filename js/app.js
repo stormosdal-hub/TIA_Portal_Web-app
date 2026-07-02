@@ -376,30 +376,83 @@
   }
 
   /* ------------------------------------------------------ compile */
+  // Consistency check: missing operands, unknown (typo) operands, dangling call
+  // targets / missing instance DBs, SCL parse errors, duplicate tags.
+  // Returns { errors, warnings } so callers (e.g. PLC download) can gate on it.
   T.app.compile = function () {
     outputLog = [];
     const stamp = new Date().toLocaleTimeString();
     let warnings = 0, errors = 0, elements = 0, networks = 0;
+    const warn = (m) => { warnings++; outputLog.push('<span class="tia-output-warn">⚠ ' + m + '</span>'); };
+    const err = (m) => { errors++; outputLog.push('<span class="tia-output-err">✖ ' + m + '</span>'); };
+
+    // duplicate tag names / addresses (the runtime binds to the FIRST match)
+    const seenName = Object.create(null), seenAddr = Object.create(null);
+    (T.project.tags || []).forEach((t) => {
+      const n = (t.name || '').trim().toLowerCase();
+      if (n) { if (seenName[n]) warn('Tag table: duplicate tag name "' + t.name + '" (first one wins)'); seenName[n] = 1; }
+      const a = (t.address || '').trim().toUpperCase();
+      if (a) { if (seenAddr[a]) warn('Tag table: two tags share address ' + a); seenAddr[a] = 1; }
+    });
+
+    // Operand check: literals / addresses / tags / the block's own interface
+    // members are fine; anything else is a typo-shaped unknown reading FALSE/0.
+    const opCheck = (locals, v, where) => {
+      const raw = (v == null ? '' : String(v)).trim();
+      if (raw === '' || /^(true|false)$/i.test(raw)) return;
+      const r = T.resolve(raw);
+      if (r.unknown && !locals.has(raw.replace(/^%/, '').toLowerCase())) {
+        warn(where + ': unknown operand "' + raw + '" (reads FALSE/0 — typo?)');
+      }
+    };
+    const PARAM_SKIP = { op: 1, target: 1, instanceDb: 1 };
+
     (T.project.blocks || []).forEach((b) => {
-      (b.networks || []).forEach((n) => {
+      if (b.type === 'DB') return;
+      const locals = new Set(T.ifaceMembers(b).map((e) => String(e.member.name || '').toLowerCase()));
+      if (b.lang === 'SCL') {
+        if (T.scl && T.scl.check) {
+          const c = T.scl.check(b);
+          if (c.error) err(b.name + ' (SCL) line ' + c.error.line + ': ' + c.error.msg);
+        }
+        return;
+      }
+      (b.networks || []).forEach((n, ni) => {
         networks++;
+        const where = b.name + ' network ' + (ni + 1);
         const flat = [];
         (n.stages || []).forEach((s) => (s.branches || []).forEach((br) => (br.elements || []).forEach((e) => flat.push(e))));
         (n.outputs || []).forEach((e) => flat.push(e));
         (n.boxes || []).forEach((e) => flat.push(e));
         flat.forEach((e) => {
           elements++;
-          const needsOperand = T.catalog[e.kind] && (T.catalog[e.kind].operandRole) && !e.operand && !(e.params && (e.params.out || e.params.q));
-          if (needsOperand) { warnings++; outputLog.push('<span class="tia-output-warn">⚠ ' + b.name + ': ' + (T.catalog[e.kind] ? T.catalog[e.kind].name : e.kind) + ' has no operand</span>'); }
+          const d = T.catalog[e.kind] || {};
+          const label = where + ': ' + (d.name || e.kind);
+          const needsOperand = d.operandRole && !e.operand && !(e.params && (e.params.out || e.params.q));
+          if (needsOperand) warn(label + ' has no operand');
+          if (e.kind === 'call') {
+            const t = e.params && e.params.target && T.findBlock(e.params.target);
+            if (!t) err(where + ': call target block is missing (deleted?)');
+            else if (t.type === 'FB' && !(e.params.instanceDb && T.findBlock(e.params.instanceDb)))
+              err(where + ': FB call "' + t.name + '" has no instance data block');
+            Object.keys(e.args || {}).forEach((k) =>
+              opCheck(locals, e.args[k], where + ': call parameter ' + k));
+          }
+          opCheck(locals, e.operand, label);
+          const par = e.params || {};
+          Object.keys(par).forEach((k) => { if (!PARAM_SKIP[k]) opCheck(locals, par[k], label + ' · ' + k.toUpperCase()); });
+          (e.inputs || []).forEach((p) => opCheck(locals, p.operand, label + ' · pin ' + p.name));
         });
       });
     });
+
     outputLog.unshift('<span class="tia-output-' + (errors ? 'err' : 'ok') + '">' + (errors ? '✖ Compiled with errors' : '✔ Compile completed') +
       ' — ' + T.project.blocks.length + ' block(s), ' + networks + ' network(s), ' + elements + ' element(s), ' +
-      warnings + ' warning(s) [' + stamp + ']</span>');
+      errors + ' error(s), ' + warnings + ' warning(s) [' + stamp + ']</span>');
     inspectorTab = 'output';
     renderInspector();
     T.status(errors ? 'Compiled with errors' : 'Compile completed (' + warnings + ' warnings)', errors ? 'err' : 'ok');
+    return { errors, warnings };
   };
 
   /* ------------------------------------------------------ status bar */
@@ -465,9 +518,22 @@
 
   /* ------------------------------------------------------ autosave */
   function initAutosave() {
-    let dirty = false;
-    ['tags:changed', 'tree:changed', 'block:activated'].forEach((ev) => T.bus.on(ev, () => { dirty = true; }));
-    setInterval(() => { if (dirty && T.project) { T.storage.save(); dirty = false; } }, 4000);
+    let dirty = false, failed = false;
+    // iface:changed covers block-interface edits AND the SCL editor's typing signal
+    ['tags:changed', 'tree:changed', 'block:activated', 'iface:changed']
+      .forEach((ev) => T.bus.on(ev, () => { dirty = true; }));
+    const flush = () => {
+      if (!dirty || !T.project) return;
+      if (T.storage.save()) {
+        dirty = false;
+        if (failed) { failed = false; T.status('Autosave working again', 'ok'); }
+      } else if (!failed) {           // warn once, keep dirty so we retry
+        failed = true;
+        T.status('AUTOSAVE FAILED (browser storage full?) — use Project ▸ Export to file to protect your work', 'err');
+      }
+    };
+    setInterval(flush, 4000);
+    window.addEventListener('beforeunload', flush);   // catch the last <4 s of edits
   }
 
   /* ------------------------------------------------------ boot */

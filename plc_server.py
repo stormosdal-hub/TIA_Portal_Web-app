@@ -83,14 +83,29 @@ class Runtime:
 
     def shutdown(self):
         self._stop.set()
+        with self.lock:
+            self._outputs_off()
+
+    def _outputs_off(self):
+        """STOP behavior of a real PLC: de-energize every output. Without this,
+        stopping the scan freezes GPIO in its last state (motor keeps running).
+        Caller must hold self.lock."""
+        try:
+            for dev in self.engine.outputs.values():
+                dev.value = False
+            for dev in self.engine.pwms.values():
+                dev.value = 0.0
+        except Exception as e:
+            sys.stderr.write('[stop] output reset error: %r\n' % (e,))
 
     # ---- API operations (all take the lock) -------------------------------
     def set_program(self, project):
         with self.lock:
-            self.engine.set_program(project)
+            res = self.engine.set_program(project) or {}
             self.has_program = True
             self.running = True
             self.project_name = (project or {}).get('name')
+            return res
 
     def force(self, key, value):
         with self.lock:
@@ -98,8 +113,11 @@ class Runtime:
 
     def set_running(self, run):
         with self.lock:
+            was = self.running
             # only run when we actually have a program
             self.running = bool(run) and self.has_program
+            if was and not self.running:
+                self._outputs_off()
             return self.running
 
     def info(self):
@@ -150,8 +168,12 @@ class Handler(BaseHTTPRequestHandler):
         if body:
             self.wfile.write(body)
 
+    MAX_BODY = 8 * 1024 * 1024    # a project JSON is KBs; cap so a bad POST can't OOM a Pi
+
     def _read_body_json(self):
         length = int(self.headers.get('Content-Length') or 0)
+        if length > self.MAX_BODY:
+            raise ValueError('request body too large (%d bytes)' % length)
         raw = self.rfile.read(length) if length else b''
         if not raw:
             return None
@@ -196,8 +218,8 @@ class Handler(BaseHTTPRequestHandler):
             project = self._read_body_json()
             if not isinstance(project, dict):
                 return self._send_json({'ok': False, 'error': 'expected project JSON object'}, 400)
-            RT.set_program(project)
-            return self._send_json({'ok': True})
+            res = RT.set_program(project)
+            return self._send_json({'ok': True, 'warnings': res.get('warnings', [])})
 
         if path == '/api/force':
             body = self._read_body_json() or {}

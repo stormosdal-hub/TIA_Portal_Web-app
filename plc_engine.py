@@ -25,6 +25,7 @@
 # when gpiozero is unavailable or mock=True is requested.
 # ============================================================================
 
+import math
 import re
 import time
 from collections import defaultdict
@@ -104,6 +105,25 @@ def parse_time_ms(s):
 def parse_time_s(s):
     """Time literal -> seconds (codegen.js uses seconds for the PT argument)."""
     return parse_time_ms(s) / 1000.0
+
+
+_ADDR_RE = re.compile(r'^[IQM](\d+\.\d+|W\d+|B\d+|D\d+)$', re.IGNORECASE)
+
+
+def _in_param_key(kind, pin_name):
+    """Map a box pin NAME -> params key (parity: sim.js inParamKey — an unwired
+    numeric pin reads its box.params literal/operand, NOT pin.operand)."""
+    table = {
+        'compare': {'in1': 'in1', 'in2': 'in2'},
+        'ton': {'PT': 'pt'}, 'tof': {'PT': 'pt'}, 'tp': {'PT': 'pt'},
+        'ctu': {'PV': 'pv'}, 'ctd': {'PV': 'pv'},
+        'move': {'IN': 'in'},
+        'add': {'in1': 'in1', 'in2': 'in2'}, 'sub': {'in1': 'in1', 'in2': 'in2'},
+        'mul': {'in1': 'in1', 'in2': 'in2'}, 'div': {'in1': 'in1', 'in2': 'in2'},
+        'norm_x': {'MIN': 'min', 'VALUE': 'val', 'MAX': 'max'},
+        'scale_x': {'MIN': 'min', 'VALUE': 'val', 'MAX': 'max'},
+    }
+    return table.get(kind, {}).get(pin_name)
 
 
 # Numeric comparison by operator string (mirrors sim.js cmp()).
@@ -186,13 +206,17 @@ class Engine:
     # ---- (re)initialise everything that is per-program ---------------------
     def _reset_runtime_state(self):
         self.M = defaultdict(int)     # memory: keyed by tag name / address / symbol
-        self.ST = {}                  # timer/counter/edge instance state, keyed by element/box id
-        self.FBP = {}                 # FBD cross-scan pin cache (feedback / latches), key "box|pin"
+        self.ST = {}                  # timer/counter/edge state, keyed "<inst>:<element id>"
+        self.FBP = {}                 # FBD cross-scan pin cache (feedback / latches), key "<inst>:box|pin"
         self.live = {}                # element_id -> bool
         self.power = {}               # network_id -> bool
         self.pinval = {}              # pin_id -> bool
         self.scan_count = 0
         self._scope = None            # active block-local member scope (member-name lc -> key)
+        self._alias = {}              # lowercase tag name / address -> canonical tag name
+        self._callstack = set()       # re-entrant block-call guard (parity: sim.js _scanCtx.stack)
+        self.err_count = 0            # networks that raised during scan (see _run_block)
+        self.last_error = None
 
     # =======================================================================
     #  Program loading
@@ -221,12 +245,21 @@ class Engine:
             self.inputs = {}
             self.outputs = {}
             self.pwms = {}
-        return {'ok': True}
+        # surface unsupported-language blocks so the app can warn the user
+        warnings = []
+        if self.project:
+            for b in (self.project.get('blocks') or []):
+                if b.get('type') != 'DB' and b.get('lang') == 'SCL' and str(b.get('code') or '').strip():
+                    warnings.append('SCL block "%s" is not executed by this runtime' % (b.get('name') or '?'))
+        return {'ok': True, 'warnings': warnings}
 
     def _seed_memory(self):
         """Initialise M with every declared tag by its NAME (bool->False, num->0).
-        Matches codegen.js collectKeys() which keys by tag name."""
+        Matches codegen.js collectKeys() which keys by tag name. Also builds the
+        alias table so an operand typed as the tag's ADDRESS ("I0.0", "%I0.0")
+        or with different case hits the SAME cell that read_inputs() writes."""
         self._tags = list(self.project.get('tags') or [])
+        self._alias = {}
         for t in self._tags:
             name = t.get('name')
             if not _not_empty(name):
@@ -235,6 +268,10 @@ class Engine:
                 self.M[name] = False
             else:
                 self.M[name] = 0
+            self._alias.setdefault(str(name).lower(), name)
+            addr = str(t.get('address') or '').strip()
+            if addr:
+                self._alias.setdefault(addr.lower(), name)
 
     # ---- block lookups (codegen.js T.findBlock equivalents) ---------------
     def _find_block(self, ref):
@@ -350,18 +387,27 @@ class Engine:
         raw = '' if op is None else str(op).strip()
         if raw == '':
             return ('lit', False)
+        if raw.startswith('%'):                     # TIA absolute-address prefix
+            raw = raw[1:].strip()
         if re.match(r'^-?\d+(\.\d+)?$', raw):
             f = float(raw)
             return ('lit', int(f) if f.is_integer() else f)
         if re.match(r'^(true|false)$', raw, re.IGNORECASE):
             return ('lit', raw.lower() == 'true')
         if re.match(r'^t#', raw, re.IGNORECASE):
-            return ('lit', parse_time_s(raw))      # time literal -> seconds
+            return ('lit', parse_time_ms(raw))      # time literal -> ms (app-native, sim parity)
         # block-local interface member (shadows global tags), keyed "<inst>.<member>"
         if ctx and ctx.get('members') and raw.lower() in ctx['members']:
             member_name = ctx['members'][raw.lower()]
             return ('key', ctx['inst'] + '.' + member_name)
-        # tag name (or any unknown symbol / raw address) keyed directly
+        # tag aliasing: name (any case) or its address -> the canonical name cell
+        alias = self._alias.get(raw.lower())
+        if alias is not None:
+            return ('key', alias)
+        # bare address with no tag: normalise case so all its users share one cell
+        if _ADDR_RE.match(raw):
+            return ('key', raw.upper())
+        # unknown symbol keyed directly
         return ('key', raw)
 
     def _rd(self, op, ctx):
@@ -377,12 +423,22 @@ class Engine:
     def _rd_num(self, op, ctx):
         return num(self._rd(op, ctx))
 
+    def _ms(self, op, ctx):
+        """Resolve a time operand to MILLISECONDS (the app's native unit): a
+        plain number IS ms, T# literals parse to ms, a tag/member VALUE is ms.
+        Parity: sim.js resolvePT. Never negative."""
+        raw = '' if op is None else str(op).strip()
+        if raw == '':
+            return 0
+        if re.match(r'^-?\d+(\.\d+)?$', raw):
+            return max(0.0, float(raw))
+        if re.match(r'^t#', raw, re.IGNORECASE):
+            return max(0, parse_time_ms(raw))
+        return max(0, num(self._rd(raw, ctx)))
+
     def _secs(self, op, ctx):
-        """Resolve a PT operand to seconds: literal (already seconds) or num(value)."""
-        kind, val = self._resolve(op, ctx)
-        if kind == 'lit':
-            return val
-        return num(self.M[val])
+        """PT operand -> seconds (the timer primitives run on seconds)."""
+        return self._ms(op, ctx) / 1000.0
 
     def _wkey(self, op, ctx):
         """L-value memory key for writing an operand, or None if not writable."""
@@ -394,6 +450,10 @@ class Engine:
     def _write(self, op, ctx, value):
         k = self._wkey(op, ctx)
         if k is not None:
+            # scrub non-finite numbers (a MUL overflow would poison memory AND
+            # break the JSON snapshot; sim.js setWord does the same)
+            if isinstance(value, float) and not math.isfinite(value):
+                value = 0
             self.M[k] = value
 
     # =======================================================================
@@ -439,16 +499,17 @@ class Engine:
         if reset:
             s['c'] = 0
         elif cu and not s['prev']:
-            s['c'] += 1
+            s['c'] = min(s['c'] + 1, 32767)
         s['prev'] = cu
         return (s['c'] >= pv, s['c'])
 
     def _ctd(self, i, cd, pv, load):
-        s = self.ST.setdefault(i, {'c': pv, 'prev': False})
+        # IEC/S7: CV starts at 0 (Q true) until LD loads PV (sim.js parity)
+        s = self.ST.setdefault(i, {'c': 0, 'prev': False})
         if load:
             s['c'] = pv
         elif cd and not s['prev']:
-            s['c'] -= 1
+            s['c'] = max(s['c'] - 1, -32767)
         s['prev'] = cd
         return (s['c'] <= 0, s['c'])
 
@@ -475,6 +536,11 @@ class Engine:
     # =======================================================================
     #  LAD evaluation
     # =======================================================================
+    def _stid(self, ctx, eid):
+        """Per-element state id, scoped by the executing instance so an FB's
+        timers/counters/edges never share state between instances (sim.js inst())."""
+        return (((ctx.get('inst') if ctx else '') or '')) + ':' + str(eid)
+
     def _inline_value(self, el, ctx):
         """Inline (contact-area) element value; records el._live in self.live."""
         kind = el.get('kind')
@@ -483,9 +549,9 @@ class Engine:
         elif kind == 'contact_nc':
             v = not self._rd_bool(el.get('operand'), ctx)
         elif kind == 'edge_p':
-            v = self._redge(el.get('id'), self._rd_bool(el.get('operand'), ctx))
+            v = self._redge(self._stid(ctx, el.get('id')), self._rd_bool(el.get('operand'), ctx))
         elif kind == 'edge_n':
-            v = self._fedge(el.get('id'), self._rd_bool(el.get('operand'), ctx))
+            v = self._fedge(self._stid(ctx, el.get('id')), self._rd_bool(el.get('operand'), ctx))
         elif kind == 'compare':
             p = el.get('params') or {}
             v = _cmp(p.get('op') or '==',
@@ -508,6 +574,10 @@ class Engine:
             if not branches:
                 stage_val = True          # a stage with no branches passes power
             else:
+                # an empty branch is a bare wire only while the WHOLE stage is
+                # empty; alongside a populated branch it is an unfinished
+                # parallel arm and must not short the OR (sim.js parity)
+                has_els = any((br.get('elements') or []) for br in branches)
                 stage_val = False
                 for br in branches:
                     els = br.get('elements') or []
@@ -516,7 +586,7 @@ class Engine:
                         # evaluate EVERY element (so each gets _live) even after a False
                         if not self._inline_value(e, ctx):
                             bval = False
-                    if bval:
+                    if bval and ((not has_els) or els):
                         stage_val = True
             if not stage_val:
                 rung = False
@@ -544,17 +614,17 @@ class Engine:
             self.live[eid] = bool(p)
 
         elif k == 'ton':
-            self._set_q(par.get('q'), ctx, self._ton(eid, p, self._secs(par.get('pt'), ctx)))
+            self._set_q(par.get('q'), ctx, self._ton(self._stid(ctx, eid), p, self._secs(par.get('pt'), ctx)))
             self.live[eid] = bool(p)
         elif k == 'tof':
-            self._set_q(par.get('q'), ctx, self._tof(eid, p, self._secs(par.get('pt'), ctx)))
+            self._set_q(par.get('q'), ctx, self._tof(self._stid(ctx, eid), p, self._secs(par.get('pt'), ctx)))
             self.live[eid] = bool(p)
         elif k == 'tp':
-            self._set_q(par.get('q'), ctx, self._tp(eid, p, self._secs(par.get('pt'), ctx)))
+            self._set_q(par.get('q'), ctx, self._tp(self._stid(ctx, eid), p, self._secs(par.get('pt'), ctx)))
             self.live[eid] = bool(p)
 
         elif k == 'ctu':
-            q, cv = self._ctu(eid, p, self._rd_num(par.get('pv'), ctx),
+            q, cv = self._ctu(self._stid(ctx, eid), p, self._rd_num(par.get('pv'), ctx),
                               self._rd_bool(par.get('r') or '', ctx))
             if _not_empty(par.get('cv')):
                 self._write(par.get('cv'), ctx, cv)
@@ -562,7 +632,7 @@ class Engine:
                 self._write(par.get('q'), ctx, q)
             self.live[eid] = bool(p)
         elif k == 'ctd':
-            q, cv = self._ctd(eid, p, self._rd_num(par.get('pv'), ctx),
+            q, cv = self._ctd(self._stid(ctx, eid), p, self._rd_num(par.get('pv'), ctx),
                               self._rd_bool(par.get('r') or '', ctx))
             if _not_empty(par.get('cv')):
                 self._write(par.get('cv'), ctx, cv)
@@ -608,11 +678,11 @@ class Engine:
             self.live[eid] = bool(q)
 
         elif k in ('p_trig', 'r_trig'):
-            q = self._redge(eid, p)
+            q = self._redge(self._stid(ctx, eid), p)
             self._set_q(par.get('q'), ctx, q)
             self.live[eid] = bool(q)
         elif k in ('n_trig', 'f_trig'):
-            q = self._fedge(eid, p)
+            q = self._fedge(self._stid(ctx, eid), p)
             self._set_q(par.get('q'), ctx, q)
             self.live[eid] = bool(q)
 
@@ -678,6 +748,7 @@ class Engine:
     def _eval_fbd_network(self, net, ctx):
         boxes = net.get('boxes') or []
         wires = net.get('wires') or []
+        inst = (ctx.get('inst') if ctx else '') or ''
         # wire lookup: "to_box|to_pin" -> {box, pin} source output
         src_of_input = {}
         for w in wires:
@@ -686,9 +757,12 @@ class Engine:
 
         order = self._topo(boxes, wires)
         computed = {}                  # "box|pin" -> value for outputs computed this scan
+        # FBP cache keys are instance-scoped (parity: sim.js pinKey)
+        fbp_key = lambda b, p: inst + ':' + str(b) + '|' + str(p)
 
         def in_expr(box, pin):
-            """Resolve an input pin's value (wired source, else cached FBP, else operand)."""
+            """Resolve an input pin's value (wired source, else cached FBP, else
+            the box.params literal for numeric pins, else pin.operand)."""
             key = str(box.get('id')) + '|' + str(pin.get('id'))
             src = src_of_input.get(key)
             if src:
@@ -696,9 +770,15 @@ class Engine:
                 if skey in computed:
                     v = computed[skey]
                 else:
-                    v = self.FBP.get(skey, False)     # feedback / not yet computed
+                    v = self.FBP.get(fbp_key(src.get('box'), src.get('pin')), False)  # feedback
             else:
-                v = self._rd(pin.get('operand'), ctx)
+                pk = _in_param_key(box.get('kind'), pin.get('name'))
+                if pk == 'pt':
+                    v = self._ms((box.get('params') or {}).get(pk), ctx)   # PT: app-native ms
+                elif pk:
+                    v = self._rd_num((box.get('params') or {}).get(pk), ctx)
+                else:
+                    v = self._rd(pin.get('operand'), ctx)
             if pin.get('inverted'):
                 v = (not v)
             return v
@@ -715,9 +795,8 @@ class Engine:
             # store output pin values: into computed (this scan) and FBP (next scan)
             for i, pin in enumerate(outs):
                 pv = out_vals[i] if i < len(out_vals) else False
-                pkey = str(box.get('id')) + '|' + str(pin.get('id'))
-                computed[pkey] = pv
-                self.FBP[pkey] = pv
+                computed[str(box.get('id')) + '|' + str(pin.get('id'))] = pv
+                self.FBP[fbp_key(box.get('id'), pin.get('id'))] = pv
                 self.pinval[pin.get('id')] = bool(pv)
 
     def _eval_fbd_box(self, box, in_e, ctx):
@@ -762,30 +841,27 @@ class Engine:
             v = _cmp(p.get('op') or '==', a, b)
             out_vals[0] = v
             live = v
-        elif k == 'ton':
-            v = self._ton(bid, bool(in_e[0] if in_e else False), self._secs(p.get('pt'), ctx))
+        elif k in ('ton', 'tof', 'tp'):
+            # the PT pin value (wired or param, resolved by in_expr) is in ms
+            pti = next((i for i, pp in enumerate(box.get('inputs') or []) if pp.get('name') == 'PT'), None)
+            pt_s = (max(0, num(in_e[pti])) / 1000.0) if (pti is not None and pti < len(in_e)) \
+                else self._secs(p.get('pt'), ctx)
+            fn = {'ton': self._ton, 'tof': self._tof, 'tp': self._tp}[k]
+            v = fn(self._stid(ctx, bid), bool(in_e[0] if in_e else False), pt_s)
+            if _not_empty(p.get('q')):          # sim.js evalTON writes par.q in FBD too
+                self._write(p.get('q'), ctx, v)
             out_vals[0] = v
             live = v
-        elif k == 'tof':
-            v = self._tof(bid, bool(in_e[0] if in_e else False), self._secs(p.get('pt'), ctx))
-            out_vals[0] = v
-            live = v
-        elif k == 'tp':
-            v = self._tp(bid, bool(in_e[0] if in_e else False), self._secs(p.get('pt'), ctx))
-            out_vals[0] = v
-            live = v
-        elif k == 'ctu':
-            q, cv = self._ctu(bid, bool(in_e[0] if in_e else False),
-                              self._rd_num(p.get('pv'), ctx),
-                              bool(in_e[1] if len(in_e) > 1 else False))
-            out_vals[0] = q
-            if n_out > 1:
-                out_vals[1] = cv
-            live = q
-        elif k == 'ctd':
-            q, cv = self._ctd(bid, bool(in_e[0] if in_e else False),
-                              self._rd_num(p.get('pv'), ctx),
-                              bool(in_e[1] if len(in_e) > 1 else False))
+        elif k in ('ctu', 'ctd'):
+            pvi = next((i for i, pp in enumerate(box.get('inputs') or []) if pp.get('name') == 'PV'), None)
+            pv = num(in_e[pvi]) if (pvi is not None and pvi < len(in_e)) else self._rd_num(p.get('pv'), ctx)
+            fn = self._ctu if k == 'ctu' else self._ctd
+            q, cv = fn(self._stid(ctx, bid), bool(in_e[0] if in_e else False), pv,
+                       bool(in_e[1] if len(in_e) > 1 else False))
+            if _not_empty(p.get('cv')):         # sim.js evalCTU writes par.cv/par.q in FBD too
+                self._write(p.get('cv'), ctx, cv)
+            if _not_empty(p.get('q')):
+                self._write(p.get('q'), ctx, q)
             out_vals[0] = q
             if n_out > 1:
                 out_vals[1] = cv
@@ -814,33 +890,35 @@ class Engine:
             out_vals[0] = v
             live = True
         elif k == 'sr':                 # reset dominant; in pins [S, R1]
+            qk = self._stid(ctx, bid) + '|q'
             cur = (self._rd_bool(box.get('operand'), ctx) if _not_empty(box.get('operand'))
-                   else self.FBP.get(str(bid) + '|q', False))
+                   else self.FBP.get(qk, False))
             q = self._sr(cur, bool(in_e[0] if in_e else False),
                          bool(in_e[1] if len(in_e) > 1 else False))
             if _not_empty(box.get('operand')):
                 self._write(box.get('operand'), ctx, q)
-            self.FBP[str(bid) + '|q'] = q
+            self.FBP[qk] = q
             out_vals[0] = q
             live = q
         elif k == 'rs':                 # set dominant; in pins [R, S1]
+            qk = self._stid(ctx, bid) + '|q'
             cur = (self._rd_bool(box.get('operand'), ctx) if _not_empty(box.get('operand'))
-                   else self.FBP.get(str(bid) + '|q', False))
+                   else self.FBP.get(qk, False))
             q = self._rs(cur, bool(in_e[0] if in_e else False),
                          bool(in_e[1] if len(in_e) > 1 else False))
             if _not_empty(box.get('operand')):
                 self._write(box.get('operand'), ctx, q)
-            self.FBP[str(bid) + '|q'] = q
+            self.FBP[qk] = q
             out_vals[0] = q
             live = q
         elif k in ('p_trig', 'r_trig'):
-            q = self._redge(bid, bool(in_e[0] if in_e else False))
+            q = self._redge(self._stid(ctx, bid), bool(in_e[0] if in_e else False))
             if _not_empty(p.get('q')):
                 self._write(p.get('q'), ctx, q)
             out_vals[0] = q
             live = q
         elif k in ('n_trig', 'f_trig'):
-            q = self._fedge(bid, bool(in_e[0] if in_e else False))
+            q = self._fedge(self._stid(ctx, bid), bool(in_e[0] if in_e else False))
             if _not_empty(p.get('q')):
                 self._write(p.get('q'), ctx, q)
             out_vals[0] = q
@@ -950,13 +1028,14 @@ class Engine:
 
     def _instance_id(self, node, target_block, params):
         """Instance name used to key member storage. Mirrors codegen.js:
-        the instance-DB block's name if wired, else "<target>_<id-suffix>"."""
+        the instance-DB block's name if wired, else "<target>_<full node id>"
+        (a truncated id suffix can collide across call sites)."""
         inst_db = params.get('instanceDb')
         if _not_empty(inst_db):
             db = self._find_block(inst_db)
             if db and db.get('name'):
                 return db.get('name')
-        return (target_block.get('name') or 'blk') + '_' + str(node.get('id'))[-4:]
+        return (target_block.get('name') or 'blk') + '_' + str(node.get('id'))
 
     def _block_ctx(self, blk, inst):
         """Build a per-block evaluation context: member-name (lowercase) -> member
@@ -969,22 +1048,34 @@ class Engine:
         return {'members': members, 'inst': inst}
 
     def _run_block(self, blk, inst):
-        """Execute every network of a block under its own member context."""
+        """Execute every network of a block under its own member context.
+        Re-entrant calls are blocked (parity: sim.js cycle guard) so recursive
+        programs can't blow the Python stack every scan."""
         if not blk or blk.get('type') == 'DB':
             return
+        bid = blk.get('id')
+        if bid in self._callstack:
+            return
+        self._callstack.add(bid)
         ctx = self._block_ctx(blk, inst)
         lang = blk.get('lang')
-        for net in (blk.get('networks') or []):
-            if not net:
-                continue
-            try:
-                if lang == 'FBD':
-                    self._eval_fbd_network(net, ctx)
-                else:
-                    self._eval_lad_network(net, ctx)
-            except Exception:
-                # a bad network must not crash the whole scan (sim.js swallows too)
-                pass
+        try:
+            for net in (blk.get('networks') or []):
+                if not net:
+                    continue
+                try:
+                    if lang == 'FBD':
+                        self._eval_fbd_network(net, ctx)
+                    else:
+                        self._eval_lad_network(net, ctx)
+                except Exception as e:
+                    # a bad network must not crash the whole scan (sim.js logs too);
+                    # keep a diagnosis for /api/state instead of failing silently
+                    self.err_count += 1
+                    self.last_error = '%s / network %s: %s' % (
+                        blk.get('name') or bid, net.get('id'), e)
+        finally:
+            self._callstack.discard(bid)
 
     # =======================================================================
     #  SCAN DRIVER (port of sim.js scanOnce / codegen.js scan)
@@ -1016,6 +1107,7 @@ class Engine:
         inline; then run any orphan FC/FB (never referenced by a call) once."""
         if not self.project:
             return
+        self._callstack.clear()        # defensive: never let a guard leak across scans
         blocks = self.project.get('blocks') or []
 
         def by_num(btype):
@@ -1067,6 +1159,13 @@ class Engine:
     def snapshot(self, running=False):
         """Live state for the browser monitor. mem includes every project tag by
         name; live/power/pins are keyed by element/network/pin id (see class doc)."""
+        def safe(v):
+            # non-finite floats would make json.dumps emit bare Infinity/NaN,
+            # which the browser's response.json() rejects (killing the monitor)
+            if isinstance(v, float) and not math.isfinite(v):
+                return 0
+            return v
+
         mem = {}
         # every declared tag, by name, with current value (bool stays bool)
         for t in self._tags:
@@ -1077,11 +1176,11 @@ class Engine:
             if t.get('dataType') == 'Bool':
                 mem[name] = bool(v)
             else:
-                mem[name] = num(v)
+                mem[name] = safe(num(v))
         # also surface any extra memory keys the program touched (members, symbols)
         for k, v in self.M.items():
             if k not in mem:
-                mem[k] = (bool(v) if isinstance(v, bool) else v)
+                mem[k] = (bool(v) if isinstance(v, bool) else safe(v))
         return {
             'running': bool(running),
             'scan': self.scan_count,
@@ -1089,6 +1188,8 @@ class Engine:
             'live': dict(self.live),
             'power': dict(self.power),
             'pins': dict(self.pinval),
+            'errors': self.err_count,
+            'lastError': self.last_error,
         }
 
 

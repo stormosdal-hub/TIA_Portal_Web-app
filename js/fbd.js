@@ -980,10 +980,13 @@
       class: 'tia-input', type: 'text', value: cur,
       style: { width: '60%', font: 'inherit' },
     });
-    const finish = () => { net[field] = inp.value.trim(); markDirty(); render(); };
+    // `done` guards double-commit (Enter → render → detach-blur → finish again)
+    // and makes Escape actually CANCEL (the detach-blur would otherwise commit).
+    let done = false;
+    const finish = () => { if (done) return; done = true; net[field] = inp.value.trim(); markDirty(); render(); };
     inp.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') { e.preventDefault(); finish(); }
-      else if (e.key === 'Escape') { e.preventDefault(); render(); }
+      else if (e.key === 'Escape') { e.preventDefault(); done = true; render(); }
       e.stopPropagation();
     });
     inp.addEventListener('blur', finish);

@@ -58,13 +58,25 @@
 
   /* ------------------------------------------------- download / change program */
   O.download = function () {
+    // TIA-style consistency check first: never download a program with hard errors
+    const res = (T.app && T.app.compile) ? T.app.compile() : { errors: 0 };
+    if (res && res.errors) {
+      T.status('Download aborted — fix the ' + res.errors + ' compile error(s) first (see Output)', 'err');
+      return Promise.resolve(false);
+    }
+    const scl = (T.project.blocks || []).filter((b) => b.type !== 'DB' && b.lang === 'SCL' && (b.code || '').trim());
     const go = O.connected ? Promise.resolve(true) : O.connect();
     return go.then((ok) => {
       if (!ok) return;
       return api('/api/program', { method: 'POST', body: T.project }).then(() => {
         O.running = true;
         buildIndex();
-        T.status('Program downloaded to PLC — running on the Pi', 'ok');
+        if (scl.length) {
+          T.status('Downloaded — but SCL block(s) ' + scl.map((b) => b.name).join(', ') +
+                   ' are NOT executed by the Pi online runtime (use Export Python for SCL)', 'warn');
+        } else {
+          T.status('Program downloaded to PLC — running on the Pi', 'ok');
+        }
         O.startMonitor();
       }).catch((e) => T.status('Download failed: ' + e.message, 'err'));
     });
@@ -100,7 +112,22 @@
   O.run = function () { api('/api/run', { method: 'POST' }).then((r) => { O.running = !!(r && r.running); emit(); }).catch(() => {}); };
   O.stop = function () { api('/api/stop', { method: 'POST' }).then((r) => { O.running = !!(r && r.running); emit(); }).catch(() => {}); };
 
-  function poll() { api('/api/state').then(applyState).catch(() => { /* transient */ }); }
+  let _inflight = false, _fails = 0;
+  function poll() {
+    if (_inflight) return;                    // never stack requests on a slow Pi
+    _inflight = true;
+    api('/api/state')
+      .then((s) => { _fails = 0; applyState(s); })
+      .catch(() => {
+        if (O.monitoring && ++_fails >= 10) { // ~1.5 s of silence: the Pi is gone
+          O.stopMonitor();
+          O.connected = false;
+          emit();
+          T.status('PLC runtime unreachable — monitoring stopped', 'err');
+        }
+      })
+      .finally(() => { _inflight = false; });
+  }
 
   // index model objects by id so a snapshot can light them up
   function buildIndex() {
@@ -115,7 +142,7 @@
   }
 
   function applyState(s) {
-    if (!s) return;
+    if (!s || !O.monitoring) return;   // a late response must not re-light a stopped monitor
     O.running = !!s.running; O.scan = s.scan || 0;
     // memory values -> T.mem (by tag name, so the sim table & contacts read real values)
     if (s.mem) (T.project.tags || []).forEach((t) => {

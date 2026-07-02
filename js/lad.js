@@ -162,6 +162,7 @@
   let block = null;         // current block
   let rootEl = null;        // .lad-root container inside host
   let selEl = null;         // selected Element (model object) or null
+  let selBranch = null;     // selected EMPTY parallel branch (insert target) or null
   let activeNet = null;     // network containing the selection (else first)
   let simRunning = false;   // true while the simulator runs (Feature 4 coloring)
 
@@ -185,6 +186,27 @@
       }
       const oi = (net.outputs || []).indexOf(el);
       if (oi >= 0) return { net, list: net.outputs, index: oi, area: 'output' };
+    }
+    return null;
+  }
+
+  // Locate a branch's stage/network (empty-branch selection & insertion).
+  function locateBranch(br) {
+    if (!block || !br) return null;
+    for (const net of block.networks) {
+      for (const stage of (net.stages || [])) {
+        if (stage.branches.indexOf(br) >= 0) return { net, stage };
+      }
+    }
+    return null;
+  }
+  function findBranchById(id) {
+    if (!block) return null;
+    for (const net of block.networks) {
+      for (const stg of (net.stages || [])) {
+        const f = stg.branches.find((b) => b.id === id);
+        if (f) return f;
+      }
     }
     return null;
   }
@@ -221,6 +243,7 @@
     // Make sure activeNet is still valid (it may have been deleted).
     if (activeNet && block.networks.indexOf(activeNet) < 0) activeNet = null;
     if (selEl && !locate(selEl)) selEl = null;
+    if (selBranch && (!locateBranch(selBranch) || selBranch.elements.length)) selBranch = null;
     getActiveNet();
 
     block.networks.forEach((net, i) => rootEl.appendChild(renderNetwork(net, i + 1)));
@@ -422,8 +445,22 @@
   function renderBranch(svg, br, sx, sxEnd, by, net, maxEls) {
     const els = br.elements;
     if (!els.length) {
-      // empty branch: straight wire across the stage row
+      // empty branch: straight wire + a selectable/droppable hit target so the
+      // branch can actually be filled (click it, then insert — or drop onto it)
       svg.appendChild(wire(sx, by, sxEnd, by, net, 'emptybr-' + br.id));
+      if (br === selBranch) {
+        svg.appendChild(T.svg('rect', {
+          class: 'lad-sel-box', x: sx + 3, y: by - 10,
+          width: Math.max(24, sxEnd - sx - 6), height: 20,
+        }));
+      }
+      const hit = T.svg('rect', {
+        class: 'lad-hit', style: 'cursor:pointer',
+        'data-branch-id': br.id, 'data-net-id': net.id,
+        x: sx + 2, y: by - 12, width: Math.max(28, sxEnd - sx - 4), height: 24,
+      });
+      hit.addEventListener('mousedown', (e) => { e.stopPropagation(); selectBranch(br, net); });
+      svg.appendChild(hit);
       return;
     }
     // Distribute elements across the stage width; each element gets one cell.
@@ -605,8 +642,8 @@
   function inputParamMap(kind) {
     switch (kind) {
       case 'ton': case 'tof': case 'tp': return { PT: 'pt' };
-      case 'ctu': return { PV: 'pv' };
-      case 'ctd': return { PV: 'pv' };
+      case 'ctu': return { PV: 'pv', R: 'r' };    // R = reset condition operand
+      case 'ctd': return { PV: 'pv', LD: 'r' };   // LD = load condition (stored in params.r)
       case 'move': return { IN: 'in' };
       case 'add': case 'sub': case 'mul': case 'div': return { in1: 'in1', in2: 'in2' };
       case 'norm_x': case 'scale_x': return { MIN: 'min', VALUE: 'val', MAX: 'max' };
@@ -917,14 +954,19 @@
       class: 'tia-input', type: 'text', value: cur,
       style: { width: '60%', font: 'inherit' },
     });
+    // `done` guards double-commit (Enter → render → detach-blur → finish again)
+    // and makes Escape actually CANCEL (the detach-blur would otherwise commit).
+    let done = false;
     const finish = () => {
+      if (done) return;
+      done = true;
       net[field] = inp.value.trim();
       markDirty();
       render();
     };
     inp.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') { e.preventDefault(); finish(); }
-      else if (e.key === 'Escape') { e.preventDefault(); render(); }
+      else if (e.key === 'Escape') { e.preventDefault(); done = true; render(); }
       e.stopPropagation();
     });
     inp.addEventListener('blur', finish);
@@ -937,6 +979,7 @@
    * ======================================================================= */
   function select(el, noRender) {
     selEl = el || null;
+    selBranch = null;                   // element selection replaces branch selection
     if (selEl) {
       const loc = locate(selEl);
       if (loc) activeNet = loc.net;
@@ -947,6 +990,15 @@
     // stays attached (a rebuild would detach it and the floating <input> would land
     // in the discarded DOM).
     if (!noRender) render();
+  }
+
+  // Select an empty parallel branch as the insertion target.
+  function selectBranch(br, net) {
+    selEl = null;
+    selBranch = br;
+    activeNet = net;
+    render();
+    T.status('Empty branch selected — insert or drop a contact into it', 'info');
   }
 
   function markActiveCards() {
@@ -1033,6 +1085,13 @@
       // Drop targets this network; if an element under the cursor is inline and
       // selected, insert chains off it — otherwise insert into this network.
       activeNet = net;
+      selBranch = null;
+      // Dropped onto an empty parallel branch → insert into that branch.
+      const brT = e.target.closest && e.target.closest('[data-branch-id]');
+      if (brT && T.catalog[kind].area === 'inline') {
+        const br = findBranchById(brT.getAttribute('data-branch-id'));
+        if (br) { selBranch = br; selEl = null; insert(kind); return; }
+      }
       // If dropped onto an existing element, select it first so inline chaining works.
       const target = e.target.closest && e.target.closest('[data-el-id]');
       if (target) {
@@ -1113,10 +1172,15 @@
       net.outputs = net.outputs || [];
       net.outputs.push(el);
     } else {
-      // inline: if an inline element is selected, append in series right after
-      // it inside its branch; else append a brand-new stage holding the element.
+      // inline: a selected empty branch takes the element; else if an inline
+      // element is selected, append in series right after it inside its branch;
+      // else append a brand-new stage holding the element.
+      const brLoc = selBranch && locateBranch(selBranch);
       const loc = selEl && locate(selEl);
-      if (loc && loc.area === 'inline') {
+      if (brLoc && brLoc.net === net) {
+        selBranch.elements.push(el);
+        selBranch = null;
+      } else if (loc && loc.area === 'inline') {
         loc.branch.elements.splice(loc.index + 1, 0, el);
       } else {
         const stage = T.model.newStage();          // one branch with empty elements
@@ -1151,6 +1215,18 @@
 
   // deleteSelection(): remove selected element; prune empties; keep selection sane.
   function deleteSelection() {
+    if (!selEl && selBranch) {          // a selected empty parallel branch
+      const bl = locateBranch(selBranch);
+      if (bl && bl.stage.branches.length > 1) {
+        bl.stage.branches.splice(bl.stage.branches.indexOf(selBranch), 1);
+        selBranch = null;
+        markDirty();
+        render();
+      } else {
+        T.status('Cannot delete the only branch of a stage', 'warn');
+      }
+      return;
+    }
     if (!selEl) { T.status('Nothing selected to delete', 'warn'); return; }
     const loc = locate(selEl);
     if (!loc) { selEl = null; render(); return; }
@@ -1196,6 +1272,7 @@
     const br = T.model.newBranch();
     loc.stage.branches.push(br);
     activeNet = loc.net;
+    selEl = null; selBranch = br;       // pre-select so the next insert lands in it
     markDirty();
     render();
     T.status('Parallel branch added — insert a contact into it', 'info');
@@ -1214,8 +1291,10 @@
       return;
     }
     const stage = stages[stages.length - 1];
-    stage.branches.push(T.model.newBranch());
+    const br = T.model.newBranch();
+    stage.branches.push(br);
     activeNet = net;
+    selEl = null; selBranch = br;       // pre-select so the next insert lands in it
     markDirty();
     render();
     T.status('Parallel branch added to last stage — insert a contact into it', 'info');
@@ -1267,10 +1346,10 @@
     const tag = (e.target && e.target.tagName) || '';
     if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target && e.target.isContentEditable)) return;
     if (e.key === 'Delete' || e.key === 'Backspace') {
-      if (selEl) { e.preventDefault(); deleteSelection(); }
+      if (selEl || selBranch) { e.preventDefault(); deleteSelection(); }
     } else if (e.key === 'Escape') {
       closeMenu(); killEditInput();
-      if (selEl) { select(null); }
+      if (selEl || selBranch) { select(null); }
     }
   }
 
@@ -1347,6 +1426,7 @@
     host = hostEl;
     block = blk;
     selEl = null;
+    selBranch = null;
     activeNet = (blk && blk.networks && blk.networks[0]) || null;
     render();
 

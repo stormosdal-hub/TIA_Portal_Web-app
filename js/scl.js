@@ -262,8 +262,7 @@
     function parseExpr() { return parseOr(); }
     function parseOr() { let a = parseXor(); while (isKw('OR')) { next(); a = { n: 'bin', op: 'OR', a: a, b: parseXor() }; } return a; }
     function parseXor() { let a = parseAnd(); while (isKw('XOR')) { next(); a = { n: 'bin', op: 'XOR', a: a, b: parseAnd() }; } return a; }
-    function parseAnd() { let a = parseNot(); while (isKw('AND') || isOp('&')) { next(); a = { n: 'bin', op: 'AND', a: a, b: parseNot() }; } return a; }
-    function parseNot() { if (isKw('NOT')) { next(); return { n: 'un', op: 'NOT', a: parseNot() }; } return parseCmp(); }
+    function parseAnd() { let a = parseCmp(); while (isKw('AND') || isOp('&')) { next(); a = { n: 'bin', op: 'AND', a: a, b: parseCmp() }; } return a; }
     function parseCmp() {
       let a = parseAdd();
       while (isOp('=') || isOp('<>') || isOp('<') || isOp('>') || isOp('<=') || isOp('>=')) {
@@ -278,6 +277,8 @@
       return a;
     }
     function parseUnary() {
+      // NOT binds at factor level (IEC 61131-3): "NOT a = b" is "(NOT a) = b"
+      if (isKw('NOT')) { next(); return { n: 'un', op: 'NOT', a: parseUnary() }; }
       if (isOp('-')) { next(); return { n: 'un', op: '-', a: parseUnary() }; }
       if (isOp('+')) { next(); return parseUnary(); }
       return parsePrimary();
@@ -502,7 +503,7 @@
     const c = compile(blk);
     if (c.error) return ['# SCL parse error (line ' + c.error.line + '): ' + c.error.msg, 'pass'];
     if (!c.program || !c.program.body.length) return ['pass'];
-    let caseN = 0;
+    let caseN = 0, loopN = 0;
     const out = [];
     const E = (node) => {
       switch (node.n) {
@@ -559,20 +560,34 @@
             break;
           }
           case 'for': {
-            // explicit stepped while-loop (direction follows the runtime sign of BY)
-            const tgt = wt(s.var), rdv = rd(s.var), by = s.by ? E(s.by) : '1';
+            // Increment-at-TOP lowering: a bottom increment is skipped by
+            // `continue`, which would freeze the counter and hang the scan.
+            // TO/BY are hoisted into temps (evaluated once, like the interpreter).
+            const tgt = wt(s.var), rdv = rd(s.var);
             if (!tgt) { out.push(pad + '# cannot use ' + s.var + ' as loop variable'); break; }
-            out.push(pad + tgt + ' = ' + E(s.from));
-            out.push(pad + 'while (' + rdv + ' <= ' + E(s.to) + ') if (' + by + ') >= 0 else (' + rdv + ' >= ' + E(s.to) + '):');
-            emit(s.body, ind + 1);
-            out.push('    '.repeat(ind + 1) + tgt + ' = ' + rdv + ' + (' + by + ')');
+            const ln = ++loopN, tv = '_to' + ln, bv = '_by' + ln;
+            const p1 = '    '.repeat(ind + 1), p2 = '    '.repeat(ind + 2);
+            out.push(pad + tv + ' = ' + E(s.to));
+            out.push(pad + bv + ' = ' + (s.by ? E(s.by) : '1'));
+            out.push(pad + 'if ' + bv + ' != 0:');            // BY 0 skips (interpreter parity)
+            out.push(p1 + tgt + ' = ' + E(s.from) + ' - ' + bv);
+            out.push(p1 + 'while True:');
+            out.push(p2 + tgt + ' = ' + rdv + ' + ' + bv);
+            out.push(p2 + 'if (' + rdv + ' > ' + tv + ') if ' + bv + ' >= 0 else (' + rdv + ' < ' + tv + '): break');
+            emit(s.body, ind + 2);
             break;
           }
           case 'while': out.push(pad + 'while ' + E(s.cond) + ':'); emit(s.body, ind + 1); break;
-          case 'repeat':
-            out.push(pad + 'while True:'); emit(s.body, ind + 1);
-            out.push('    '.repeat(ind + 1) + 'if ' + E(s.cond) + ': break');
+          case 'repeat': {
+            // do-while with the UNTIL test at the loop TOP so `continue`
+            // re-checks the condition (IEC semantics) instead of skipping it.
+            const fv = '_r' + (++loopN);
+            out.push(pad + fv + ' = True');
+            out.push(pad + 'while ' + fv + ' or not ' + E(s.cond) + ':');
+            out.push('    '.repeat(ind + 1) + fv + ' = False');
+            emit(s.body, ind + 1);
             break;
+          }
           case 'exit': out.push(pad + 'break'); break;
           case 'continue': out.push(pad + 'continue'); break;
           case 'return': out.push(pad + 'return'); break;
@@ -650,8 +665,12 @@
     block.code = taArea.value;
     renderGutter(0);                                 // keep numbers in sync immediately
     if (compileTimer) clearTimeout(compileTimer);
-    compileTimer = setTimeout(recompile, 250);       // debounce parse
-    T.bus.emit('iface:changed');                     // piggy-back the autosave signal
+    compileTimer = setTimeout(() => {
+      recompile();
+      T.bus.emit('iface:changed');                   // debounced autosave signal — a
+      // per-keystroke emit would re-render the outline/details/iface panels on
+      // every character typed
+    }, 250);
   }
 
   function onKeyDown(e) {

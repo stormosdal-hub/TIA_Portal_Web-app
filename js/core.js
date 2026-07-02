@@ -483,7 +483,7 @@ window.TIA = window.TIA || {};
     getBit(addr) { return !!this.bits[String(addr).toUpperCase()]; },
     setBit(addr, v) { this.bits[String(addr).toUpperCase()] = !!v; },
     getWord(addr) { return +this.words[String(addr).toUpperCase()] || 0; },
-    setWord(addr, v) { this.words[String(addr).toUpperCase()] = +v || 0; },
+    setWord(addr, v) { const n = +v; this.words[String(addr).toUpperCase()] = isFinite(n) ? n : 0; },
   };
 
   // Parse IEC time literal "T#5s","T#1m30s","500ms" -> milliseconds. Also accepts plain ms number.
@@ -521,8 +521,10 @@ window.TIA = window.TIA || {};
   const ADDR_BIT = /^[IQM]\d+\.\d+$/i;
   const ADDR_WORD = /^[IQM]W\d+$/i;
   T.resolve = function (operand, expect) {
-    const raw = (operand == null ? '' : String(operand)).trim();
+    let raw = (operand == null ? '' : String(operand)).trim();
     if (raw === '') return { type: 'none', raw };
+    // TIA absolute-address prefix: %I0.0 ≡ I0.0 (also lets %MW10 hit ADDR_WORD)
+    if (raw.charAt(0) === '%') raw = raw.slice(1).trim();
     // numeric literal
     if (/^-?\d+(\.\d+)?$/.test(raw)) return { type: 'const', value: parseFloat(raw), raw };
     // boolean literal
@@ -580,20 +582,31 @@ window.TIA = window.TIA || {};
   };
 
   /* ============================================================ persistence */
+  // Runtime-only fields (leading underscore: _live, _power, _val, sim scratch)
+  // must not be persisted — an exported project would otherwise carry stale
+  // energized/latch state. _seq is real model data (block numbering) and stays.
+  function stripRuntime(k, v) { return (k.charAt(0) === '_' && k !== '_seq') ? undefined : v; }
   T.storage = {
     KEY: 'tia_browser_project_v1',
     save() {
-      try { localStorage.setItem(this.KEY, JSON.stringify(T.project)); return true; }
+      try { localStorage.setItem(this.KEY, JSON.stringify(T.project, stripRuntime)); return true; }
       catch (e) { console.warn('localStorage save failed', e); return false; }
     },
     load() {
-      try {
-        const s = localStorage.getItem(this.KEY);
-        return s ? JSON.parse(s) : null;
-      } catch (e) { return null; }
+      let s = null;
+      try { s = localStorage.getItem(this.KEY); } catch (e) { return null; }
+      if (!s) return null;
+      try { return JSON.parse(s); }
+      catch (e) {
+        // keep the raw text so a corrupted save can be recovered, not silently
+        // overwritten by the demo project on the next autosave
+        try { localStorage.setItem(this.KEY + '_corrupt', s); } catch (e2) { /* full */ }
+        console.error('[TIA] saved project is corrupt — raw copy kept under ' + this.KEY + '_corrupt', e);
+        return null;
+      }
     },
     exportFile() {
-      const data = JSON.stringify(T.project, null, 2);
+      const data = JSON.stringify(T.project, stripRuntime, 2);
       const blob = new Blob([data], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = T.el('a', { href: url, download: (T.project.name || 'project') + '.tiaweb.json' });

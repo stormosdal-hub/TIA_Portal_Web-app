@@ -50,12 +50,17 @@
   //               may run many times per scan for different instances, but never
   //               re-enter itself)
   //   calledIds : Set of block ids referenced by any kind:'call' element/box
+  //   instId    : id of the instance currently executing (instance DB / call site /
+  //               block id), so per-element state is per-instance, not global
   // Reset every scan so call-gated execution never leaks across scans.
-  let _scanCtx = { stack: [], calledIds: new Set() };
+  let _scanCtx = { stack: [], calledIds: new Set(), instId: '@main' };
 
+  // Per-element state keyed by (executing instance, element id): an FB containing
+  // a timer/counter/edge must NOT share that state between its instances.
   function inst(id) {
-    let s = _state.get(id);
-    if (!s) { s = {}; _state.set(id, s); }
+    const key = (_scanCtx.instId || '@main') + ':' + id;
+    let s = _state.get(key);
+    if (!s) { s = {}; _state.set(key, s); }
     return s;
   }
 
@@ -131,9 +136,14 @@
   function stageValue(stage) {
     const brs = (stage && stage.branches) || [];
     if (!brs.length) return true;      // a stage with no branches passes power
+    // An empty branch is a bare wire only while the whole stage is empty (a fresh
+    // stage). Alongside a populated branch it is an unfinished parallel arm and
+    // must not short the OR to true (matches TIA).
+    const hasEls = brs.some((b) => b.elements && b.elements.length);
     let v = false;
     for (let i = 0; i < brs.length; i++) {
-      if (branchValue(brs[i])) v = true;
+      const conducts = branchValue(brs[i]);   // always evaluate: stamps el._live
+      if (conducts && (!hasEls || (brs[i].elements && brs[i].elements.length))) v = true;
     }
     return v;
   }
@@ -281,10 +291,20 @@
   }
 
   /* ----- IEC timers (shared by LAD outputs & FBD boxes) ----------------- */
+  // PT accepts a T# literal / plain ms number, or an OPERAND (tag / interface
+  // member) whose value is milliseconds. parseTime alone turns a tag name into 0.
+  function resolvePT(raw) {
+    const s = raw == null ? '' : String(raw).trim();
+    if (s === '') return 0;
+    const ms = (/^t#/i.test(s) || /^-?\d+(\.\d+)?$/.test(s)) ? T.parseTime(s) : num(T.readNum(s));
+    return Math.max(0, ms);
+  }
+
   // TON: on-delay. While IN true, ET ramps; Q after ET>=PT. IN false resets.
-  function evalTON(id, p, par) {
+  // extPT (FBD): the already-resolved PT pin value in ms (wired or literal).
+  function evalTON(id, p, par, extPT) {
     const s = inst(id);
-    const PT = T.parseTime(par.pt);
+    const PT = (extPT != null) ? Math.max(0, num(extPT)) : resolvePT(par.pt);
     let elapsed = 0;
     if (p) {
       if (s.t0 == null) s.t0 = now();
@@ -300,9 +320,9 @@
   }
 
   // TOF: off-delay. Q true while IN true; after falling edge stays true PT.
-  function evalTOF(id, p, par) {
+  function evalTOF(id, p, par, extPT) {
     const s = inst(id);
-    const PT = T.parseTime(par.pt);
+    const PT = (extPT != null) ? Math.max(0, num(extPT)) : resolvePT(par.pt);
     let q;
     let elapsed = 0;
     if (p) {
@@ -328,9 +348,9 @@
   // TP: pulse. Rising edge starts a fixed-length pulse; Q true for PT regardless
   // of the input. The timer re-arms only once the pulse has finished AND the
   // input has returned low (IEC behaviour).
-  function evalTP(id, p, par) {
+  function evalTP(id, p, par, extPT) {
     const s = inst(id);
-    const PT = T.parseTime(par.pt);
+    const PT = (extPT != null) ? Math.max(0, num(extPT)) : resolvePT(par.pt);
     // rising edge while idle starts a pulse
     if (p && !s.prevIn && s.t0 == null) s.t0 = now();
     let q = false, elapsed = 0;
@@ -353,17 +373,18 @@
   const CMAX = 32767;
 
   // CTU: count up on rising CU; reset on R; Q when count>=PV.
-  function evalCTU(id, cu, par) {
+  // extR / extPV (FBD): already-resolved R pin and PV pin values.
+  function evalCTU(id, cu, par, extR, extPV) {
     const s = inst(id);
     if (s.count == null) s.count = 0;
-    const reset = T.readBit(par.r);
+    const reset = (extR != null) ? !!extR : T.readBit(par.r);
     if (reset) {
       s.count = 0;
     } else if (cu && !s.prevCU) {
       s.count = Math.min(s.count + 1, CMAX);
     }
     s.prevCU = cu;
-    const PV = num(T.readNum(par.pv));
+    const PV = (extPV != null) ? num(extPV) : num(T.readNum(par.pv));
     const q = s.count >= PV;
     if (notEmpty(par.cv)) T.writeNum(par.cv, s.count);
     if (notEmpty(par.q)) T.writeBit(par.q, q);
@@ -371,11 +392,12 @@
   }
 
   // CTD: count down on rising CD; load PV on LD; Q when count<=0.
-  function evalCTD(id, cd, par) {
+  // IEC/S7: CV starts at 0 (Q true) until LD loads PV.
+  function evalCTD(id, cd, par, extLD, extPV) {
     const s = inst(id);
-    const PV = num(T.readNum(par.pv));
-    if (s.count == null) s.count = PV;
-    const load = T.readBit(par.r);     // LD operand stored in params.r (same slot as CTU reset)
+    const PV = (extPV != null) ? num(extPV) : num(T.readNum(par.pv));
+    if (s.count == null) s.count = 0;
+    const load = (extLD != null) ? !!extLD : T.readBit(par.r);   // LD operand stored in params.r (same slot as CTU reset)
     if (load) {
       s.count = PV;
     } else if (cd && !s.prevCD) {
@@ -421,7 +443,9 @@
     return null;
   }
 
-  function pinKey(boxId, pinId) { return boxId + ':' + pinId; }
+  // Pin cache keys are instance-scoped too: cyclic-wire latch values inside an
+  // FB must not leak between its instances across scans.
+  function pinKey(boxId, pinId) { return (_scanCtx.instId || '@main') + ':' + boxId + ':' + pinId; }
 
   // Find the wire (if any) feeding an input pin; return source {box,pin} or null.
   function wireInto(net, boxId, pinId) {
@@ -527,19 +551,23 @@
         break;
       }
 
-      /* latches — S/R (or R/S1) are the two input pins; operand stores Q */
+      /* latches — S/R (or R/S1) are the two input pins; operand stores Q.
+         Operand-less latch state lives in inst() (per instance, cleared on
+         sim reset — never persisted on the model). */
       case 'sr': {                      // reset dominant: in pins [S, R1]
-        let q = notEmpty(box.operand) ? T.readBit(box.operand) : !!box._q;
+        const st = inst(box.id);
+        let q = notEmpty(box.operand) ? T.readBit(box.operand) : !!st.q;
         if (!!inVals[1]) q = false; else if (!!inVals[0]) q = true;
         if (notEmpty(box.operand)) T.writeBit(box.operand, q);
-        box._q = q; outVal = q; live = q;
+        st.q = q; outVal = q; live = q;
         break;
       }
       case 'rs': {                      // set dominant: in pins [R, S1]
-        let q = notEmpty(box.operand) ? T.readBit(box.operand) : !!box._q;
+        const st = inst(box.id);
+        let q = notEmpty(box.operand) ? T.readBit(box.operand) : !!st.q;
         if (!!inVals[1]) q = true; else if (!!inVals[0]) q = false;
         if (notEmpty(box.operand)) T.writeBit(box.operand, q);
-        box._q = q; outVal = q; live = q;
+        st.q = q; outVal = q; live = q;
         break;
       }
 
@@ -557,12 +585,21 @@
         break;
       }
 
-      /* timers/counters — first input pin (IN/CU/CD) acts as enable RLO */
-      case 'ton': outVal = evalTON(box.id, !!inVals[0], par); live = outVal; break;
-      case 'tof': outVal = evalTOF(box.id, !!inVals[0], par); live = outVal; break;
-      case 'tp':  outVal = evalTP(box.id, !!inVals[0], par);  live = outVal; break;
-      case 'ctu': outVal = evalCTU(box.id, !!inVals[0], par); live = outVal; break;
-      case 'ctd': outVal = evalCTD(box.id, !!inVals[0], par); live = outVal; break;
+      /* timers/counters — first input pin (IN/CU/CD) acts as enable RLO.
+         PT/PV and R/LD come from their pins (wired value or literal), so a
+         wired preset / reset condition actually takes effect. */
+      case 'ton': case 'tof': case 'tp': {
+        const pt = num(unwiredNum(net, box, 'pt', inVals, ins, 'PT'));
+        const f = k === 'ton' ? evalTON : k === 'tof' ? evalTOF : evalTP;
+        outVal = f(box.id, !!inVals[0], par, pt); live = outVal;
+        break;
+      }
+      case 'ctu': case 'ctd': {
+        const pv = num(unwiredNum(net, box, 'pv', inVals, ins, 'PV'));
+        outVal = (k === 'ctu' ? evalCTU : evalCTD)(box.id, !!inVals[0], par, !!inVals[1], pv);
+        live = outVal;
+        break;
+      }
 
       case 'move': {
         // MOVE in FBD has a single IN pin (the value); it moves unconditionally.
@@ -808,6 +845,8 @@
     // 2) switch to the callee's local scope (members shadow global tags)
     const scope = buildScope(blk, instanceId);
     const prevScope = T.setScope(scope);
+    const prevInst = _scanCtx.instId;
+    _scanCtx.instId = instanceId;        // per-instance element state (see inst())
     _scanCtx.stack.push(blk.id);
     try {
       // copy inputs into the instance's member storage
@@ -829,6 +868,7 @@
       }
     } finally {
       _scanCtx.stack.pop();
+      _scanCtx.instId = prevInst;
       T.setScope(prevScope);   // restore caller scope
     }
 
@@ -856,7 +896,7 @@
 
     // Fresh per-scan context: which blocks are referenced by a call, and which
     // have already executed this scan (recursion guard).
-    _scanCtx = { stack: [], calledIds: collectCalledIds() };
+    _scanCtx = { stack: [], calledIds: collectCalledIds(), instId: '@main' };
 
     const byNum = (type) => p.blocks.filter((b) => b.type === type)
       .sort((a, b) => (a.number || 0) - (b.number || 0));
@@ -903,7 +943,7 @@
     reset() {
       _state = new Map();
       _pinCache = Object.create(null);
-      _scanCtx = { stack: [], calledIds: new Set() };
+      _scanCtx = { stack: [], calledIds: new Set(), instId: '@main' };
       clearLiveFlags();
       // T.mem values are intentionally kept (inputs the user set persist).
     },
