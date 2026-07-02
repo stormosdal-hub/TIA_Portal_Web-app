@@ -64,19 +64,15 @@
       T.status('Download aborted — fix the ' + res.errors + ' compile error(s) first (see Output)', 'err');
       return Promise.resolve(false);
     }
-    const scl = (T.project.blocks || []).filter((b) => b.type !== 'DB' && b.lang === 'SCL' && (b.code || '').trim());
     const go = O.connected ? Promise.resolve(true) : O.connect();
     return go.then((ok) => {
       if (!ok) return;
-      return api('/api/program', { method: 'POST', body: T.project }).then(() => {
+      return api('/api/program', { method: 'POST', body: T.project }).then((r) => {
         O.running = true;
         buildIndex();
-        if (scl.length) {
-          T.status('Downloaded — but SCL block(s) ' + scl.map((b) => b.name).join(', ') +
-                   ' are NOT executed by the Pi online runtime (use Export Python for SCL)', 'warn');
-        } else {
-          T.status('Program downloaded to PLC — running on the Pi', 'ok');
-        }
+        const warns = (r && r.warnings) || [];
+        if (warns.length) T.status('Downloaded with warnings: ' + warns.join(' · '), 'warn');
+        else T.status('Program downloaded to PLC — running on the Pi', 'ok');
         O.startMonitor();
       }).catch((e) => T.status('Download failed: ' + e.message, 'err'));
     });

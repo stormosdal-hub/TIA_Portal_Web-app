@@ -53,7 +53,17 @@ the block's interface variables. Type to filter, use ↑/↓ + Enter (or click) 
 keep what you typed.
 
 ## Editing
-- **Insert**: click an instruction on the right, **or drag-and-drop it onto a network**.
+- **Undo / redo**: **Ctrl+Z** / **Ctrl+Y** (or Ctrl+Shift+Z) in the LAD and FBD editors
+  (per block, up to 60 steps — network deletes included).
+- **Copy / cut / paste**: **Ctrl+C / Ctrl+X / Ctrl+V** duplicates the selected LAD element
+  or FBD box (fresh ids; successive pastes cascade).
+- **Zoom**: **Ctrl+scroll** over the editor, or **Ctrl + / Ctrl − / Ctrl 0** (40–200%).
+- **Rename safely**: renaming a PLC tag (tag table) or a block-interface member updates
+  every operand, call parameter and GPIO mapping that referenced it.
+- **Cross-references**: Inspector ▸ **Properties** ▸ *Where used* lists every place a tag or
+  member is referenced (block, network, slot — SCL hits with line numbers); click to jump.
+- **Insert**: click an instruction on the right, **or drag-and-drop it onto a network** —
+  dropping on the **left half** of an existing contact inserts *before* it, right half *after*.
   Contacts/compare go in the condition area; coils/timers/counters/move/math go to
   the output side.
 - **Set operands**: click the `???`/label above a contact or coil and type a tag
@@ -131,13 +141,17 @@ it live in the app — TIA-style online monitoring against a real Pi.
    real GPIO/memory** and the **Simulation table** shows live values; toggling/forcing a tag there is sent
    to the running PLC. A `🔵 ONLINE` pill shows the status.
 
-Files: `plc_engine.py` interprets the program (a faithful Python port of the simulator — verified by
-parity tests); `plc_server.py` serves the app and a small JSON API (`/api/state`, `/api/program`,
-`/api/force`, …). Pure stdlib + gpiozero; no other dependencies.
+Files: `plc_engine.py` interprets the program (a faithful Python port of the simulator — LAD, FBD
+**and SCL** — verified by parity tests); `plc_server.py` serves the app and a small JSON API
+(`/api/state`, `/api/program`, `/api/force`, …). Pure stdlib + gpiozero; no other dependencies.
+**Stop** de-energizes all mapped GPIO outputs (real PLC STOP behavior).
 
 ## Saving your work
 - **Save** stores the project in the browser's local storage (auto-restored next launch;
   the IDE also autosaves every few seconds).
+- Every save also files the project **by name**, so several projects can live in the same
+  browser: the **Project menu** lists recent ones to switch between (the current project is
+  saved first), and **Project ▸ Rename project…** changes the name.
 - **Export** downloads a `.json` file. **Open** re-imports one. Use this to back up or
   move projects between machines (local storage is per-browser).
 
@@ -152,6 +166,13 @@ Bit logic (`contact NO/NC`, `P/N edge`, `coil`, `negated coil`, `set/reset`),
 `AND/OR/XOR/NOT` (FBD) + assignment, `compare` (`== <> > < >= <=`),
 timers `TON/TOF/TP`, counters `CTU/CTD`, `MOVE`, math `ADD/SUB/MUL/DIV`,
 and block **calls** (drag a block from the tree onto a network).
+
+Blocks can also be written in **SCL** (structured text: `IF/CASE/FOR/WHILE/REPEAT`,
+`EXIT/CONTINUE`, math functions) — SCL runs in the in-app simulator, on the online Pi
+runtime, and in the exported `.py`, with the same semantics in all three.
+
+GPIO inputs support an optional **debounce (ms)** in the Raspberry Pi pin table — it filters
+mechanical switch bounce that would otherwise double-count CTU/P_TRIG edges on real hardware.
 
 ## Project tree & simulation table tips
 - **Single-click** a block or the tag table to preview it in the **Details view**; **double-click** to open it.

@@ -138,12 +138,24 @@
     );
     tr.appendChild(gutter);
 
-    /* --- Name: free text -> tag.name --- */
+    /* --- Name: free text -> tag.name. On commit (blur/Enter) the rename is
+       propagated to every operand that referenced the old name. --- */
     const nameInput = T.el('input', {
       class: 'tia-tags-cell', type: 'text', value: tag.name || '',
       placeholder: 'Tag name', spellcheck: 'false',
       oninput: (e) => { tag.name = e.target.value; refreshDot(dot, tag); emitChanged(); },
-      onfocus: () => selectRow(tag.id, true),
+      onfocus: (e) => { selectRow(tag.id, true); e.target.dataset.oldName = tag.name || ''; },
+      onchange: (e) => {
+        const old = e.target.dataset.oldName || '';
+        e.target.dataset.oldName = tag.name || '';
+        if (!T.refactor || !old || old === tag.name) return;
+        const n = T.refactor.renameTag(old, tag.name);
+        if (n) {
+          T.status('Renamed "' + old + '" → "' + tag.name + '" — updated ' + n + ' reference(s)', 'ok');
+          T.bus.emit('tree:changed');
+          if (T.activeEditor && T.activeEditor.refresh) T.activeEditor.refresh();
+        }
+      },
     });
     tr.appendChild(T.el('td', { class: 'col-name' }, nameInput));
 
@@ -301,15 +313,29 @@
     }
   }
 
-  // Delete the selected tag (or the last one if nothing is selected).
+  // Delete the selected tag; warn when program logic still references it.
   function deleteSelected() {
     if (!T.project) return;
     const tags = T.project.tags || [];
     if (tags.length === 0) return;
 
-    let idx = tags.findIndex((t) => t.id === selectedId);
-    if (idx < 0) idx = tags.length - 1;       // no selection -> delete last
+    const idx = tags.findIndex((t) => t.id === selectedId);
+    if (idx < 0) {
+      T.status('Select a tag first (click its row number)', 'warn');
+      return;
+    }
+    const tag = tags[idx];
+    const refs = (T.refactor && tag.name) ? T.refactor.countTagRefs(tag.name) : 0;
+    const msg = refs
+      ? 'Tag "' + tag.name + '" is referenced by ' + refs + ' operand(s).\n' +
+        'Delete anyway? (the operands keep the name and will read FALSE/0)'
+      : 'Delete tag "' + (tag.name || tag.address || '?') + '"?';
+    if (!window.confirm(msg)) return;
     tags.splice(idx, 1);
+    // drop its Raspberry-Pi GPIO pin mapping so no dangling entry remains
+    if (Array.isArray(T.project.gpio) && tag.name) {
+      T.project.gpio = T.project.gpio.filter((g) => !(g && g.tag === tag.name));
+    }
 
     // Move selection to a sensible neighbour.
     if (tags.length === 0) selectedId = null;

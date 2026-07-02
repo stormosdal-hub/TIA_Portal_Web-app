@@ -14,7 +14,17 @@
     },
     openProject() {
       T.storage.importFile((p) => {
+        // a random .json would otherwise "load" as an empty project and be
+        // autosaved over the current one moments later
+        if (!p || !Array.isArray(p.blocks) || !Array.isArray(p.tags)) {
+          alert('This file is not a TIA Web project (missing blocks/tags).');
+          return;
+        }
+        if (T.project && !confirm('Open project "' + (p.name || '?') + '"?\n' +
+            'The current project "' + (T.project.name || '?') + '" stays saved in browser storage.')) return;
+        if (T.project) T.storage.save();
         T.app.adoptProject(p);
+        T.storage.save();
         T.status('Project loaded', 'ok');
       });
     },

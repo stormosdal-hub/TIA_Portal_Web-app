@@ -144,11 +144,25 @@
   function buildMemberRow(block, section, member) {
     const tr = T.el('tr', { class: 'tia-iface-row', dataset: { memId: member.id } });
 
-    /* --- Name (with a drag grip so the variable can be dropped onto a pin) --- */
+    /* --- Name (with a drag grip so the variable can be dropped onto a pin).
+       On commit (blur/Enter) the rename is propagated to operands inside the
+       block and to call-site argument pins everywhere the block is used. --- */
     const nameInput = T.el('input', {
       class: 'tia-iface-cell', type: 'text', value: member.name || '',
       placeholder: 'Name', spellcheck: 'false',
       oninput: (e) => { member.name = e.target.value; notifyIface(block); },
+      onfocus: (e) => { e.target.dataset.oldName = member.name || ''; },
+      onchange: (e) => {
+        const old = e.target.dataset.oldName || '';
+        e.target.dataset.oldName = member.name || '';
+        if (!T.refactor || !old || old === member.name) return;
+        const n = T.refactor.renameMember(block, old, member.name);
+        if (n) {
+          T.status('Renamed "' + old + '" → "' + member.name + '" — updated ' + n + ' reference(s)', 'ok');
+          notifyIface(block);
+          if (T.activeEditor && T.activeEditor.refresh) T.activeEditor.refresh();
+        }
+      },
     });
     const grip = T.el('span', {
       class: 'tia-iface-grip', title: 'Drag this variable onto an input/output pin',
@@ -325,6 +339,7 @@
 
   // Render the DB view into `dbHost` for `dbBlockRef`.
   function renderDb() {
+    if (dbHost && !dbHost.isConnected) { dbHost = null; dbBlockRef = null; }
     if (!dbHost) return;
     T.clear(dbHost);
     const dbBlock = dbBlockRef;
@@ -404,6 +419,9 @@
   // Falls back to a full re-render if the host content is unexpectedly absent.
   function refreshDbValues() {
     if (!dbHost || !dbBlockRef) return;
+    // the DB tab was closed / replaced: stop refreshing a detached table and
+    // release the stale block reference
+    if (!dbHost.isConnected) { dbHost = null; dbBlockRef = null; return; }
     const fb = T.findBlock(dbBlockRef.instanceOf);
     if (!fb) return;
     const table = dbHost.querySelector('table.tia-db-table');

@@ -292,6 +292,48 @@
       row('Language', blk.lang);
       row('Networks', String((blk.networks || []).length));
     }
+
+    /* ---- cross-references: where is a tag / member used? ---- */
+    dl.appendChild(T.el('hr'));
+    const res = T.el('div', { class: 'tia-xref-res' });
+    const inp = T.el('input', {
+      class: 'tia-input', type: 'text', placeholder: 'Tag / member name…',
+      style: { width: '170px' }, spellcheck: 'false',
+    });
+    const runXref = () => {
+      T.clear(res);
+      const q = inp.value.trim();
+      if (!q) return;
+      const refs = (T.refactor && T.refactor.findRefs) ? T.refactor.findRefs(q) : [];
+      if (!refs.length) {
+        res.appendChild(T.el('div', { class: 'tia-muted' }, 'No references to "' + q + '".'));
+        return;
+      }
+      refs.forEach((r) => {
+        res.appendChild(T.el('div', {
+          class: 'tia-xref-row', title: 'Open ' + r.block,
+          onclick: () => { const b = T.findBlock(r.blockId); if (b) T.bus.emit('open:block', b); },
+        },
+          T.el('span', { class: 'tia-xref-blk' }, r.block),
+          T.el('span', { class: 'tia-xref-where' },
+            (r.net ? ' · network ' + r.net : '') + ' · ' + r.where)));
+      });
+      res.appendChild(T.el('div', { class: 'tia-muted' }, refs.length + ' reference(s)'));
+    };
+    // suggestion dropdown, attached lazily so it positions against the mounted input
+    inp.addEventListener('focus', () => {
+      if (!inp._ac) inp._ac = T.attachAutocomplete(inp, {
+        items: () => T.operandCandidates(),
+        onPick: (v) => { inp.value = v; runXref(); },
+      });
+    });
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') runXref(); });
+    dl.appendChild(T.el('div', { class: 'tia-prop-row' },
+      T.el('span', { class: 'tia-prop-k' }, 'Where used'),
+      T.el('span', {}, inp,
+        T.el('button', { class: 'tia-tb-btn', style: { marginLeft: '6px' }, onclick: runXref }, 'Find'))));
+    dl.appendChild(res);
+
     host.appendChild(dl);
   }
 
@@ -311,6 +353,12 @@
     .tia-prop-k { width:90px; color:var(--tia-text-soft); }
     .tia-prop-v { color:var(--tia-text); font-weight:500; }
     .tia-output-log { font-family:var(--tia-mono); font-size:12px; line-height:1.6; white-space:pre-wrap; }
+    /* cross-reference list (Properties tab) */
+    .tia-xref-res { margin-top:4px; max-height:180px; overflow:auto; }
+    .tia-xref-row { padding:2px 6px; cursor:pointer; border-radius:2px; font-size:12px; }
+    .tia-xref-row:hover { background:var(--tia-hover); }
+    .tia-xref-blk { font-weight:600; color:var(--tia-petrol-deep); }
+    .tia-xref-where { color:var(--tia-text-soft); }
     .tia-output-ok { color:#1a7a3a; } .tia-output-warn { color:#b8860b; } .tia-output-err { color:#c0392b; }
     /* dropdown menus */
     .tia-dropdown { position:absolute; background:#fff; border:1px solid var(--tia-border);
@@ -321,15 +369,49 @@
   `);
 
   /* ------------------------------------------------------ menu bar */
+  // Open another project saved in this browser (the current one stays saved).
+  function openSaved(name) {
+    if (T.project) T.storage.save();
+    const p = T.storage.loadFromLibrary(name);
+    if (!p) { T.status('Saved project "' + name + '" not found', 'warn'); return; }
+    adoptProject(p);
+    T.storage.save();                    // it is the "current" project now
+    T.status('Opened "' + name + '" from browser storage', 'ok');
+  }
+  function renameProject() {
+    if (!T.project) return;
+    const cur = T.project.name || '';
+    const name = window.prompt('Project name:', cur);
+    if (!name || !name.trim() || name.trim() === cur) return;
+    T.project.name = name.trim();
+    byId('tia-project-name').textContent = T.project.name;
+    T.storage.save();
+    T.bus.emit('tree:changed');
+    T.status('Project renamed to "' + T.project.name + '"', 'ok');
+  }
+  // Built at click time so the "recent projects" list is always current.
+  function projectMenuItems() {
+    const items = [
+      ['New project', T.actions.newProject],
+      ['Open file…', T.actions.openProject],
+      ['Save', T.actions.save],
+      ['Export to file…', T.actions.exportProject],
+      ['Rename project…', renameProject],
+    ];
+    const idx = T.storage.libraryIndex();
+    const names = Object.keys(idx).sort((a, b) => idx[b] - idx[a])
+      .filter((n) => !T.project || n !== T.project.name)
+      .slice(0, 8);
+    if (names.length) {
+      items.push('-');
+      names.forEach((n) => items.push(['Open "' + n + '"', () => openSaved(n)]));
+    }
+    return items;
+  }
   function buildMenu() {
     const host = byId('tia-menu'); if (!host) return; T.clear(host);
     const menus = [
-      ['Project', [
-        ['New project', T.actions.newProject],
-        ['Open…', T.actions.openProject],
-        ['Save', T.actions.save],
-        ['Export to file…', T.actions.exportProject],
-      ]],
+      ['Project', projectMenuItems],
       ['Edit', [
         ['Insert network', T.actions.addNetwork],
         ['Delete selection', T.actions.deleteSelection],
@@ -345,7 +427,7 @@
     menus.forEach(([label, items]) => {
       host.appendChild(T.el('div', {
         class: 'tia-menu-item',
-        onclick: (e) => showDropdown(e.currentTarget, items),
+        onclick: (e) => showDropdown(e.currentTarget, typeof items === 'function' ? items() : items),
       }, label));
     });
   }

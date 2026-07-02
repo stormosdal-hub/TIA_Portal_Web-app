@@ -126,6 +126,481 @@ def _in_param_key(kind, pin_name):
     return table.get(kind, {}).get(pin_name)
 
 
+# ==========================================================================
+#  SCL (Structured Control Language) — tokenizer + parser.
+#  A faithful port of js/scl.js (same AST shape, same precedence: NOT binds at
+#  factor level, AND > XOR > OR, comparisons above add/mul). The evaluator
+#  lives on Engine (it needs the operand layer / block context).
+# ==========================================================================
+class _SclError(Exception):
+    def __init__(self, msg, line=0, col=0):
+        super().__init__(msg)
+        self.line = line
+        self.col = col
+
+
+_SCL_KW = {
+    'IF', 'THEN', 'ELSIF', 'ELSE', 'END_IF',
+    'CASE', 'OF', 'END_CASE',
+    'FOR', 'TO', 'BY', 'DO', 'END_FOR',
+    'WHILE', 'END_WHILE',
+    'REPEAT', 'UNTIL', 'END_REPEAT',
+    'EXIT', 'CONTINUE', 'RETURN',
+    'AND', 'OR', 'XOR', 'NOT', 'MOD',
+    'TRUE', 'FALSE',
+}
+
+
+def _scl_tokenize(src):
+    toks = []
+    i, line, col = 0, 1, 1
+    n = len(src)
+    state = {'i': 0, 'line': 1, 'col': 1}
+
+    def err(msg):
+        raise _SclError(msg, state['line'], state['col'])
+
+    def adv(k):
+        for _ in range(k):
+            if state['i'] < n and src[state['i']] == '\n':
+                state['line'] += 1
+                state['col'] = 1
+            else:
+                state['col'] += 1
+            state['i'] += 1
+
+    while state['i'] < n:
+        i = state['i']
+        c = src[i]
+        if c in ' \t\r\n':
+            adv(1)
+            continue
+        if c == '/' and i + 1 < n and src[i + 1] == '/':          # line comment
+            while state['i'] < n and src[state['i']] != '\n':
+                adv(1)
+            continue
+        if c == '(' and i + 1 < n and src[i + 1] == '*':          # block comment
+            adv(2)
+            while state['i'] < n and not (src[state['i']] == '*'
+                                          and state['i'] + 1 < n and src[state['i'] + 1] == ')'):
+                adv(1)
+            if state['i'] >= n:
+                err('Unterminated (* comment *)')
+            adv(2)
+            continue
+        sl, sc = state['line'], state['col']
+        if c.isdigit():
+            s = ''
+            while state['i'] < n and src[state['i']].isdigit():
+                s += src[state['i']]
+                adv(1)
+            # fractional part only when followed by a digit (keeps 1..5 ranges intact)
+            if state['i'] < n and src[state['i']] == '.' \
+                    and state['i'] + 1 < n and src[state['i'] + 1].isdigit():
+                s += '.'
+                adv(1)
+                while state['i'] < n and src[state['i']].isdigit():
+                    s += src[state['i']]
+                    adv(1)
+            v = float(s)
+            v = int(v) if v.is_integer() else v
+            toks.append({'t': 'num', 'v': v, 'line': sl, 'col': sc})
+            continue
+        if c.isalpha() or c == '_':
+            s = ''
+            while state['i'] < n and (src[state['i']].isalnum() or src[state['i']] == '_'):
+                s += src[state['i']]
+                adv(1)
+            if state['i'] < n and src[state['i']] == '#':          # typed literal T#5s / INT#3
+                rest = ''
+                adv(1)
+                while state['i'] < n and (src[state['i']].isalnum() or src[state['i']] in '_.'):
+                    rest += src[state['i']]
+                    adv(1)
+                up = s.upper()
+                if up in ('T', 'TIME'):
+                    val = parse_time_ms('T#' + rest) or 0
+                else:
+                    try:
+                        val = float(rest)
+                    except ValueError:
+                        val = 0.0
+                    val = int(val) if float(val).is_integer() else val
+                toks.append({'t': 'num', 'v': val, 'line': sl, 'col': sc})
+                continue
+            up = s.upper()
+            if up in _SCL_KW:
+                toks.append({'t': 'kw', 'v': up, 'line': sl, 'col': sc})
+            else:
+                toks.append({'t': 'id', 'v': s, 'line': sl, 'col': sc})
+            continue
+        two = src[i:i + 2]
+        if two in (':=', '<=', '>=', '<>', '..'):
+            toks.append({'t': 'op', 'v': two, 'line': sl, 'col': sc})
+            adv(2)
+            continue
+        if c in '+-*/()<>=;:,.':
+            toks.append({'t': 'op', 'v': c, 'line': sl, 'col': sc})
+            adv(1)
+            continue
+        err('Unexpected character "%s"' % c)
+    toks.append({'t': 'eof', 'v': '<eof>', 'line': state['line'], 'col': state['col']})
+    return toks
+
+
+def _scl_parse(src):
+    toks = _scl_tokenize(src)
+    p = [0]
+
+    def peek():
+        return toks[p[0]]
+
+    def nxt():
+        t = toks[p[0]]
+        p[0] += 1
+        return t
+
+    def err(msg, tk=None):
+        tk = tk or peek()
+        raise _SclError(msg + ' near "%s"' % (tk['v'],), tk.get('line', 0), tk.get('col', 0))
+
+    def is_op(v):
+        t = peek()
+        return t['t'] == 'op' and t['v'] == v
+
+    def is_kw(v):
+        t = peek()
+        return t['t'] == 'kw' and t['v'] == v
+
+    def eat_op(v):
+        if not is_op(v):
+            err('Expected "%s"' % v)
+        return nxt()
+
+    def eat_kw(v):
+        if not is_kw(v):
+            err('Expected %s' % v)
+        return nxt()
+
+    def accept_op(v):
+        if is_op(v):
+            nxt()
+            return True
+        return False
+
+    def parse_stmts(stop):
+        out = []
+        while not stop():
+            if peek()['t'] == 'eof':
+                break
+            if accept_op(';'):
+                continue
+            out.append(parse_stmt())
+        return out
+
+    def parse_stmt():
+        t = peek()
+        if t['t'] == 'kw':
+            v = t['v']
+            if v == 'IF':
+                return parse_if()
+            if v == 'CASE':
+                return parse_case()
+            if v == 'FOR':
+                return parse_for()
+            if v == 'WHILE':
+                return parse_while()
+            if v == 'REPEAT':
+                return parse_repeat()
+            if v == 'EXIT':
+                nxt(); accept_op(';'); return {'n': 'exit'}
+            if v == 'CONTINUE':
+                nxt(); accept_op(';'); return {'n': 'continue'}
+            if v == 'RETURN':
+                nxt(); accept_op(';'); return {'n': 'return'}
+        if t['t'] == 'id':
+            name = parse_lvalue()
+            eat_op(':=')
+            e = parse_expr()
+            accept_op(';')
+            return {'n': 'assign', 'name': name, 'expr': e}
+        err('Unexpected statement')
+
+    def parse_lvalue():
+        name = nxt()['v']
+        while is_op('.'):
+            nxt()
+            if peek()['t'] != 'id':
+                err('Expected member name')
+            name += '.' + nxt()['v']
+        return name
+
+    def parse_if():
+        eat_kw('IF')
+        arms = []
+        cond = parse_expr()
+        eat_kw('THEN')
+        body = parse_stmts(lambda: is_kw('ELSIF') or is_kw('ELSE') or is_kw('END_IF'))
+        arms.append({'cond': cond, 'body': body})
+        while is_kw('ELSIF'):
+            nxt()
+            cond = parse_expr()
+            eat_kw('THEN')
+            body = parse_stmts(lambda: is_kw('ELSIF') or is_kw('ELSE') or is_kw('END_IF'))
+            arms.append({'cond': cond, 'body': body})
+        els = None
+        if is_kw('ELSE'):
+            nxt()
+            els = parse_stmts(lambda: is_kw('END_IF'))
+        eat_kw('END_IF')
+        accept_op(';')
+        return {'n': 'if', 'arms': arms, 'els': els}
+
+    def is_case_boundary():
+        if is_kw('END_CASE') or is_kw('ELSE'):
+            return True
+        t = peek()
+        if t['t'] != 'num' and not (t['t'] == 'op' and t['v'] == '-'):
+            return False
+        q = [p[0]]
+
+        def skip_label():
+            if toks[q[0]]['t'] == 'op' and toks[q[0]]['v'] == '-':
+                q[0] += 1
+            if toks[q[0]]['t'] != 'num':
+                return False
+            q[0] += 1
+            if toks[q[0]]['t'] == 'op' and toks[q[0]]['v'] == '..':
+                q[0] += 1
+                if toks[q[0]]['t'] == 'op' and toks[q[0]]['v'] == '-':
+                    q[0] += 1
+                if toks[q[0]]['t'] != 'num':
+                    return False
+                q[0] += 1
+            return True
+
+        if not skip_label():
+            return False
+        while toks[q[0]]['t'] == 'op' and toks[q[0]]['v'] == ',':
+            q[0] += 1
+            if not skip_label():
+                return False
+        return toks[q[0]]['t'] == 'op' and toks[q[0]]['v'] == ':'
+
+    def parse_signed_int():
+        sign = 1
+        if is_op('-'):
+            nxt()
+            sign = -1
+        if peek()['t'] != 'num':
+            err('Expected number in CASE label')
+        return sign * nxt()['v']
+
+    def parse_case_label():
+        lo = parse_signed_int()
+        if is_op('..'):
+            nxt()
+            hi = parse_signed_int()
+            return {'lo': lo, 'hi': hi}
+        return {'lo': lo, 'hi': lo}
+
+    def parse_case():
+        eat_kw('CASE')
+        sel = parse_expr()
+        eat_kw('OF')
+        arms = []
+        els = None
+        while not is_kw('END_CASE') and not is_kw('ELSE'):
+            labels = [parse_case_label()]
+            while accept_op(','):
+                labels.append(parse_case_label())
+            eat_op(':')
+            body = parse_stmts(is_case_boundary)
+            arms.append({'labels': labels, 'body': body})
+        if is_kw('ELSE'):
+            nxt()
+            els = parse_stmts(lambda: is_kw('END_CASE'))
+        eat_kw('END_CASE')
+        accept_op(';')
+        return {'n': 'case', 'expr': sel, 'arms': arms, 'els': els}
+
+    def parse_for():
+        eat_kw('FOR')
+        if peek()['t'] != 'id':
+            err('Expected loop variable')
+        v = parse_lvalue()
+        eat_op(':=')
+        frm = parse_expr()
+        eat_kw('TO')
+        to = parse_expr()
+        by = None
+        if is_kw('BY'):
+            nxt()
+            by = parse_expr()
+        eat_kw('DO')
+        body = parse_stmts(lambda: is_kw('END_FOR'))
+        eat_kw('END_FOR')
+        accept_op(';')
+        return {'n': 'for', 'var': v, 'from': frm, 'to': to, 'by': by, 'body': body}
+
+    def parse_while():
+        eat_kw('WHILE')
+        cond = parse_expr()
+        eat_kw('DO')
+        body = parse_stmts(lambda: is_kw('END_WHILE'))
+        eat_kw('END_WHILE')
+        accept_op(';')
+        return {'n': 'while', 'cond': cond, 'body': body}
+
+    def parse_repeat():
+        eat_kw('REPEAT')
+        body = parse_stmts(lambda: is_kw('UNTIL'))
+        eat_kw('UNTIL')
+        cond = parse_expr()
+        eat_kw('END_REPEAT')
+        accept_op(';')
+        return {'n': 'repeat', 'body': body, 'cond': cond}
+
+    def parse_expr():
+        return parse_or()
+
+    def parse_or():
+        a = parse_xor()
+        while is_kw('OR'):
+            nxt()
+            a = {'n': 'bin', 'op': 'OR', 'a': a, 'b': parse_xor()}
+        return a
+
+    def parse_xor():
+        a = parse_and()
+        while is_kw('XOR'):
+            nxt()
+            a = {'n': 'bin', 'op': 'XOR', 'a': a, 'b': parse_and()}
+        return a
+
+    def parse_and():
+        a = parse_cmp()
+        while is_kw('AND'):
+            nxt()
+            a = {'n': 'bin', 'op': 'AND', 'a': a, 'b': parse_cmp()}
+        return a
+
+    def parse_cmp():
+        a = parse_add()
+        while (is_op('=') or is_op('<>') or is_op('<') or is_op('>')
+               or is_op('<=') or is_op('>=')):
+            op = nxt()['v']
+            a = {'n': 'bin', 'op': op, 'a': a, 'b': parse_add()}
+        return a
+
+    def parse_add():
+        a = parse_mul()
+        while is_op('+') or is_op('-'):
+            op = nxt()['v']
+            a = {'n': 'bin', 'op': op, 'a': a, 'b': parse_mul()}
+        return a
+
+    def parse_mul():
+        a = parse_unary()
+        while is_op('*') or is_op('/') or is_kw('MOD'):
+            op = nxt()['v']
+            a = {'n': 'bin', 'op': op, 'a': a, 'b': parse_unary()}
+        return a
+
+    def parse_unary():
+        if is_kw('NOT'):
+            nxt()
+            return {'n': 'un', 'op': 'NOT', 'a': parse_unary()}
+        if is_op('-'):
+            nxt()
+            return {'n': 'un', 'op': '-', 'a': parse_unary()}
+        if is_op('+'):
+            nxt()
+            return parse_unary()
+        return parse_primary()
+
+    def parse_primary():
+        t = peek()
+        if t['t'] == 'num':
+            nxt()
+            return {'n': 'num', 'v': t['v']}
+        if t['t'] == 'kw' and t['v'] in ('TRUE', 'FALSE'):
+            nxt()
+            return {'n': 'bool', 'v': t['v'] == 'TRUE'}
+        if is_op('('):
+            nxt()
+            e = parse_expr()
+            eat_op(')')
+            return e
+        if t['t'] == 'id':
+            name = parse_lvalue()
+            if is_op('('):
+                nxt()
+                args = []
+                if not is_op(')'):
+                    args.append(parse_expr())
+                    while accept_op(','):
+                        args.append(parse_expr())
+                eat_op(')')
+                return {'n': 'call', 'name': name, 'args': args}
+            return {'n': 'var', 'name': name}
+        err('Unexpected token in expression')
+
+    body = parse_stmts(lambda: peek()['t'] == 'eof')
+    if peek()['t'] != 'eof':
+        err('Unexpected token')
+    return {'n': 'block', 'body': body}
+
+
+def _scl_num(v):
+    if v is True:
+        return 1
+    if v is False:
+        return 0
+    return num(v)
+
+
+def _scl_bool(v):
+    if isinstance(v, bool):
+        return v
+    return _scl_num(v) != 0
+
+
+def _scl_intify(x):
+    """Collapse integral floats to int (JS numbers don't distinguish 3.0/3)."""
+    if isinstance(x, float) and x.is_integer():
+        return int(x)
+    return x
+
+
+def _js_round(x):
+    """JS Math.round: half rounds toward +Infinity (Python round() is banker's)."""
+    return math.floor(x + 0.5)
+
+
+# built-in SCL functions (mirrors scl.js FUNCS)
+_SCL_FUNCS = {
+    'ABS': lambda a: abs(_scl_num(a[0])),
+    'SQRT': lambda a: math.sqrt(_scl_num(a[0])),
+    'SQR': lambda a: _scl_num(a[0]) * _scl_num(a[0]),
+    'MIN': lambda a: min(_scl_num(x) for x in a),
+    'MAX': lambda a: max(_scl_num(x) for x in a),
+    'LIMIT': lambda a: max(_scl_num(a[0]), min(_scl_num(a[1]), _scl_num(a[2]))),
+    'TRUNC': lambda a: math.trunc(_scl_num(a[0])),
+    'ROUND': lambda a: _js_round(_scl_num(a[0])),
+    'INT': lambda a: math.trunc(_scl_num(a[0])),
+    'REAL': lambda a: _scl_num(a[0]),
+    'LN': lambda a: math.log(_scl_num(a[0])),
+    'EXP': lambda a: math.exp(_scl_num(a[0])),
+    'SIN': lambda a: math.sin(_scl_num(a[0])),
+    'COS': lambda a: math.cos(_scl_num(a[0])),
+    'TAN': lambda a: math.tan(_scl_num(a[0])),
+}
+
+_SCL_MAX_ITER = 200000
+_SCL_EXIT, _SCL_CONT, _SCL_RET = 'exit', 'continue', 'return'
+
+
 # Numeric comparison by operator string (mirrors sim.js cmp()).
 def _cmp(op, a, b):
     return {
@@ -214,7 +689,9 @@ class Engine:
         self.scan_count = 0
         self._scope = None            # active block-local member scope (member-name lc -> key)
         self._alias = {}              # lowercase tag name / address -> canonical tag name
+        self._tag_bits = set()        # lowercase names of Bool tags (SCL type resolution)
         self._callstack = set()       # re-entrant block-call guard (parity: sim.js _scanCtx.stack)
+        self._scl_cache = {}          # block id -> (code, program|None, error|None)
         self.err_count = 0            # networks that raised during scan (see _run_block)
         self.last_error = None
 
@@ -245,12 +722,15 @@ class Engine:
             self.inputs = {}
             self.outputs = {}
             self.pwms = {}
-        # surface unsupported-language blocks so the app can warn the user
+        # SCL blocks run natively now — warn only when one fails to parse
         warnings = []
         if self.project:
             for b in (self.project.get('blocks') or []):
                 if b.get('type') != 'DB' and b.get('lang') == 'SCL' and str(b.get('code') or '').strip():
-                    warnings.append('SCL block "%s" is not executed by this runtime' % (b.get('name') or '?'))
+                    _code, _prog, perr = self._scl_program(b)
+                    if perr:
+                        warnings.append('SCL block "%s": %s (block is skipped)'
+                                        % (b.get('name') or '?', perr))
         return {'ok': True, 'warnings': warnings}
 
     def _seed_memory(self):
@@ -260,12 +740,14 @@ class Engine:
         or with different case hits the SAME cell that read_inputs() writes."""
         self._tags = list(self.project.get('tags') or [])
         self._alias = {}
+        self._tag_bits = set()
         for t in self._tags:
             name = t.get('name')
             if not _not_empty(name):
                 continue
             if t.get('dataType') == 'Bool':
                 self.M[name] = False
+                self._tag_bits.add(str(name).lower())
             else:
                 self.M[name] = 0
             self._alias.setdefault(str(name).lower(), name)
@@ -322,7 +804,9 @@ class Engine:
                     freq = 100 if (freq is None or freq == '') else int(freq)
                     self.pwms[tag] = self._make_pwm(bcm, freq, use_real)
                 elif direction == 'in':
-                    self.inputs[tag] = self._make_input(bcm, pull, active_low, use_real)
+                    deb = m.get('debounce')
+                    bounce_s = (int(deb) / 1000.0) if deb not in (None, '', 0, '0') else None
+                    self.inputs[tag] = self._make_input(bcm, pull, active_low, use_real, bounce_s)
                 else:
                     self.outputs[tag] = self._make_output(bcm, active_low, use_real)
             except Exception:
@@ -342,13 +826,14 @@ class Engine:
         except Exception:
             return False
 
-    def _make_input(self, bcm, pull, active_low, use_real):
+    def _make_input(self, bcm, pull, active_low, use_real, bounce_s=None):
         if not use_real:
             return _MockPin(False)
         from gpiozero import DigitalInputDevice
         # active_state is only valid when there is no pull resistor (pull == 'none')
         active_state = ((not active_low) if pull == 'none' else None)
-        return DigitalInputDevice(bcm, pull_up=(pull == 'up'), active_state=active_state)
+        return DigitalInputDevice(bcm, pull_up=(pull == 'up'), active_state=active_state,
+                                  bounce_time=bounce_s)
 
     def _make_output(self, bcm, active_low, use_real):
         if not use_real:
@@ -460,39 +945,58 @@ class Engine:
     #  Timer / counter / edge / latch primitives (port of codegen.js helpers)
     #  Timers use seconds; PT is supplied in seconds.
     # =======================================================================
+    # Timers return (q, et_ms) — ET mirrors sim.js (milliseconds, clamped to PT).
     def _ton(self, i, inp, pt):
         s = self.ST.setdefault(i, {'t0': None})
+        el = 0.0
+        q = False
         if inp:
             if s['t0'] is None:
                 s['t0'] = self.now()
-            return (self.now() - s['t0']) >= pt
-        s['t0'] = None
-        return False
+            el = self.now() - s['t0']
+            q = el >= pt
+        else:
+            s['t0'] = None
+        return (q, min(el, pt) * 1000.0)
 
     def _tof(self, i, inp, pt):
         s = self.ST.setdefault(i, {'t0': None, 'prev': False})
+        el = 0.0
         if inp:
             s['t0'] = None
             q = True
         else:
             if s['prev'] and s['t0'] is None:
                 s['t0'] = self.now()
-            q = (s['t0'] is not None) and ((self.now() - s['t0']) < pt)
+            if s['t0'] is not None:
+                el = self.now() - s['t0']
+                if el >= pt:
+                    q = False
+                    el = pt
+                else:
+                    q = True
+            else:
+                q = False
         s['prev'] = inp
-        return q
+        return (q, el * 1000.0)
 
     def _tp(self, i, inp, pt):
         s = self.ST.setdefault(i, {'t0': None, 'prev': False})
+        q = False
+        el = 0.0
         if inp and not s['prev'] and s['t0'] is None:
             s['t0'] = self.now()
-        q = False
         if s['t0'] is not None:
-            if (self.now() - s['t0']) < pt:
+            el = self.now() - s['t0']
+            if el < pt:
                 q = True
-            elif not inp:
-                s['t0'] = None
+            else:
+                q = False
+                el = pt
+                if not inp:
+                    s['t0'] = None
         s['prev'] = inp
-        return q
+        return (q, min(el, pt) * 1000.0)
 
     def _ctu(self, i, cu, pv, reset):
         s = self.ST.setdefault(i, {'c': 0, 'prev': False})
@@ -613,14 +1117,13 @@ class Engine:
                 self._write(el.get('operand'), ctx, False)
             self.live[eid] = bool(p)
 
-        elif k == 'ton':
-            self._set_q(par.get('q'), ctx, self._ton(self._stid(ctx, eid), p, self._secs(par.get('pt'), ctx)))
-            self.live[eid] = bool(p)
-        elif k == 'tof':
-            self._set_q(par.get('q'), ctx, self._tof(self._stid(ctx, eid), p, self._secs(par.get('pt'), ctx)))
-            self.live[eid] = bool(p)
-        elif k == 'tp':
-            self._set_q(par.get('q'), ctx, self._tp(self._stid(ctx, eid), p, self._secs(par.get('pt'), ctx)))
+        elif k in ('ton', 'tof', 'tp'):
+            fn = {'ton': self._ton, 'tof': self._tof, 'tp': self._tp}[k]
+            q, et = fn(self._stid(ctx, eid), p, self._secs(par.get('pt'), ctx))
+            if _not_empty(par.get('q')):
+                self._write(par.get('q'), ctx, q)
+            if _not_empty(par.get('et')):
+                self._write(par.get('et'), ctx, et)
             self.live[eid] = bool(p)
 
         elif k == 'ctu':
@@ -847,10 +1350,14 @@ class Engine:
             pt_s = (max(0, num(in_e[pti])) / 1000.0) if (pti is not None and pti < len(in_e)) \
                 else self._secs(p.get('pt'), ctx)
             fn = {'ton': self._ton, 'tof': self._tof, 'tp': self._tp}[k]
-            v = fn(self._stid(ctx, bid), bool(in_e[0] if in_e else False), pt_s)
-            if _not_empty(p.get('q')):          # sim.js evalTON writes par.q in FBD too
+            v, et = fn(self._stid(ctx, bid), bool(in_e[0] if in_e else False), pt_s)
+            if _not_empty(p.get('q')):          # sim.js evalTON writes par.q/par.et in FBD too
                 self._write(p.get('q'), ctx, v)
+            if _not_empty(p.get('et')):
+                self._write(p.get('et'), ctx, et)
             out_vals[0] = v
+            if n_out > 1:                       # ET pin mirrors sim.js: reads back par.et (0 when unset)
+                out_vals[1] = et if _not_empty(p.get('et')) else 0
             live = v
         elif k in ('ctu', 'ctd'):
             pvi = next((i for i, pp in enumerate(box.get('inputs') or []) if pp.get('name') == 'PV'), None)
@@ -1039,13 +1546,17 @@ class Engine:
 
     def _block_ctx(self, blk, inst):
         """Build a per-block evaluation context: member-name (lowercase) -> member
-        name, plus the instance id used to key "<inst>.<member>"."""
+        name, the Bool members (SCL type resolution), and the instance id used to
+        key "<inst>.<member>"."""
         members = {}
+        bits = set()
         for m in self._iface_members(blk):
             name = m.get('name')
             if name:
                 members[name.lower()] = name
-        return {'members': members, 'inst': inst}
+                if m.get('dataType') == 'Bool':
+                    bits.add(name.lower())
+        return {'members': members, 'bits': bits, 'inst': inst}
 
     def _run_block(self, blk, inst):
         """Execute every network of a block under its own member context.
@@ -1060,6 +1571,15 @@ class Engine:
         ctx = self._block_ctx(blk, inst)
         lang = blk.get('lang')
         try:
+            if lang == 'SCL':
+                try:
+                    _code, prog, _perr = self._scl_program(blk)
+                    if prog is not None:
+                        self._scl_run_stmts(prog['body'], ctx)
+                except Exception as e:
+                    self.err_count += 1
+                    self.last_error = '%s (SCL): %s' % (blk.get('name') or bid, e)
+                return
             for net in (blk.get('networks') or []):
                 if not net:
                     continue
@@ -1076,6 +1596,180 @@ class Engine:
                         blk.get('name') or bid, net.get('id'), e)
         finally:
             self._callstack.discard(bid)
+
+    # =======================================================================
+    #  SCL execution (evaluator port of scl.js — parser is module-level)
+    # =======================================================================
+    def _scl_program(self, blk):
+        """Parse-and-cache a block's SCL body. Returns (code, program|None, err|None)."""
+        code = str(blk.get('code') or '')
+        bid = blk.get('id')
+        c = self._scl_cache.get(bid)
+        if c and c[0] == code:
+            return c
+        try:
+            entry = (code, _scl_parse(code), None)
+        except _SclError as e:
+            entry = (code, None, 'line %s: %s' % (e.line, e))
+        except Exception as e:                     # defensive: any parser bug
+            entry = (code, None, str(e))
+        self._scl_cache[bid] = entry
+        return entry
+
+    def _scl_is_bit(self, name, ctx):
+        """Storage class of an operand — mirrors scl.js opIsBit(): Bool member /
+        Bool tag / bit address -> bit; undeclared symbols and words -> number."""
+        raw = str('' if name is None else name).strip()
+        if raw.startswith('%'):
+            raw = raw[1:].strip()
+        low = raw.lower()
+        if ctx and ctx.get('members') and low in ctx['members']:
+            return low in (ctx.get('bits') or ())
+        alias = self._alias.get(low)
+        if alias is not None:
+            return alias.lower() in self._tag_bits
+        return bool(re.match(r'^[IQM]\d+\.\d+$', raw, re.IGNORECASE))
+
+    def _scl_read(self, name, ctx):
+        v = self._rd(name, ctx)
+        return bool(v) if self._scl_is_bit(name, ctx) else num(v)
+
+    def _scl_write(self, name, value, ctx):
+        if self._scl_is_bit(name, ctx):
+            self._write(name, ctx, _scl_bool(value))
+        else:
+            self._write(name, ctx, _scl_intify(_scl_num(value)))
+
+    def _scl_eval(self, node, ctx):
+        n = node['n']
+        if n == 'num' or n == 'bool':
+            return node['v']
+        if n == 'var':
+            return self._scl_read(node['name'], ctx)
+        if n == 'call':
+            fn = _SCL_FUNCS.get(node['name'].upper())
+            if not fn:
+                return 0                          # unknown call -> 0 (lenient, scl.js parity)
+            return fn([self._scl_eval(a, ctx) for a in node['args']])
+        if n == 'un':
+            if node['op'] == 'NOT':
+                return not _scl_bool(self._scl_eval(node['a'], ctx))
+            return -_scl_num(self._scl_eval(node['a'], ctx))
+        if n == 'bin':
+            op = node['op']
+            if op == 'AND':                       # boolean operators short-circuit
+                return _scl_bool(self._scl_eval(node['a'], ctx)) and _scl_bool(self._scl_eval(node['b'], ctx))
+            if op == 'OR':
+                return _scl_bool(self._scl_eval(node['a'], ctx)) or _scl_bool(self._scl_eval(node['b'], ctx))
+            if op == 'XOR':
+                return _scl_bool(self._scl_eval(node['a'], ctx)) != _scl_bool(self._scl_eval(node['b'], ctx))
+            a = _scl_num(self._scl_eval(node['a'], ctx))
+            b = _scl_num(self._scl_eval(node['b'], ctx))
+            if op == '+':
+                return a + b
+            if op == '-':
+                return a - b
+            if op == '*':
+                return a * b
+            if op == '/':
+                return 0 if b == 0 else _scl_intify(a / b)
+            if op == 'MOD':                       # JS %: remainder takes the dividend's sign
+                return 0 if b == 0 else _scl_intify(math.fmod(a, b))
+            if op == '=':
+                return a == b
+            if op == '<>':
+                return a != b
+            if op == '<':
+                return a < b
+            if op == '>':
+                return a > b
+            if op == '<=':
+                return a <= b
+            if op == '>=':
+                return a >= b
+            return 0
+        return 0
+
+    def _scl_run_stmts(self, stmts, ctx):
+        for s in stmts:
+            sig = self._scl_run_stmt(s, ctx)
+            if sig:
+                return sig
+        return None
+
+    def _scl_run_stmt(self, s, ctx):
+        n = s['n']
+        if n == 'assign':
+            self._scl_write(s['name'], self._scl_eval(s['expr'], ctx), ctx)
+            return None
+        if n == 'if':
+            for arm in s['arms']:
+                if _scl_bool(self._scl_eval(arm['cond'], ctx)):
+                    return self._scl_run_stmts(arm['body'], ctx)
+            if s['els'] is not None:
+                return self._scl_run_stmts(s['els'], ctx)
+            return None
+        if n == 'case':
+            v = _scl_num(self._scl_eval(s['expr'], ctx))
+            for arm in s['arms']:
+                for lab in arm['labels']:
+                    if lab['lo'] <= v <= lab['hi']:
+                        return self._scl_run_stmts(arm['body'], ctx)
+            if s['els'] is not None:
+                return self._scl_run_stmts(s['els'], ctx)
+            return None
+        if n == 'for':
+            i = _scl_num(self._scl_eval(s['from'], ctx))
+            to = _scl_num(self._scl_eval(s['to'], ctx))
+            by = _scl_num(self._scl_eval(s['by'], ctx)) if s['by'] else 1
+            if by == 0:
+                return None
+            guard = 0
+            while (i <= to) if by > 0 else (i >= to):
+                guard += 1
+                if guard > _SCL_MAX_ITER:
+                    break
+                self._scl_write(s['var'], i, ctx)
+                sig = self._scl_run_stmts(s['body'], ctx)
+                if sig == _SCL_EXIT:
+                    break
+                if sig == _SCL_RET:
+                    return _SCL_RET
+                i += by                            # CONTINUE falls through to here
+            return None
+        if n == 'while':
+            guard = 0
+            while _scl_bool(self._scl_eval(s['cond'], ctx)):
+                guard += 1
+                if guard > _SCL_MAX_ITER:
+                    break
+                sig = self._scl_run_stmts(s['body'], ctx)
+                if sig == _SCL_EXIT:
+                    break
+                if sig == _SCL_RET:
+                    return _SCL_RET
+            return None
+        if n == 'repeat':
+            guard = 0
+            while True:
+                guard += 1
+                if guard > _SCL_MAX_ITER:
+                    break
+                sig = self._scl_run_stmts(s['body'], ctx)
+                if sig == _SCL_EXIT:
+                    break
+                if sig == _SCL_RET:
+                    return _SCL_RET
+                if _scl_bool(self._scl_eval(s['cond'], ctx)):
+                    break
+            return None
+        if n == 'exit':
+            return _SCL_EXIT
+        if n == 'continue':
+            return _SCL_CONT
+        if n == 'return':
+            return _SCL_RET
+        return None
 
     # =======================================================================
     #  SCAN DRIVER (port of sim.js scanOnce / codegen.js scan)

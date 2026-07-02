@@ -201,15 +201,19 @@
     /* --- filter box (always present, even with no project) --- */
     const input = T.el('input', {
       class: 'tia-input', type: 'text', placeholder: 'Filter tags…', value: filterText,
-      oninput: (e) => { filterText = e.target.value; render(); },
+      oninput: (e) => {
+        filterText = e.target.value;
+        render();   // rebuilds the panel INCLUDING this input — refocus the new one
+        const nh = document.getElementById('tia-outline');
+        const ni = nh && nh.querySelector('.tia-ol-filter input');
+        if (ni) {
+          ni.focus();
+          const L = ni.value.length;
+          try { ni.setSelectionRange(L, L); } catch (err) { /* no-op */ }
+        }
+      },
     });
     host.appendChild(T.el('div', { class: 'tia-ol-filter' }, input));
-    // keep caret position natural after a re-render
-    setTimeout(() => {
-      if (document.activeElement !== input && filterText) {
-        // do not steal focus unless the user is typing; left intentionally inert
-      }
-    }, 0);
 
     const p = T.project;
     if (!p) {

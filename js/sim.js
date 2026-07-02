@@ -45,6 +45,12 @@
   // FBD cross-scan pin-value cache (for cyclic/latch wires): key = box.id+':'+pin.id
   let _pinCache = Object.create(null);
 
+  // Structural caches — rebuilding these EVERY scan (walking every element for
+  // called ids, re-running the topo sort per FBD network) burned scan budget on
+  // large projects. Invalidated on any model change (tree:changed / load).
+  let _calledCache = null;              // Set of block ids referenced by a call
+  const _netCache = new Map();          // net.id -> { ordered:[boxes], wireIdx }
+
   // Per-scan execution context (set up at the top of scanOnce):
   //   stack     : block ids currently on the execution stack (cycle guard — a block
   //               may run many times per scan for different instances, but never
@@ -447,14 +453,19 @@
   // FB must not leak between its instances across scans.
   function pinKey(boxId, pinId) { return (_scanCtx.instId || '@main') + ':' + boxId + ':' + pinId; }
 
-  // Find the wire (if any) feeding an input pin; return source {box,pin} or null.
-  function wireInto(net, boxId, pinId) {
-    const ws = net.wires || [];
-    for (let i = 0; i < ws.length; i++) {
-      const w = ws[i];
-      if (w.to && w.to.box === boxId && w.to.pin === pinId) return w.from;
+  // Cached per-network structure: topological box order + an input-pin -> wire
+  // source index (replaces a linear net.wires scan per pin per scan).
+  function netStructure(net) {
+    let c = _netCache.get(net.id);
+    if (!c) {
+      const wireIdx = Object.create(null);
+      (net.wires || []).forEach((w) => {
+        if (w && w.to) wireIdx[w.to.box + ':' + w.to.pin] = w.from || null;
+      });
+      c = { ordered: orderBoxes(net), wireIdx };
+      _netCache.set(net.id, c);
     }
-    return null;
+    return c;
   }
 
   function findBox(net, id) {
@@ -471,8 +482,8 @@
   // else cached last-scan value, else the pin's own operand/param literal).
   // `computed` is a Set of box ids fully evaluated this scan; `cache` is the
   // working per-scan pin-value store. Applies pin.inverted for booleans.
-  function inputPinValue(net, box, pin, cache, computed) {
-    const src = wireInto(net, box.id, pin.id);
+  function inputPinValue(net, box, pin, cache, computed, wireIdx) {
+    const src = wireIdx[box.id + ':' + pin.id] || null;
     let val;
     if (src) {
       const k = pinKey(src.box, src.pin);
@@ -502,7 +513,7 @@
   }
 
   // Compute all output-pin values of a box and write side effects to memory.
-  function evalBox(net, box, cache, computed) {
+  function evalBox(net, box, cache, computed, wireIdx) {
     const k = box.kind;
     const ins = box.inputs || [];
     const outs = box.outputs || [];
@@ -511,7 +522,7 @@
     // read each input pin value, and record it on the pin so the editor can
     // colour input stubs/dots/operands green (high) / blue (low) during simulation.
     const inVals = ins.map((p) => {
-      const v = inputPinValue(net, box, p, cache, computed);
+      const v = inputPinValue(net, box, p, cache, computed, wireIdx);
       p._val = !!v;
       return v;
     });
@@ -751,9 +762,9 @@
   function evalFbdNetwork(net) {
     const cache = Object.create(null);   // per-scan working pin values
     const computed = new Set();
-    const ordered = orderBoxes(net);
-    for (let i = 0; i < ordered.length; i++) {
-      evalBox(net, ordered[i], cache, computed);
+    const st = netStructure(net);        // cached order + wire index
+    for (let i = 0; i < st.ordered.length; i++) {
+      evalBox(net, st.ordered[i], cache, computed, st.wireIdx);
     }
     // persist this scan's pin values for next-scan cyclic reads
     for (const k in cache) _pinCache[k] = cache[k];
@@ -895,8 +906,10 @@
     if (!p || !Array.isArray(p.blocks)) return;
 
     // Fresh per-scan context: which blocks are referenced by a call, and which
-    // have already executed this scan (recursion guard).
-    _scanCtx = { stack: [], calledIds: collectCalledIds(), instId: '@main' };
+    // have already executed this scan (recursion guard). calledIds only changes
+    // when the model changes (invalidated via tree:changed / project:loaded).
+    if (!_calledCache) _calledCache = collectCalledIds();
+    _scanCtx = { stack: [], calledIds: _calledCache, instId: '@main' };
 
     const byNum = (type) => p.blocks.filter((b) => b.type === type)
       .sort((a, b) => (a.number || 0) - (b.number || 0));
@@ -1021,6 +1034,8 @@
   `);
 
   let _tableHost = null;
+  let _rowKeys = null;      // Set of keys currently rendered (cheap rebuild check)
+  let _nodeCache = null;    // cached node lists so a tick doesn't re-query the DOM
 
   // Build the list of watch rows from project tags + any live mem keys in use.
   function collectRows() {
@@ -1151,6 +1166,8 @@
     }
 
     const rows = collectRows();
+    _rowKeys = new Set(rows.map((r) => r.key));
+    _nodeCache = null;                    // rebuilt lazily on the next tick
     const wrap = T.el('div', { class: 'sim-wrap' });
 
     if (!rows.length) {
@@ -1203,46 +1220,52 @@
   }
 
   // Lightweight in-place value update on each tick (keeps editing focus intact).
+  // Node lists are cached per render — at 20 ms scans, re-querying the DOM four
+  // times per tick dominated the tick cost with a few hundred rows.
   function refreshValues() {
     const host = _tableHost;
     if (!host) return;
-    // bit monitors
-    T.$$('[data-monbit]', host).forEach((sp) => {
+    if (!_nodeCache) {
+      _nodeCache = {
+        monbit: T.$$('[data-monbit]', host),
+        bitkey: T.$$('[data-bitkey]', host),
+        monword: T.$$('[data-monword]', host),
+        wordkey: T.$$('[data-wordkey]', host),
+      };
+    }
+    _nodeCache.monbit.forEach((sp) => {
       sp.textContent = T.mem.getBit(sp.getAttribute('data-monbit')) ? 'TRUE' : 'FALSE';
     });
-    // bit toggles
-    T.$$('[data-bitkey]', host).forEach((dot) => {
+    _nodeCache.bitkey.forEach((dot) => {
       const v = T.mem.getBit(dot.getAttribute('data-bitkey'));
       dot.className = 'sim-dot ' + (v ? 'on' : 'off');
       const g = dot.querySelector('.glyph'); if (g) g.textContent = v ? '●' : '○';
       const l = dot.querySelector('.lbl'); if (l) l.textContent = v ? 'TRUE' : 'FALSE';
     });
-    // word monitors
-    T.$$('[data-monword]', host).forEach((sp) => {
+    _nodeCache.monword.forEach((sp) => {
       sp.textContent = String(T.mem.getWord(sp.getAttribute('data-monword')));
     });
-    // word inputs (skip the one being edited)
-    T.$$('[data-wordkey]', host).forEach((inp) => {
-      if (document.activeElement === inp) return;
+    _nodeCache.wordkey.forEach((inp) => {
+      if (document.activeElement === inp) return;   // skip the one being edited
       const v = String(T.mem.getWord(inp.getAttribute('data-wordkey')));
       if (inp.value !== v) inp.value = v;
     });
   }
 
-  // Decide whether a structural re-render is needed (new keys appeared).
+  // Decide whether a structural re-render is needed: a memory key appeared that
+  // has no row yet. Mem keys only ever accumulate mid-run; tag edits re-render
+  // via tags:changed, so comparing against the rendered-key set is sufficient.
   function needsRebuild() {
-    const host = _tableHost;
-    if (!host) return false;
-    const have = {};
-    T.$$('[data-bitkey],[data-wordkey],[data-monbit],[data-monword]', host).forEach((n) => {
-      const k = n.getAttribute('data-bitkey') || n.getAttribute('data-wordkey')
-        || n.getAttribute('data-monbit') || n.getAttribute('data-monword');
-      if (k) have[k] = true;
-    });
-    const rows = collectRows();
-    for (let i = 0; i < rows.length; i++) if (!have[rows[i].key]) return true;
+    if (!_tableHost) return false;
+    if (!_rowKeys) return true;
+    for (const k in T.mem.bits) if (!_rowKeys.has(k)) return true;
+    for (const k in T.mem.words) if (!_rowKeys.has(k)) return true;
     return false;
   }
+
+  /* ----- structural caches invalidate on any model change ---------------- */
+  ['tree:changed', 'project:loaded', 'iface:changed'].forEach((ev) =>
+    T.bus.on(ev, () => { _calledCache = null; _netCache.clear(); }));
 
   /* ----- table reacts to sim ticks and model changes -------------------- */
   T.bus.on('sim:tick', () => {

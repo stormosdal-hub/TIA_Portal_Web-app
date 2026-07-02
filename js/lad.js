@@ -165,6 +165,9 @@
   let selBranch = null;     // selected EMPTY parallel branch (insert target) or null
   let activeNet = null;     // network containing the selection (else first)
   let simRunning = false;   // true while the simulator runs (Feature 4 coloring)
+  let clipEl = null;        // copy/paste buffer (one serialized element)
+  let insertBefore = false; // one-shot: next inline insert goes BEFORE the selection
+  let zoom = 1;             // editor zoom factor (CSS zoom on the root)
 
   /* ======================================================================= *
    *  SMALL HELPERS                                                           *
@@ -221,7 +224,47 @@
     return activeNet;
   }
 
-  function markDirty() { T.bus.emit('tree:changed'); }
+  /* ---------------------------------------------------------- undo / redo */
+  // Every mutation path calls markDirty() AFTER the change, so we keep the
+  // last-known serialized state and push it when the model actually changed.
+  const HIST_MAX = 60;
+  let undoStack = [], redoStack = [], histBlk = null, lastSnap = '';
+  function snapNow() { return block ? JSON.stringify(block, T.stripRuntime) : ''; }
+  function markDirty() {
+    if (block) {
+      const now = snapNow();
+      if (lastSnap && now !== lastSnap) {
+        undoStack.push(lastSnap);
+        if (undoStack.length > HIST_MAX) undoStack.shift();
+        redoStack.length = 0;
+      }
+      lastSnap = now;
+    }
+    T.bus.emit('tree:changed');
+  }
+  // Restore a snapshot INTO the same block object (its identity is shared with
+  // T.project.blocks and the open tab, so it must not be replaced).
+  function applySnap(s) {
+    const restored = JSON.parse(s);
+    Object.keys(block).forEach((k) => { delete block[k]; });
+    Object.assign(block, restored);
+    lastSnap = snapNow();
+    selEl = null; selBranch = null; activeNet = null;
+    T.bus.emit('tree:changed');
+    render();
+  }
+  function undo() {
+    if (!undoStack.length) { T.status('Nothing to undo', 'warn'); return; }
+    redoStack.push(snapNow());
+    applySnap(undoStack.pop());
+    T.status('Undo (' + undoStack.length + ' left)', 'info');
+  }
+  function redo() {
+    if (!redoStack.length) { T.status('Nothing to redo', 'warn'); return; }
+    undoStack.push(snapNow());
+    applySnap(redoStack.pop());
+    T.status('Redo', 'info');
+  }
 
   /* ======================================================================= *
    *  RENDER — full re-render of the block into the host                     *
@@ -248,6 +291,29 @@
 
     block.networks.forEach((net, i) => rootEl.appendChild(renderNetwork(net, i + 1)));
     host.appendChild(rootEl);
+    applyZoom();
+  }
+
+  /* ---- zoom (CSS zoom on the root; Ctrl+wheel / Ctrl +/-/0) ---- */
+  function applyZoom() { if (rootEl) rootEl.style.zoom = zoom; }
+  function setZoom(z) {
+    zoom = Math.min(2, Math.max(0.4, Math.round(z * 10) / 10));
+    applyZoom();
+    T.status('Zoom ' + Math.round(zoom * 100) + '%', 'info');
+  }
+
+  // Re-render only one network's card — a full render() rebuilds every SVG in
+  // the block, which is the root cause of click latency on large blocks.
+  function renderNet(net) {
+    if (!rootEl || !block) return render();
+    const idx = block.networks.indexOf(net);
+    const old = rootEl.querySelector('.lad-net[data-net-id="' + cssEsc(net.id) + '"]');
+    if (idx < 0 || !old) return render();
+    killEditInput(true);
+    closeMenu();
+    old.replaceWith(renderNetwork(net, idx + 1));
+    markActiveCards();
+    if (simRunning) { try { highlight(); } catch (e) { /* no-op */ } }
   }
 
   /* ----------------------------------------------------------- one network */
@@ -533,7 +599,8 @@
     el.params = el.params || {};
     el.params.op = ops[(i + 1) % ops.length];
     markDirty();
-    render();
+    const loc = locate(el);
+    if (loc) renderNet(loc.net); else render();
   }
 
   /* ======================================================================= *
@@ -910,18 +977,21 @@
       class: 'lad-edit-input', type: 'text', value: cur,
       spellcheck: 'false', autocomplete: 'off',
     });
-    // position over the label (account for scroll inside the body)
-    const left = tr.left - bodyRect.left + body.scrollLeft - 4;
-    const top = tr.top - bodyRect.top + body.scrollTop - 2;
+    // position over the label (account for scroll inside the body; rects are
+    // visual px while style.left is layout px inside the zoomed root — ÷ zoom)
+    const z = zoom || 1;
+    const left = (tr.left - bodyRect.left) / z + body.scrollLeft - 4;
+    const top = (tr.top - bodyRect.top) / z + body.scrollTop - 2;
     inp.style.left = Math.max(2, left) + 'px';
     inp.style.top = Math.max(2, top) + 'px';
-    inp.style.minWidth = Math.max(60, tr.width + 16) + 'px';
+    inp.style.minWidth = Math.max(60, tr.width / z + 16) + 'px';
 
     const commit = () => {
       if (editInput !== inp) return;     // already torn down -> no-op (prevents re-entrancy)
+      const loc = locate(el);
       killEditInput(true);               // apply value, then remove the input
       markDirty();
-      render();
+      if (loc) renderNet(loc.net); else render();
     };
     inp.addEventListener('mousedown', (e) => e.stopPropagation());
 
@@ -962,11 +1032,11 @@
       done = true;
       net[field] = inp.value.trim();
       markDirty();
-      render();
+      renderNet(net);
     };
     inp.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') { e.preventDefault(); finish(); }
-      else if (e.key === 'Escape') { e.preventDefault(); done = true; render(); }
+      else if (e.key === 'Escape') { e.preventDefault(); done = true; renderNet(net); }
       e.stopPropagation();
     });
     inp.addEventListener('blur', finish);
@@ -978,18 +1048,25 @@
    *  SELECTION                                                              *
    * ======================================================================= */
   function select(el, noRender) {
+    const prevLoc = selEl && selEl !== el ? locate(selEl) : null;
     selEl = el || null;
     selBranch = null;                   // element selection replaces branch selection
+    let curLoc = null;
     if (selEl) {
-      const loc = locate(selEl);
-      if (loc) activeNet = loc.net;
+      curLoc = locate(selEl);
+      if (curLoc) activeNet = curLoc.net;
     }
-    // cheap visual refresh of selection: re-render just toggles classes by rebuild.
-    // Selection outline is part of the SVG group, so do a light rebuild.
+    if (!noRender) {
+      // only the affected network card(s) need a rebuild
+      const nets = [];
+      if (prevLoc && nets.indexOf(prevLoc.net) < 0) nets.push(prevLoc.net);
+      if (curLoc && nets.indexOf(curLoc.net) < 0) nets.push(curLoc.net);
+      if (nets.length) { nets.forEach(renderNet); return; }
+      render();
+    }
     // noRender is used by the inline-edit click handlers so the clicked text node
     // stays attached (a rebuild would detach it and the floating <input> would land
     // in the discarded DOM).
-    if (!noRender) render();
   }
 
   // Select an empty parallel branch as the insertion target.
@@ -1080,7 +1157,7 @@
       }
 
       const kind = getKind(e);
-      if (!kind || !T.catalog[kind]) return;
+      if (!kind || !T.catalog[kind] || T.catalog[kind].lad === false) return;
       e.preventDefault();
       // Drop targets this network; if an element under the cursor is inline and
       // selected, insert chains off it — otherwise insert into this network.
@@ -1092,11 +1169,16 @@
         const br = findBranchById(brT.getAttribute('data-branch-id'));
         if (br) { selBranch = br; selEl = null; insert(kind); return; }
       }
-      // If dropped onto an existing element, select it first so inline chaining works.
+      // If dropped onto an existing element, select it first so inline chaining
+      // works; the LEFT half of the element means "insert before it".
       const target = e.target.closest && e.target.closest('[data-el-id]');
       if (target) {
         const el = findElById(target.getAttribute('data-el-id'));
-        if (el) selEl = el;
+        if (el) {
+          selEl = el;
+          const r = target.getBoundingClientRect();
+          insertBefore = T.catalog[kind].area === 'inline' && e.clientX < r.left + r.width / 2;
+        }
       } else {
         selEl = null;
       }
@@ -1162,6 +1244,8 @@
     if (!block) return;
     const d = def(kind);
     if (!T.catalog[kind]) { T.status('Unknown instruction: ' + kind, 'warn'); return; }
+    if (d.lad === false) { T.status('Instruction not available in LAD', 'warn'); return; }
+    const before = insertBefore; insertBefore = false;   // one-shot (set by drop position)
     const net = getActiveNet();
     if (!net) return;
 
@@ -1181,7 +1265,7 @@
         selBranch.elements.push(el);
         selBranch = null;
       } else if (loc && loc.area === 'inline') {
-        loc.branch.elements.splice(loc.index + 1, 0, el);
+        loc.branch.elements.splice(loc.index + (before ? 0 : 1), 0, el);
       } else {
         const stage = T.model.newStage();          // one branch with empty elements
         stage.branches[0].elements.push(el);
@@ -1260,6 +1344,33 @@
     if (selEl) { const l = locate(selEl); if (l) activeNet = l.net; }
     markDirty();
     render();
+  }
+
+  // Paste the copied element: clone with a fresh id, place like insert() does.
+  function pasteElement() {
+    if (!clipEl || !block) return;
+    const el = JSON.parse(JSON.stringify(clipEl));
+    el.id = T.uid('el');
+    const d = def(el.kind);
+    const net = getActiveNet();
+    if (!net) return;
+    if (d.area === 'output') {
+      (net.outputs = net.outputs || []).push(el);
+    } else {
+      const brLoc = selBranch && locateBranch(selBranch);
+      const loc = selEl && locate(selEl);
+      if (brLoc && brLoc.net === net) { selBranch.elements.push(el); selBranch = null; }
+      else if (loc && loc.area === 'inline') loc.branch.elements.splice(loc.index + 1, 0, el);
+      else {
+        const stage = T.model.newStage();
+        stage.branches[0].elements.push(el);
+        (net.stages = net.stages || []).push(stage);
+      }
+    }
+    selEl = el;
+    markDirty();
+    render();
+    T.status('Pasted ' + (d.name || el.kind), 'info');
   }
 
   // Open a parallel branch in the stage that contains the selected element.
@@ -1345,6 +1456,30 @@
     if (T.activeEditor !== api) return;
     const tag = (e.target && e.target.tagName) || '';
     if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target && e.target.isContentEditable)) return;
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'z') {
+      e.preventDefault();
+      if (e.shiftKey) redo(); else undo();
+      return;
+    }
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'y') {
+      e.preventDefault(); redo(); return;
+    }
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.key.toLowerCase() === 'c' || e.key.toLowerCase() === 'x')) {
+      if (selEl) {
+        e.preventDefault();
+        clipEl = JSON.parse(JSON.stringify(selEl, T.stripRuntime));
+        if (e.key.toLowerCase() === 'x') deleteSelection();
+        T.status((e.key.toLowerCase() === 'x' ? 'Cut ' : 'Copied ') + (def(clipEl.kind).name || clipEl.kind), 'info');
+      }
+      return;
+    }
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'v') {
+      if (clipEl) { e.preventDefault(); pasteElement(); }
+      return;
+    }
+    if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '=')) { e.preventDefault(); setZoom(zoom + 0.1); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key === '-') { e.preventDefault(); setZoom(zoom - 0.1); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key === '0') { e.preventDefault(); setZoom(1); return; }
     if (e.key === 'Delete' || e.key === 'Backspace') {
       if (selEl || selBranch) { e.preventDefault(); deleteSelection(); }
     } else if (e.key === 'Escape') {
@@ -1428,7 +1563,16 @@
     selEl = null;
     selBranch = null;
     activeNet = (blk && blk.networks && blk.networks[0]) || null;
+    if (histBlk !== blk) { undoStack = []; redoStack = []; histBlk = blk; }
+    lastSnap = snapNow();
     render();
+
+    // Ctrl+scroll zooms the sheet (host is recreated per tab activation)
+    host.addEventListener('wheel', (e) => {
+      if (!e.ctrlKey || T.activeEditor !== api) return;
+      e.preventDefault();
+      setZoom(zoom + (e.deltaY < 0 ? 0.1 : -0.1));
+    }, { passive: false });
 
     api = {
       lang: 'LAD',

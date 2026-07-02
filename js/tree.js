@@ -344,14 +344,35 @@
       T.status('Cannot delete OB1 (main program).', 'warn');
       return;
     }
-    if (!window.confirm('Delete block "' + b.name + ' [' + b.type + b.number + ']" ?')) return;
+
+    // Reference check: call sites targeting this block / using it as instance,
+    // plus its own instance DBs (which become useless and are cascade-deleted).
+    let callRefs = 0, instRefs = 0;
+    blocks.forEach((ob) => (ob.networks || []).forEach((net) => {
+      const check = (el) => {
+        if (!el || el.kind !== 'call' || !el.params) return;
+        if (el.params.target === b.id) callRefs++;
+        if (b.type === 'DB' && el.params.instanceDb === b.id) instRefs++;
+      };
+      (net.outputs || []).forEach(check);
+      (net.boxes || []).forEach(check);
+    }));
+    const instDbs = blocks.filter((x) => x.type === 'DB' && x.instanceOf === b.id);
+
+    let msg = 'Delete block "' + b.name + ' [' + b.type + b.number + ']" ?';
+    if (callRefs) msg += '\n\n⚠ It is called from ' + callRefs + ' place(s) — those calls become invalid (Compile will flag them).';
+    if (instRefs) msg += '\n\n⚠ ' + instRefs + ' FB call(s) use this instance data block.';
+    if (instDbs.length) msg += '\n\n⚠ Its instance data block(s) will be deleted too: ' + instDbs.map((d) => d.name).join(', ');
+    if (!window.confirm(msg)) return;
 
     const idx = blocks.indexOf(b);
     if (idx < 0) return;
-    const wasActive = T.project.activeBlockId === b.id;
-    blocks.splice(idx, 1);
+    [b].concat(instDbs).forEach((x) => {
+      const i = blocks.indexOf(x);
+      if (i >= 0) blocks.splice(i, 1);
+    });
 
-    if (wasActive) {
+    if (!T.findBlock(T.project.activeBlockId)) {
       // activate a neighbour so the editor always has a valid block.
       const next = blocks[Math.min(idx, blocks.length - 1)];
       if (next) {
@@ -361,7 +382,8 @@
         T.project.activeBlockId = null;
       }
     }
-    T.status('Deleted ' + b.type + b.number + '.', 'info');
+    T.status('Deleted ' + b.type + b.number +
+      (instDbs.length ? ' (+' + instDbs.length + ' instance DB)' : '') + '.', 'info');
     T.bus.emit('tree:changed');
   }
 

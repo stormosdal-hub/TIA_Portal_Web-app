@@ -210,8 +210,81 @@
    *  SMALL HELPERS                                                           *
    * ======================================================================= */
   const def = (kind) => T.catalog[kind] || {};
-  function markDirty() { T.bus.emit('tree:changed'); }
+  /* ---------------------------------------------------------- undo / redo */
+  // Mutation paths call markDirty() AFTER the change; keep the last serialized
+  // state and push it when the model actually changed (same pattern as lad.js).
+  const HIST_MAX = 60;
+  let undoStack = [], redoStack = [], histBlk = null, lastSnap = '';
+  function snapNow() { return block ? JSON.stringify(block, T.stripRuntime) : ''; }
+  function markDirty() {
+    if (block) {
+      const now = snapNow();
+      if (lastSnap && now !== lastSnap) {
+        undoStack.push(lastSnap);
+        if (undoStack.length > HIST_MAX) undoStack.shift();
+        redoStack.length = 0;
+      }
+      lastSnap = now;
+    }
+    T.bus.emit('tree:changed');
+  }
+  // Restore INTO the same block object (identity shared with T.project/tabs).
+  function applySnap(s) {
+    const restored = JSON.parse(s);
+    Object.keys(block).forEach((k) => { delete block[k]; });
+    Object.assign(block, restored);
+    lastSnap = snapNow();
+    sel = null; pending = null; activeNet = null;
+    T.bus.emit('tree:changed');
+    render();
+  }
+  function undo() {
+    if (!undoStack.length) { T.status('Nothing to undo', 'warn'); return; }
+    redoStack.push(snapNow());
+    applySnap(undoStack.pop());
+    T.status('Undo (' + undoStack.length + ' left)', 'info');
+  }
+  function redo() {
+    if (!redoStack.length) { T.status('Nothing to redo', 'warn'); return; }
+    undoStack.push(snapNow());
+    applySnap(redoStack.pop());
+    T.status('Redo', 'info');
+  }
+
   function cssEsc(s) { return String(s).replace(/["\\]/g, '\\$&'); }
+
+  let clipBox = null;       // copy/paste buffer (one serialized box)
+  let zoom = 1;             // editor zoom factor (CSS zoom on the root)
+  function applyZoom() { if (rootEl) rootEl.style.zoom = zoom; }
+  function setZoom(z) {
+    zoom = Math.min(2, Math.max(0.4, Math.round(z * 10) / 10));
+    applyZoom();
+    T.status('Zoom ' + Math.round(zoom * 100) + '%', 'info');
+  }
+
+  // network currently holding the pending-wire source box (for the rubber band)
+  function pendingNet() {
+    if (!pending || !block) return null;
+    for (const net of block.networks) {
+      if ((net.boxes || []).some((b) => b.id === pending.boxId)) return net;
+    }
+    return null;
+  }
+
+  // Re-render only one network's card — a full render() rebuilds every sheet.
+  function renderNet(net) {
+    if (!rootEl || !block) return render();
+    const idx = block.networks.indexOf(net);
+    const old = rootEl.querySelector('.fbd-net[data-net-id="' + cssEsc(net.id) + '"]');
+    if (idx < 0 || !old) return render();
+    if (editInput) { try { editInput.blur(); } catch (e) { /* commits typed text */ } }
+    killEditInput();
+    closeMenu();
+    old.replaceWith(renderNetwork(net, idx + 1));
+    markActiveCards();
+    if (pending && pendingNet() === net) attachPendingTracker(net);
+    if (simRunning) { try { highlight(); } catch (e) { /* no-op */ } }
+  }
 
   function findBoxInNet(net, id) { return (net.boxes || []).find((b) => b.id === id) || null; }
   function findPin(boxObj, pinId) {
@@ -300,6 +373,9 @@
    * ======================================================================= */
   function render() {
     if (!host) return;
+    // an externally-triggered render must COMMIT an open inline edit, not
+    // discard the typed text (blur fires the input's commit synchronously)
+    if (editInput) { try { editInput.blur(); } catch (e) { /* no-op */ } }
     killEditInput();
     closeMenu();
     // NOTE: do NOT cancelPending() here — onPinClick sets `pending` and then calls
@@ -325,6 +401,9 @@
 
     block.networks.forEach((net, i) => rootEl.appendChild(renderNetwork(net, i + 1)));
     host.appendChild(rootEl);
+    applyZoom();
+    // keep the rubber-band line alive across re-renders while wiring
+    if (pending) { const pn = pendingNet(); if (pn) attachPendingTracker(pn); }
   }
 
   /* ----------------------------------------------------------- one network */
@@ -389,7 +468,47 @@
   /* ======================================================================= *
    *  SHEET BUILD — lay out one network's boxes & wires as an SVG            *
    * ======================================================================= */
+  // Keep a call box's pins in sync with the callee's CURRENT interface: pins
+  // were snapshotted at drop time, so adding/removing members left stale pins
+  // (renames are handled by T.refactor.renameMember, which renames pins in
+  // place, preserving their wires). Matching is by name; removed members drop
+  // their pin and any wires touching it.
+  function syncCallPins(net, boxObj) {
+    const tb = boxObj.params && T.findBlock(boxObj.params.target);
+    if (!tb) return;
+    T.ensureInterface(tb);
+    const reconcile = (existing, fixedFirst, members, isOut) => {
+      const out = [existing.find((p) => p.name === fixedFirst) ||
+        (isOut ? { id: T.uid('pin'), name: fixedFirst }
+               : { id: T.uid('pin'), name: fixedFirst, inverted: false, operand: '' })];
+      members.forEach((m) => {
+        const have = existing.find((p) => p.name === m.name);
+        out.push(have || (isOut ? { id: T.uid('pin'), name: m.name }
+                                : { id: T.uid('pin'), name: m.name, inverted: false, operand: '' }));
+      });
+      return out;
+    };
+    const ins = reconcile(boxObj.inputs || [], 'EN', T.ifaceCallInputs(tb), false);
+    const outs = reconcile(boxObj.outputs || [], 'ENO', T.ifaceCallOutputs(tb), true);
+    const changed = ins.length !== (boxObj.inputs || []).length
+      || outs.length !== (boxObj.outputs || []).length
+      || ins.some((p, i) => boxObj.inputs[i] !== p)
+      || outs.some((p, i) => boxObj.outputs[i] !== p);
+    if (!changed) return;
+    boxObj.inputs = ins;
+    boxObj.outputs = outs;
+    // purge wires that touched a removed pin
+    const pinIds = new Set(ins.concat(outs).map((p) => p.id));
+    net.wires = (net.wires || []).filter((w) =>
+      (w.from.box !== boxObj.id || pinIds.has(w.from.pin)) &&
+      (w.to.box !== boxObj.id || pinIds.has(w.to.pin)));
+    // model changed during render: autosave + sim structural caches must know
+    T.bus.emit('tree:changed');
+  }
+
   function buildSheet(net) {
+    // call boxes follow the callee's current interface (members added/removed)
+    (net.boxes || []).forEach((b) => { if (b.kind === 'call') syncCallPins(net, b); });
     // measure required canvas size from box extents
     let maxX = G.minSheetW, maxY = G.minSheetH;
     (net.boxes || []).forEach((b) => {
@@ -494,7 +613,21 @@
       g.addEventListener('dblclick', (e) => { e.preventDefault(); e.stopPropagation(); openCalledBlock(boxObj); });
     } else if (geom.titled) {
       const lbl = boxLabel(boxObj.kind) + (boxObj.kind === 'compare' ? ' ' + (cmpOp(boxObj)) : '');
-      g.appendChild(T.svg('text', { class: 'fbd-box-title', x: geom.w / 2, y: 13 }, lbl));
+      const titleText = T.svg('text', { class: 'fbd-box-title', x: geom.w / 2, y: 13 }, lbl);
+      if (boxObj.kind === 'compare') {
+        // clicking the title cycles the comparison operator (LAD parity)
+        titleText.style.cursor = 'pointer';
+        titleText.addEventListener('mousedown', (e) => e.stopPropagation());
+        titleText.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const ops = ['==', '<>', '>', '>=', '<', '<='];
+          boxObj.params = boxObj.params || {};
+          boxObj.params.op = ops[(ops.indexOf(boxObj.params.op || '==') + 1) % ops.length];
+          markDirty();
+          renderNet(net);
+        });
+      }
+      g.appendChild(titleText);
       g.appendChild(T.svg('line', { class: 'fbd-box-divider', x1: 0, y1: G.titleH, x2: geom.w, y2: G.titleH }));
     } else {
       // big centred gate glyph
@@ -650,7 +783,7 @@
     t.addEventListener('click', (e) => {
       e.stopPropagation();
       selectBox(net, boxObj, true);   // noRender: keep this text node attached for the inline editor
-      openInlineEdit(t, value, (nv) => { setter(nv); markDirty(); render(); });
+      openInlineEdit(t, value, (nv) => { setter(nv); markDirty(); renderNet(net); });
     });
     attachTagDrop(t, (name) => { setter(name); });
     g.appendChild(t);
@@ -703,7 +836,7 @@
       e.stopPropagation();
       selectBox(net, boxObj, true);   // noRender: keep this text node attached for the inline editor
       // for the compare box, clicking the operator (title) cycles it; params edit inline
-      openInlineEdit(t, val, (nv) => { boxObj.params[pkey] = nv; markDirty(); render(); });
+      openInlineEdit(t, val, (nv) => { boxObj.params[pkey] = nv; markDirty(); renderNet(net); });
     });
     attachTagDrop(t, (name) => { boxObj.params[pkey] = name; });
     g.appendChild(t);
@@ -749,11 +882,14 @@
       if (pending) cancelPending();
       selectBox(net, boxObj);
 
-      const svg = g.ownerSVGElement;
+      // selectBox re-rendered the card, detaching `g` — continue the drag on
+      // the freshly-built node so the box visibly follows the cursor.
+      const gd = (rootEl && rootEl.querySelector('.fbd-box[data-box-id="' + cssEsc(boxObj.id) + '"]')) || g;
+      const svg = gd.ownerSVGElement;
       const start = clientToSvg(svg, e);
       const ox = boxObj.x, oy = boxObj.y;
       let moved = false;
-      g.classList.add('dragging');
+      gd.classList.add('dragging');
 
       const onMove = (ev) => {
         const p = clientToSvg(svg, ev);
@@ -763,14 +899,14 @@
         ny = Math.max(8, Math.round(ny / G.snap) * G.snap);
         if (nx !== boxObj.x || ny !== boxObj.y) moved = true;
         boxObj.x = nx; boxObj.y = ny;
-        g.setAttribute('transform', 'translate(' + nx + ',' + ny + ')');
+        gd.setAttribute('transform', 'translate(' + nx + ',' + ny + ')');
         redrawWires(net);
       };
       const onUp = () => {
         document.removeEventListener('mousemove', onMove, true);
         document.removeEventListener('mouseup', onUp, true);
-        g.classList.remove('dragging');
-        if (moved) { markDirty(); render(); }   // re-render to grow the sheet & re-place labels
+        gd.classList.remove('dragging');
+        if (moved) { markDirty(); renderNet(net); }   // re-render to grow the sheet & re-place labels
       };
       document.addEventListener('mousemove', onMove, true);
       document.addEventListener('mouseup', onUp, true);
@@ -781,7 +917,9 @@
   function clientToSvg(svg, e) {
     const r = svg.getBoundingClientRect();
     // viewBox == intrinsic px here (1:1), so subtract the bounding rect origin.
-    return { x: e.clientX - r.left, y: e.clientY - r.top };
+    // The rect is in visual px while user units are layout px — ÷ zoom.
+    const z = zoom || 1;
+    return { x: (e.clientX - r.left) / z, y: (e.clientY - r.top) / z };
   }
 
   // Recompute wire paths in place (no rebuild) during a drag.
@@ -890,18 +1028,28 @@
   /* ======================================================================= *
    *  SELECTION                                                              *
    * ======================================================================= */
-  function select(s) { sel = s || null; }
+  function select(s) {
+    const prev = sel;
+    sel = s || null;
+    if (!s && prev && prev.net) renderNet(prev.net);   // clear the stale outline
+  }
 
   function selectBox(net, boxObj, noRender) {
+    const prevNet = sel && sel.net;
     sel = { type: 'box', box: boxObj, net };
     activeNet = net;
-    if (!noRender) render();
+    if (!noRender) {
+      if (prevNet && prevNet !== net) renderNet(prevNet);
+      renderNet(net);
+    }
   }
   function selectWire(net, wire) {
     if (pending) cancelPending();
+    const prevNet = sel && sel.net;
     sel = { type: 'wire', wire, net };
     activeNet = net;
-    render();
+    if (prevNet && prevNet !== net) renderNet(prevNet);
+    renderNet(net);
   }
 
   function markActiveCards() {
@@ -938,11 +1086,13 @@
       value: (curVal == null ? '' : String(curVal)),
       spellcheck: 'false', autocomplete: 'off',
     });
-    const left = tr.left - bodyRect.left + body.scrollLeft - 4;
-    const top = tr.top - bodyRect.top + body.scrollTop - 2;
+    // rects are visual px while style.left is layout px inside the zoomed root
+    const z = zoom || 1;
+    const left = (tr.left - bodyRect.left) / z + body.scrollLeft - 4;
+    const top = (tr.top - bodyRect.top) / z + body.scrollTop - 2;
     inp.style.left = Math.max(2, left) + 'px';
     inp.style.top = Math.max(2, top) + 'px';
-    inp.style.minWidth = Math.max(56, tr.width + 16) + 'px';
+    inp.style.minWidth = Math.max(56, tr.width / z + 16) + 'px';
 
     let done = false;
     const commit = () => {
@@ -983,10 +1133,10 @@
     // `done` guards double-commit (Enter → render → detach-blur → finish again)
     // and makes Escape actually CANCEL (the detach-blur would otherwise commit).
     let done = false;
-    const finish = () => { if (done) return; done = true; net[field] = inp.value.trim(); markDirty(); render(); };
+    const finish = () => { if (done) return; done = true; net[field] = inp.value.trim(); markDirty(); renderNet(net); };
     inp.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') { e.preventDefault(); finish(); }
-      else if (e.key === 'Escape') { e.preventDefault(); done = true; render(); }
+      else if (e.key === 'Escape') { e.preventDefault(); done = true; renderNet(net); }
       e.stopPropagation();
     });
     inp.addEventListener('blur', finish);
@@ -1288,13 +1438,58 @@
     if (T.activeEditor !== api) return;
     const tag = (e.target && e.target.tagName) || '';
     if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target && e.target.isContentEditable)) return;
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'z') {
+      e.preventDefault();
+      if (e.shiftKey) redo(); else undo();
+      return;
+    }
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'y') {
+      e.preventDefault(); redo(); return;
+    }
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.key.toLowerCase() === 'c' || e.key.toLowerCase() === 'x')) {
+      if (sel && sel.type === 'box') {
+        e.preventDefault();
+        clipBox = JSON.parse(JSON.stringify(sel.box, T.stripRuntime));
+        if (e.key.toLowerCase() === 'x') deleteSelection();
+        T.status((e.key.toLowerCase() === 'x' ? 'Cut ' : 'Copied ') + boxLabel(clipBox.kind), 'info');
+      }
+      return;
+    }
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'v') {
+      if (clipBox) { e.preventDefault(); pasteBox(); }
+      return;
+    }
+    if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '=')) { e.preventDefault(); setZoom(zoom + 0.1); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key === '-') { e.preventDefault(); setZoom(zoom - 0.1); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key === '0') { e.preventDefault(); setZoom(1); return; }
     if (e.key === 'Delete' || e.key === 'Backspace') {
       if (sel) { e.preventDefault(); deleteSelection(); }
     } else if (e.key === 'Escape') {
       closeMenu(); killEditInput();
       if (pending) { cancelPending(); render(); }
-      else if (sel) { select(null); render(); }
+      else if (sel) { select(null); }
     }
+  }
+
+  // Paste the copied box: clone with fresh box/pin ids at a small offset.
+  // Wires are not cloned (they reference pins that stay with the original).
+  function pasteBox() {
+    if (!clipBox || !block) return;
+    const net = activeNet || block.networks[0];
+    if (!net) return;
+    const b = JSON.parse(JSON.stringify(clipBox));
+    b.id = T.uid('box');
+    (b.inputs || []).forEach((p) => { p.id = T.uid('pin'); });
+    (b.outputs || []).forEach((p) => { p.id = T.uid('pin'); });
+    b.x = (b.x || 40) + 24;
+    b.y = (b.y || 40) + 24;
+    clipBox.x = b.x; clipBox.y = b.y;      // successive pastes cascade
+    (net.boxes = net.boxes || []).push(b);
+    sel = { type: 'box', box: b, net };
+    activeNet = net;
+    markDirty();
+    renderNet(net);
+    T.status('Pasted ' + boxLabel(b.kind), 'info');
   }
 
   /* ======================================================================= *
@@ -1365,7 +1560,16 @@
     sel = null;
     pending = null;
     activeNet = (blk && blk.networks && blk.networks[0]) || null;
+    if (histBlk !== blk) { undoStack = []; redoStack = []; histBlk = blk; }
+    lastSnap = snapNow();
     render();
+
+    // Ctrl+scroll zooms the sheet (host is recreated per tab activation)
+    host.addEventListener('wheel', (e) => {
+      if (!e.ctrlKey || T.activeEditor !== api) return;
+      e.preventDefault();
+      setZoom(zoom + (e.deltaY < 0 ? 0.1 : -0.1));
+    }, { passive: false });
 
     api = {
       lang: 'FBD',

@@ -542,8 +542,9 @@ window.TIA = window.TIA || {};
         return { type: m.bit ? 'bit' : 'word', addr: m.addr, raw, scoped: true };
       }
     }
-    // symbolic tag
-    const tag = T.tagByName(raw);
+    // symbolic tag (exact first, then case-insensitive — matches the Pi runtime)
+    const tag = T.tagByName(raw)
+      || (T.project && T.project.tags.find((t) => t.name && t.name.toLowerCase() === raw.toLowerCase()));
     if (tag) {
       const isBit = tag.dataType === 'Bool';
       // key bit/word memory by the symbolic NAME when no address given, else by address
@@ -586,11 +587,40 @@ window.TIA = window.TIA || {};
   // must not be persisted — an exported project would otherwise carry stale
   // energized/latch state. _seq is real model data (block numbering) and stays.
   function stripRuntime(k, v) { return (k.charAt(0) === '_' && k !== '_seq') ? undefined : v; }
+  T.stripRuntime = stripRuntime;   // shared with the editors' undo snapshots
   T.storage = {
     KEY: 'tia_browser_project_v1',
+    LIB_PREFIX: 'tia_proj:',
+    LIB_INDEX: 'tia_proj_index',
     save() {
-      try { localStorage.setItem(this.KEY, JSON.stringify(T.project, stripRuntime)); return true; }
+      try {
+        localStorage.setItem(this.KEY, JSON.stringify(T.project, stripRuntime));
+        this.saveToLibrary();          // best-effort per-name copy for "Open recent"
+        return true;
+      }
       catch (e) { console.warn('localStorage save failed', e); return false; }
+    },
+    // Per-project-name slots so opening/creating another project no longer
+    // overwrites the only saved one. Index: { name: lastSavedMs }.
+    saveToLibrary() {
+      if (!T.project || !T.project.name) return false;
+      try {
+        localStorage.setItem(this.LIB_PREFIX + T.project.name, JSON.stringify(T.project, stripRuntime));
+        const idx = this.libraryIndex();
+        idx[T.project.name] = Date.now();
+        localStorage.setItem(this.LIB_INDEX, JSON.stringify(idx));
+        return true;
+      } catch (e) { return false; }
+    },
+    libraryIndex() {
+      try { return JSON.parse(localStorage.getItem(this.LIB_INDEX)) || {}; }
+      catch (e) { return {}; }
+    },
+    loadFromLibrary(name) {
+      try {
+        const s = localStorage.getItem(this.LIB_PREFIX + name);
+        return s ? JSON.parse(s) : null;
+      } catch (e) { return null; }
     },
     load() {
       let s = null;
@@ -623,6 +653,166 @@ window.TIA = window.TIA || {};
         inp.remove();
       });
       document.body.appendChild(inp); inp.click();
+    },
+  };
+
+  /* ==================================================== rename refactoring ==
+   * Operands are plain strings, so renaming a tag / interface member must
+   * rewrite every reference or the logic silently reads FALSE/0 forever.
+   * ======================================================================== */
+  const REN_PARAM_SKIP = { op: 1, target: 1, instanceDb: 1 };
+  // Visit every operand-bearing slot of a block: element/box operands, operand
+  // params, call args (values), FBD pin operands. visit(get, set, info) where
+  // info = { ni: network index, slot: human label } (used by the xref list).
+  function forEachOperandSlot(block, visit) {
+    (block.networks || []).forEach((net, ni) => {
+      const doEl = (el) => {
+        const kn = el.kind || 'box';
+        visit(() => el.operand, (v) => { el.operand = v; }, { ni, slot: kn + ' operand' });
+        const par = el.params;
+        if (par) Object.keys(par).forEach((k) => {
+          if (!REN_PARAM_SKIP[k]) visit(() => par[k], (v) => { par[k] = v; }, { ni, slot: kn + ' · ' + k.toUpperCase() });
+        });
+        if (el.args) Object.keys(el.args).forEach((k) =>
+          visit(() => el.args[k], (v) => { el.args[k] = v; }, { ni, slot: 'call parameter ' + k }));
+        (el.inputs || []).forEach((p) =>
+          visit(() => p.operand, (v) => { p.operand = v; }, { ni, slot: kn + ' pin ' + p.name }));
+      };
+      (net.stages || []).forEach((s) => (s.branches || []).forEach((br) => (br.elements || []).forEach(doEl)));
+      (net.outputs || []).forEach(doEl);
+      (net.boxes || []).forEach(doEl);
+    });
+  }
+  function escRe(s) { return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+  // rewrite `code` occurrences of identifier old -> new (word-boundary, ci)
+  function renameInScl(block, oldName, newName, count) {
+    if (block.lang !== 'SCL' || typeof block.code !== 'string') return count;
+    if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(oldName)) return count;   // not an SCL identifier
+    const re = new RegExp('\\b' + escRe(oldName) + '\\b', 'gi');
+    block.code = block.code.replace(re, () => { count++; return newName; });
+    return count;
+  }
+  function rewriteSlots(block, oldName, newName) {
+    const low = String(oldName).toLowerCase();
+    let n = 0;
+    forEachOperandSlot(block, (get, set) => {
+      const v = get();
+      if (v == null) return;
+      if (String(v).trim().replace(/^%/, '').toLowerCase() === low) { set(newName); n++; }
+    });
+    return n;
+  }
+
+  T.refactor = {
+    // Rewrite every reference to a renamed GLOBAL tag. Skips blocks whose own
+    // interface declares the same name (there the operand means the member).
+    // Returns the number of rewritten references.
+    renameTag(oldName, newName) {
+      oldName = String(oldName == null ? '' : oldName).trim();
+      newName = String(newName == null ? '' : newName).trim();
+      if (!T.project || !oldName || !newName || oldName === newName) return 0;
+      // another tag still carries the old name — its references must stay
+      if ((T.project.tags || []).some((t) => t.name === oldName)) return 0;
+      let n = 0;
+      (T.project.blocks || []).forEach((b) => {
+        if (b.type === 'DB') return;
+        const locals = T.ifaceMembers(b).some((e) =>
+          String(e.member.name || '').toLowerCase() === oldName.toLowerCase());
+        if (locals) return;                       // shadowed inside this block
+        n += rewriteSlots(b, oldName, newName);
+        n = renameInScl(b, oldName, newName, n);
+      });
+      (T.project.gpio || []).forEach((g) => { if (g && g.tag === oldName) { g.tag = newName; n++; } });
+      return n;
+    },
+
+    // Rewrite references to a renamed interface MEMBER: operands inside the
+    // block, plus call-site arg keys / FBD pin names everywhere it is called.
+    renameMember(block, oldName, newName) {
+      oldName = String(oldName == null ? '' : oldName).trim();
+      newName = String(newName == null ? '' : newName).trim();
+      if (!T.project || !block || !oldName || !newName || oldName === newName) return 0;
+      if (T.ifaceMembers(block).some((e) => e.member.name === oldName)) return 0;  // old name still declared
+      let n = rewriteSlots(block, oldName, newName);
+      n = renameInScl(block, oldName, newName, n);
+      (T.project.blocks || []).forEach((b) => {
+        (b.networks || []).forEach((net) => {
+          (net.outputs || []).forEach((el) => {
+            if (el.kind === 'call' && el.params && el.params.target === block.id && el.args &&
+                Object.prototype.hasOwnProperty.call(el.args, oldName)) {
+              el.args[newName] = el.args[oldName];
+              delete el.args[oldName];
+              n++;
+            }
+          });
+          (net.boxes || []).forEach((bx) => {
+            if (bx.kind === 'call' && bx.params && bx.params.target === block.id) {
+              (bx.inputs || []).concat(bx.outputs || []).forEach((p) => {
+                if (p.name === oldName) { p.name = newName; n++; }
+              });
+            }
+          });
+        });
+      });
+      return n;
+    },
+
+    // Cross-reference list: every place a tag / member NAME (or its address) is
+    // used. Returns [{ blockId, block, net (1-based, 0 for SCL), where }].
+    findRefs(name) {
+      const out = [];
+      name = String(name == null ? '' : name).trim().replace(/^%/, '');
+      if (!T.project || !name) return out;
+      // match the queried spelling AND the tag's other identity (name <-> address)
+      const alts = new Set([name.toLowerCase()]);
+      const tags = T.project.tags || [];
+      const tag = tags.find((t) => (t.name || '').toLowerCase() === name.toLowerCase())
+        || tags.find((t) => (t.address || '').trim().toLowerCase() === name.toLowerCase());
+      if (tag) {
+        if (tag.name) alts.add(tag.name.toLowerCase());
+        if (tag.address) alts.add(tag.address.trim().toLowerCase());
+      }
+      (T.project.blocks || []).forEach((b) => {
+        if (b.type === 'DB') return;
+        const label = b.name + ' [' + b.type + b.number + ']';
+        const shadowed = T.ifaceMembers(b).some((e) =>
+          String(e.member.name || '').toLowerCase() === name.toLowerCase());
+        forEachOperandSlot(b, (get, set, info) => {
+          const v = get();
+          if (v != null && alts.has(String(v).trim().replace(/^%/, '').toLowerCase())) {
+            out.push({ blockId: b.id, block: label, net: info.ni + 1,
+                       where: info.slot + (shadowed ? ' (local member)' : '') });
+          }
+        });
+        if (b.lang === 'SCL' && typeof b.code === 'string' && /^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) {
+          const re = new RegExp('\\b' + escRe(name) + '\\b', 'i');
+          String(b.code).split('\n').forEach((lineTxt, li) => {
+            if (re.test(lineTxt)) out.push({ blockId: b.id, block: label, net: 0, where: 'SCL line ' + (li + 1) });
+          });
+        }
+      });
+      return out;
+    },
+
+    // How many operand slots reference this tag name (for delete confirmation).
+    countTagRefs(name) {
+      name = String(name == null ? '' : name).trim();
+      if (!T.project || !name) return 0;
+      const low = name.toLowerCase();
+      let n = 0;
+      (T.project.blocks || []).forEach((b) => {
+        if (b.type === 'DB') return;
+        if (T.ifaceMembers(b).some((e) => String(e.member.name || '').toLowerCase() === low)) return;
+        forEachOperandSlot(b, (get) => {
+          const v = get();
+          if (v != null && String(v).trim().replace(/^%/, '').toLowerCase() === low) n++;
+        });
+        if (b.lang === 'SCL' && typeof b.code === 'string' && /^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) {
+          const m = b.code.match(new RegExp('\\b' + escRe(name) + '\\b', 'gi'));
+          if (m) n += m.length;
+        }
+      });
+      return n;
     },
   };
 

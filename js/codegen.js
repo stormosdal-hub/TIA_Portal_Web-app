@@ -126,9 +126,12 @@ window.TIA = window.TIA || {};
       case 'coil_neg':   return [target + ' = (not p)'];
       case 'coil_set':   return ['if p: ' + target + ' = True'];
       case 'coil_reset': return ['if p: ' + target + ' = False'];
-      case 'ton': return [setQ(p.q, 'ton(' + stId(el.id) + ', p, ' + secs(p.pt, ctx) + ')', ctx)];
-      case 'tof': return [setQ(p.q, 'tof(' + stId(el.id) + ', p, ' + secs(p.pt, ctx) + ')', ctx)];
-      case 'tp':  return [setQ(p.q, 'tp('  + stId(el.id) + ', p, ' + secs(p.pt, ctx) + ')', ctx)];
+      case 'ton': case 'tof': case 'tp': {
+        const lines = ['q, et = ' + el.kind + '(' + stId(el.id) + ', p, ' + secs(p.pt, ctx) + ')'];
+        if (notEmpty(p.q)) lines.push(wt(p.q, ctx) + ' = q');
+        if (notEmpty(p.et)) lines.push(wt(p.et, ctx) + ' = et');
+        return lines;
+      }
       case 'ctu': {
         const lines = ['q, cv = ctu(' + stId(el.id) + ', p, ' + rdNum(p.pv, ctx) + ', ' + rdBool(p.r || '', ctx) + ')'];
         if (notEmpty(p.cv)) lines.push(wt(p.cv, ctx) + ' = cv');
@@ -287,8 +290,11 @@ window.TIA = window.TIA || {};
         // PT pin value (wired or param literal) is in app-native ms → seconds
         const pti = (box.inputs || []).findIndex((pp) => pp.name === 'PT');
         const pt = pti >= 0 ? '(num(' + inE[pti] + ') / 1000.0)' : secs(p.pt, ctx);
-        setMain(k + '(' + stId(box.id) + ', bool(' + (inE[0] || 'False') + '), ' + pt + ')');
-        if (notEmpty(p.q)) lines.push(wt(p.q, ctx) + ' = ' + O(0));   // sim.js writes par.q in FBD too
+        lines.push(O(0) + ', _et = ' + k + '(' + stId(box.id) + ', bool(' + (inE[0] || 'False') + '), ' + pt + ')');
+        if (notEmpty(p.q)) lines.push(wt(p.q, ctx) + ' = ' + O(0));   // sim.js writes par.q/par.et in FBD too
+        if (notEmpty(p.et)) lines.push(wt(p.et, ctx) + ' = _et');
+        // ET pin mirrors sim.js: it reads back par.et (0 when unset)
+        if (outs[1]) lines.push(outVar(box.id, outs[1].id) + ' = ' + (notEmpty(p.et) ? '_et' : '0'));
         break;
       }
       case 'ctu': case 'ctd': {
@@ -412,7 +418,8 @@ window.TIA = window.TIA || {};
         pwms.push({ tag: m.tag, bcm: m.bcm, freq: freq });
         return;
       }
-      (dir === 'in' ? ins : outs).push({ tag: m.tag, bcm: m.bcm, pull: m.pull || 'down', activeLow: !!m.activeLow });
+      (dir === 'in' ? ins : outs).push({ tag: m.tag, bcm: m.bcm, pull: m.pull || 'down',
+        activeLow: !!m.activeLow, debounce: (m.debounce == null || m.debounce === '') ? 0 : (parseInt(m.debounce, 10) || 0) });
     });
     return { ins, outs, pwms };
   }
@@ -464,27 +471,42 @@ window.TIA = window.TIA || {};
     push('ST = {}');
     push('FBP = {}            # FBD pin cache (feedback / latches)');
     push('_CALLSTACK = set()  # re-entrant block-call guard (parity with the simulator)');
+    push('# timers return (q, et_ms) — ET mirrors sim.js (ms, clamped to PT)');
     push('def ton(i, inp, pt):');
     push('    s = ST.setdefault(i, {"t0": None})');
+    push('    el = 0.0; q = False');
     push('    if inp:');
     push('        if s["t0"] is None: s["t0"] = now()');
-    push('        return (now() - s["t0"]) >= pt');
-    push('    s["t0"] = None; return False');
+    push('        el = now() - s["t0"]');
+    push('        q = el >= pt');
+    push('    else:');
+    push('        s["t0"] = None');
+    push('    return (q, min(el, pt) * 1000.0)');
     push('def tof(i, inp, pt):');
     push('    s = ST.setdefault(i, {"t0": None, "prev": False})');
-    push('    if inp: s["t0"] = None; q = True');
+    push('    el = 0.0');
+    push('    if inp:');
+    push('        s["t0"] = None; q = True');
     push('    else:');
     push('        if s["prev"] and s["t0"] is None: s["t0"] = now()');
-    push('        q = (s["t0"] is not None) and ((now() - s["t0"]) < pt)');
-    push('    s["prev"] = inp; return q');
+    push('        if s["t0"] is not None:');
+    push('            el = now() - s["t0"]');
+    push('            if el >= pt: q = False; el = pt');
+    push('            else: q = True');
+    push('        else:');
+    push('            q = False');
+    push('    s["prev"] = inp; return (q, el * 1000.0)');
     push('def tp(i, inp, pt):');
     push('    s = ST.setdefault(i, {"t0": None, "prev": False})');
     push('    if inp and not s["prev"] and s["t0"] is None: s["t0"] = now()');
-    push('    q = False');
+    push('    q = False; el = 0.0');
     push('    if s["t0"] is not None:');
-    push('        if (now() - s["t0"]) < pt: q = True');
-    push('        elif not inp: s["t0"] = None');
-    push('    s["prev"] = inp; return q');
+    push('        el = now() - s["t0"]');
+    push('        if el < pt: q = True');
+    push('        else:');
+    push('            q = False; el = pt');
+    push('            if not inp: s["t0"] = None');
+    push('    s["prev"] = inp; return (q, min(el, pt) * 1000.0)');
     push('def ctu(i, cu, pv, reset):');
     push('    s = ST.setdefault(i, {"c": 0, "prev": False})');
     push('    if reset: s["c"] = 0');
@@ -524,10 +546,10 @@ window.TIA = window.TIA || {};
     push('    @value.setter');
     push('    def value(self, v): self._v = float(v)');
     push('');
-    push('def _make_input(bcm, pull, active_low):');
+    push('def _make_input(bcm, pull, active_low, bounce_s=None):');
     push('    if MOCK: return _MockPin(False)');
     push('    from gpiozero import DigitalInputDevice');
-    push('    return DigitalInputDevice(bcm, pull_up=(pull == "up"), active_state=((not active_low) if pull == "none" else None))');
+    push('    return DigitalInputDevice(bcm, pull_up=(pull == "up"), active_state=((not active_low) if pull == "none" else None), bounce_time=bounce_s)');
     push('def _make_output(bcm, active_low):');
     push('    if MOCK: return _MockPin(False)');
     push('    from gpiozero import DigitalOutputDevice');
@@ -538,7 +560,8 @@ window.TIA = window.TIA || {};
     push('    return PWMOutputDevice(bcm, frequency=freq)');
     push('');
     push('INPUTS = {}');
-    gm.ins.forEach((m) => push('INPUTS[' + pyStr(m.tag) + '] = _make_input(' + m.bcm + ', ' + pyStr(m.pull) + ', ' + (m.activeLow ? 'True' : 'False') + ')'));
+    gm.ins.forEach((m) => push('INPUTS[' + pyStr(m.tag) + '] = _make_input(' + m.bcm + ', ' + pyStr(m.pull) + ', ' + (m.activeLow ? 'True' : 'False')
+      + (m.debounce ? ', ' + (m.debounce / 1000) : '') + ')'));
     push('OUTPUTS = {}');
     gm.outs.forEach((m) => push('OUTPUTS[' + pyStr(m.tag) + '] = _make_output(' + m.bcm + ', ' + (m.activeLow ? 'True' : 'False') + ')'));
     push('PWMS = {}');
@@ -672,11 +695,18 @@ window.TIA = window.TIA || {};
         }
         alCell = T.el('span', { class: 'tia-muted' }, '—');
       } else {
-        // Bool tag: digital input (in + pull) or output (out + active-low)
+        // Bool tag: digital input (in + pull + debounce) or output (out + active-low)
         dirSel = sel(['in', 'out'], dir, (v) => { setGpio(t.name, { dir: v }); refresh(); });
-        midCell = dir === 'in'
-          ? sel(['down', 'up', 'none'], g.pull || 'down', (v) => { setGpio(t.name, { pull: v }); refresh(); })
-          : T.el('span', { class: 'tia-muted' }, '—');
+        if (dir === 'in') {
+          const pullSel = sel(['down', 'up', 'none'], g.pull || 'down', (v) => { setGpio(t.name, { pull: v }); refresh(); });
+          const deb = T.el('input', { class: 'tia-input', type: 'number', min: 0, max: 500,
+            style: { width: '54px' }, value: (g.debounce != null ? g.debounce : ''),
+            placeholder: 'deb ms', title: 'Debounce (ms) — filters mechanical switch bounce; 0/blank = off',
+            onchange: (e) => { const v = e.target.value === '' ? null : Math.max(0, parseInt(e.target.value, 10) || 0); setGpio(t.name, { debounce: v }); refresh(); } });
+          midCell = T.el('div', { style: { display: 'flex', gap: '4px' } }, pullSel, deb);
+        } else {
+          midCell = T.el('span', { class: 'tia-muted' }, '—');
+        }
         alCell = T.el('input', { type: 'checkbox', checked: !!g.activeLow,
           onchange: (e) => { setGpio(t.name, { activeLow: e.target.checked }); refresh(); } });
       }
