@@ -1,12 +1,12 @@
 # Graph Report - TIA_Portal_Web-app  (2026-07-03)
 
 ## Corpus Check
-- 26 files · ~75,387 words
+- 25 files · ~73,860 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 702 nodes · 1412 edges · 33 communities (30 shown, 3 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 21 edges (avg confidence: 0.82)
+- 677 nodes · 1355 edges · 31 communities (29 shown, 2 thin omitted)
+- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 21 edges (avg confidence: 0.82)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
@@ -46,8 +46,6 @@
 - [[_COMMUNITY_Community 28|Community 28]]
 - [[_COMMUNITY_Community 29|Community 29]]
 - [[_COMMUNITY_Community 30|Community 30]]
-- [[_COMMUNITY_Community 31|Community 31]]
-- [[_COMMUNITY_Community 32|Community 32]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Engine` - 67 edges
@@ -76,7 +74,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (33 total, 3 thin omitted)
+## Communities (31 total, 2 thin omitted)
 
 ### Community 0 - "PLC Scan Engine"
 Cohesion: 0.06
@@ -120,7 +118,7 @@ Nodes (5): btn(), build(), group(), updateOnlineBtns(), updateSimBtn()
 
 ### Community 10 - "Tags Outline Panel"
 Cohesion: 0.11
-Nodes (19): Addresses & data types, Analog output (software PWM) + scaling, Architecture (for extending), Assigning tags by drag-and-drop, Editing, Modbus TCP server mode (any SCADA/HMI can connect), Online mode — run + monitor + change the program live (Pi runtime), Project tree & simulation table tips (+11 more)
+Nodes (18): Addresses & data types, Analog output (software PWM) + scaling, Architecture (for extending), Assigning tags by drag-and-drop, Editing, Online mode — run + monitor + change the program live (Pi runtime), Project tree & simulation table tips, Run it (+10 more)
 
 ### Community 11 - "GPIO Hardware Abstraction"
 Cohesion: 0.14
@@ -131,8 +129,8 @@ Cohesion: 0.22
 Nodes (8): Adding a new instruction (LAD/FBD) — the recipe, Architecture / where things live, CLAUDE.md — TIA Web Practice (project operating manual), Data model (core.js), Hard constraints (never violate), Known gotchas (these bit us before), Style, Verifying changes (no Node here — use headless Chromium, already installed at /usr/bin/chromium)
 
 ### Community 13 - "Tag Table Editor"
-Cohesion: 0.31
-Nodes (5): Storage class of an operand — mirrors scl.js opIsBit(): Bool member /         Bo, Collapse integral floats to int (JS numbers don't distinguish 3.0/3)., _scl_bool(), _scl_intify(), _scl_num()
+Cohesion: 0.20
+Nodes (9): _in_param_key(), _js_round(), Storage class of an operand — mirrors scl.js opIsBit(): Bool member /         Bo, Map a box pin NAME -> params key (parity: sim.js inParamKey — an unwired     num, Collapse integral floats to int (JS numbers don't distinguish 3.0/3)., JS Math.round: half rounds toward +Infinity (Python round() is banker's)., _scl_bool(), _scl_intify() (+1 more)
 
 ### Community 14 - "Tree Details View"
 Cohesion: 0.27
@@ -163,59 +161,55 @@ Cohesion: 0.29
 Nodes (6): dependencies, @modelcontextprotocol/sdk, main, name, type, version
 
 ### Community 21 - "Community 21"
-Cohesion: 0.14
-Nodes (9): _fin(), idiv(), num(), Resolve a time operand to MILLISECONDS (the app's native unit): a         plain, PT operand -> seconds (the timer primitives run on seconds)., Live state for the browser monitor. mem includes every project tag by         na, Coerce any memory value to a number. bool -> int; None/'' -> 0., Divide-by-zero-guarded division (mirrors codegen.js idiv / sim.js mathOp). (+1 more)
+Cohesion: 0.18
+Nodes (7): _fin(), idiv(), num(), Live state for the browser monitor. mem includes every project tag by         na, Coerce any memory value to a number. bool -> int; None/'' -> 0., Divide-by-zero-guarded division (mirrors codegen.js idiv / sim.js mathOp)., Write M (by tag name) to every mapped GPIO output. Digital outputs         take
 
 ### Community 22 - "Community 22"
 Cohesion: 0.40
 Nodes (4): __dirname, server, transport, VAULT
 
 ### Community 25 - "Community 25"
-Cohesion: 0.16
-Nodes (6): Engine, AND over stages ( OR over branches ( AND over inline element values ) )., Topological order of boxes by wires; back-edges (cycles) are skipped         (mi, Build a per-block evaluation context: member-name (lowercase) -> member, Interprets a TIA-Web project (LAD/FBD), drives GPIO, exposes live state.      Pu, Read every mapped GPIO input into M (by tag name).
+Cohesion: 0.11
+Nodes (11): Engine, AND over stages ( OR over branches ( AND over inline element values ) )., Topological order of boxes by wires; back-edges (cycles) are skipped         (mi, Build a per-block evaluation context: member-name (lowercase) -> member, Execute every network of a block under its own member context.         Re-entran, Parse-and-cache a block's SCL body. Returns (code, program|None, err|None)., Block ids/names referenced by any kind:'call' element/box., Run exactly one PLC scan (no I/O). Mirrors sim.js scanOnce():         run every (+3 more)
 
 ### Community 26 - "Community 26"
 Cohesion: 0.17
-Nodes (8): _not_empty(), Execute a call element: copy wired args into the callee instance,         run it, Execute an FBD call box. Returns output-pin values (ENO + members)., Instance name used to key member storage. Mirrors codegen.js:         the instan, Execute every network of a block under its own member context.         Re-entran, Block ids/names referenced by any kind:'call' element/box., Run exactly one PLC scan (no I/O). Mirrors sim.js scanOnce():         run every, Resolve a block reference (id preferred, then name).
+Nodes (7): _not_empty(), L-value memory key for writing an operand, or None if not writable., Write a Q result to operand if set; the result is discarded otherwise         (t, Execute a call element: copy wired args into the callee instance,         run it, Execute an FBD call box. Returns output-pin values (ENO + members)., Instance name used to key member storage. Mirrors codegen.js:         the instan, Resolve a block reference (id preferred, then name).
 
 ### Community 27 - "Community 27"
-Cohesion: 0.19
-Nodes (5): _MockAnalog, _MockPin, Dependency-free stand-in for a gpiozero device (mirrors codegen _MockPin)., Float-capable stand-in for a gpiozero PWMOutputDevice (duty 0.0..1.0).     Mirro, Build input/output pin devices from project['gpio'] (mirrors codegen.js
+Cohesion: 0.08
+Nodes (10): _MockAnalog, _MockPin, Dependency-free stand-in for a gpiozero device (mirrors codegen _MockPin)., Float-capable stand-in for a gpiozero PWMOutputDevice (duty 0.0..1.0).     Mirro, Build input/output pin devices from project['gpio'] (mirrors codegen.js, main(), Holds the engine, the running flag, and the scan thread. All engine access     i, Background thread: read inputs, scan, write outputs at ~SCAN_HZ while         ru (+2 more)
 
 ### Community 28 - "Community 28"
 Cohesion: 0.33
 Nodes (7): T.bus — Cross-Module Event Bus (on/off/emit), applyFilter(), buildItem(), glyphFor(), kindToken(), render(), renderSclReference()
 
 ### Community 29 - "Community 29"
-Cohesion: 0.21
-Nodes (10): _in_param_key(), _js_round(), parse_time_ms(), parse_time_s(), Time literal -> seconds (codegen.js uses seconds for the PT argument)., Map a box pin NAME -> params key (parity: sim.js inParamKey — an unwired     num, Set M[key] = value (input/memory forcing from the app). Booleans stay         bo, JS Math.round: half rounds toward +Infinity (Python round() is banker's). (+2 more)
+Cohesion: 0.22
+Nodes (7): parse_time_ms(), parse_time_s(), Resolve a time operand to MILLISECONDS (the app's native unit): a         plain, PT operand -> seconds (the timer primitives run on seconds)., Time literal -> seconds (codegen.js uses seconds for the PT argument)., Set M[key] = value (input/memory forcing from the app). Booleans stay         bo, _scl_tokenize()
 
 ### Community 30 - "Community 30"
-Cohesion: 0.16
-Nodes (7): dict, Exception, Mem, Parse-and-cache a block's SCL body. Returns (code, program|None, err|None)., Load or replace the running program. Resets all state, seeds memory         with, Initialise M with every declared tag by its NAME (bool->False, num->0)., _SclError
-
-### Community 31 - "Community 31"
-Cohesion: 0.09
-Nodes (18): _bit_key(), _coil_key(), _discrete_key(), _Handler, _holding_key(), _input_key(), modbus_map(), ModbusError (+10 more)
+Cohesion: 0.19
+Nodes (6): dict, Exception, Mem, Load or replace the running program. Resets all state, seeds memory         with, Initialise M with every declared tag by its NAME (bool->False, num->0)., _SclError
 
 ## Knowledge Gaps
 - **46 isolated node(s):** `node`, `name`, `version`, `type`, `main` (+41 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `index.html — App Entry Point` connect `Simulation Engine` to `PLC Scan Engine`, `FBD Editor`, `Ladder (LAD) Editor`, `Core Architecture & Data Model`, `HTTP / PLC Server`, `App Bootstrap & UI Shell`, `Toolbar & Ribbon`, `Tree Details View`, `Online PLC Monitor`, `PLC Launcher Script`, `Community 17`, `Community 19`, `Community 28`?**
-  _High betweenness centrality (0.259) - this node is a cross-community bridge._
+  _High betweenness centrality (0.277) - this node is a cross-community bridge._
 - **Why does `CLAUDE.md — Contributor / Agent Guide` connect `Simulation Engine` to `PLC Scan Engine`, `FBD Editor`, `Ladder (LAD) Editor`, `HTTP / PLC Server`, `Toolbar & Ribbon`?**
-  _High betweenness centrality (0.081) - this node is a cross-community bridge._
-- **Why does `Engine` connect `Community 25` to `Community 32`, `Python Code Generator`, `Project Tree Panel`, `Tag Table Editor`, `Community 21`, `Community 26`, `Community 27`, `Community 29`, `Community 30`, `Community 31`?**
-  _High betweenness centrality (0.047) - this node is a cross-community bridge._
+  _High betweenness centrality (0.087) - this node is a cross-community bridge._
+- **Why does `T.bus — Cross-Module Event Bus (on/off/emit)` connect `Community 28` to `PLC Scan Engine`, `FBD Editor`, `Ladder (LAD) Editor`, `Simulation Engine`?**
+  _High betweenness centrality (0.041) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `Engine` (e.g. with `Handler` and `Runtime`) actually correct?**
   _`Engine` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `node`, `name`, `version` to the rest of the system?**
-  _91 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _89 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `PLC Scan Engine` be split into smaller, more focused modules?**
   _Cohesion score 0.06049382716049383 - nodes in this community are weakly interconnected._
 - **Should `FBD Editor` be split into smaller, more focused modules?**

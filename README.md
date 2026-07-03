@@ -151,6 +151,31 @@ The same API makes the runtime a device for the sibling **Automation Sim** proje
 `/api/force`, so PLC tags bind to a 3D factory scene (conveyors, lamps, robots) and panel
 widgets can press the PLC's buttons. See `automation_sim/README.md` → adapter `tiaweb`.
 
+### Modbus TCP server mode (any SCADA/HMI can connect)
+`python3 plc_server.py --modbus-port 5020` also serves standard **Modbus TCP** (FC01-06,
+0F, 10) alongside the HTTP API — no extra dependency (pure stdlib, `modbus_server.py`), no
+project-specific setup. Ports below 1024 (the standard 502) need root/CAP_NET_BIND_SERVICE.
+
+Addresses map straight onto the same S7-style byte-overlapped `%I/%Q/%M` memory the ladder
+program uses (a Modbus write and a `%MW10` reference land in the exact same bytes), split
+into two 10000-wide banks per table so both `M` and `Q` are reachable with only the four
+standard Modbus tables:
+
+| Modbus table               | 0 – 9999 | 10000 – 19999 |
+|-----------------------------|----------|----------------|
+| Coils (FC01, FC05/0F)       | `M` bit  | `Q` bit        |
+| Discrete Inputs (FC02)      | `I` bit (0 – 65535, no bank split) | |
+| Holding Registers (FC03, FC06/10) | `M` word | `Q` word |
+| Input Registers (FC04)      | `I` word (0 – 65535, no bank split) | |
+
+Bit address `N` → byte `N // 8`, bit `N % 8`. Register address `N` → byte offset `N * 2`
+(2 bytes/register, big-endian); a 32-bit tag (`Int`/`Real` at a `D` address) spans two
+consecutive registers automatically. Registers carry the raw bit pattern on the wire
+(unsigned) — sign/float decoding is the Modbus client's job, exactly like a real PLC.
+`GET /api/modbus-map` lists the derived `{kind, address}` for every tag with a reachable
+address, so a SCADA engineer (or this project's own gateway, via its generic `modbus`
+adapter type) doesn't have to compute the mapping by hand.
+
 ## Saving your work
 - **Save** stores the project in the browser's local storage (auto-restored next launch;
   the IDE also autosaves every few seconds).

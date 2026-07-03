@@ -4623,263 +4623,13 @@
       "norm_label": "nameclash()"
     },
     {
-      "label": "modbus_server.py",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "modbus_server",
-      "community": 31,
-      "norm_label": "modbus_server.py"
-    },
-    {
-      "label": "ModbusError",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L54",
-      "_origin": "ast",
-      "id": "modbus_server_modbuserror",
-      "community": 31,
-      "norm_label": "modbuserror"
-    },
-    {
-      "label": "Exception",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "exception",
-      "community": 30,
-      "norm_label": "exception"
-    },
-    {
-      "label": ".__init__()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L55",
-      "_origin": "ast",
-      "id": "modbus_server_modbuserror_init",
-      "community": 31,
-      "norm_label": ".__init__()"
-    },
-    {
-      "label": "_bit_key()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L60",
-      "_origin": "ast",
-      "id": "modbus_server_bit_key",
-      "community": 31,
-      "norm_label": "_bit_key()"
-    },
-    {
-      "label": "_word_key()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L64",
-      "_origin": "ast",
-      "id": "modbus_server_word_key",
-      "community": 31,
-      "norm_label": "_word_key()"
-    },
-    {
-      "label": "_coil_key()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L68",
-      "_origin": "ast",
-      "id": "modbus_server_coil_key",
-      "community": 31,
-      "norm_label": "_coil_key()"
-    },
-    {
-      "label": "_discrete_key()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L76",
-      "_origin": "ast",
-      "id": "modbus_server_discrete_key",
-      "community": 31,
-      "norm_label": "_discrete_key()"
-    },
-    {
-      "label": "_holding_key()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L80",
-      "_origin": "ast",
-      "id": "modbus_server_holding_key",
-      "community": 31,
-      "norm_label": "_holding_key()"
-    },
-    {
-      "label": "_input_key()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L88",
-      "_origin": "ast",
-      "id": "modbus_server_input_key",
-      "community": 31,
-      "norm_label": "_input_key()"
-    },
-    {
-      "label": "modbus_map()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L92",
-      "_origin": "ast",
-      "id": "modbus_server_modbus_map",
-      "community": 31,
-      "norm_label": "modbus_map()"
-    },
-    {
-      "label": "_Handler",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L131",
-      "_origin": "ast",
-      "id": "modbus_server_handler",
-      "community": 31,
-      "norm_label": "_handler"
-    },
-    {
-      "label": ".handle()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L132",
-      "_origin": "ast",
-      "id": "modbus_server_handler_handle",
-      "community": 31,
-      "norm_label": ".handle()"
-    },
-    {
-      "label": "._dispatch()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L155",
-      "_origin": "ast",
-      "id": "modbus_server_handler_dispatch",
-      "community": 31,
-      "norm_label": "._dispatch()"
-    },
-    {
-      "label": "._handle_fc()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L170",
-      "_origin": "ast",
-      "id": "modbus_server_handler_handle_fc",
-      "community": 31,
-      "norm_label": "._handle_fc()"
-    },
-    {
-      "label": "._read_bits()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L189",
-      "_origin": "ast",
-      "id": "modbus_server_handler_read_bits",
-      "community": 31,
-      "norm_label": "._read_bits()"
-    },
-    {
-      "label": "._read_regs()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L203",
-      "_origin": "ast",
-      "id": "modbus_server_handler_read_regs",
-      "community": 31,
-      "norm_label": "._read_regs()"
-    },
-    {
-      "label": "._write_coil()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L216",
-      "_origin": "ast",
-      "id": "modbus_server_handler_write_coil",
-      "community": 31,
-      "norm_label": "._write_coil()"
-    },
-    {
-      "label": "._write_reg()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L226",
-      "_origin": "ast",
-      "id": "modbus_server_handler_write_reg",
-      "community": 31,
-      "norm_label": "._write_reg()"
-    },
-    {
-      "label": "._write_coils()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L234",
-      "_origin": "ast",
-      "id": "modbus_server_handler_write_coils",
-      "community": 31,
-      "norm_label": "._write_coils()"
-    },
-    {
-      "label": "._write_regs()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L247",
-      "_origin": "ast",
-      "id": "modbus_server_handler_write_regs",
-      "community": 31,
-      "norm_label": "._write_regs()"
-    },
-    {
-      "label": "_Server",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L261",
-      "_origin": "ast",
-      "id": "modbus_server_server",
-      "community": 31,
-      "norm_label": "_server"
-    },
-    {
-      "label": "serve_modbus()",
-      "file_type": "code",
-      "source_file": "modbus_server.py",
-      "source_location": "L266",
-      "_origin": "ast",
-      "id": "modbus_server_serve_modbus",
-      "community": 31,
-      "norm_label": "serve_modbus()"
-    },
-    {
-      "label": "{tag name: {kind, address[, registers]}} for every tag whose TIA address     fal",
-      "file_type": "rationale",
-      "source_file": "modbus_server.py",
-      "source_location": "L93",
-      "_origin": "ast",
-      "id": "modbus_server_rationale_93",
-      "community": 31,
-      "norm_label": "{tag name: {kind, address[, registers]}} for every tag whose tia address     fal"
-    },
-    {
-      "label": "Build (not start) the Modbus TCP server bound to (bind, port). Caller     runs `",
-      "file_type": "rationale",
-      "source_file": "modbus_server.py",
-      "source_location": "L267",
-      "_origin": "ast",
-      "id": "modbus_server_rationale_267",
-      "community": 31,
-      "norm_label": "build (not start) the modbus tcp server bound to (bind, port). caller     runs `"
-    },
-    {
       "label": "plc_engine.py",
       "file_type": "code",
       "source_file": "plc_engine.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "plc_engine",
-      "community": 29,
+      "community": 13,
       "norm_label": "plc_engine.py"
     },
     {
@@ -5029,7 +4779,7 @@
       "source_location": "L191",
       "_origin": "ast",
       "id": "plc_engine_in_param_key",
-      "community": 29,
+      "community": 13,
       "norm_label": "_in_param_key()"
     },
     {
@@ -5041,6 +4791,16 @@
       "id": "plc_engine_sclerror",
       "community": 30,
       "norm_label": "_sclerror"
+    },
+    {
+      "label": "Exception",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "exception",
+      "community": 30,
+      "norm_label": "exception"
     },
     {
       "label": ".__init__()",
@@ -5069,7 +4829,7 @@
       "source_location": "L329",
       "_origin": "ast",
       "id": "plc_engine_scl_parse",
-      "community": 29,
+      "community": 25,
       "norm_label": "_scl_parse()"
     },
     {
@@ -5109,7 +4869,7 @@
       "source_location": "L654",
       "_origin": "ast",
       "id": "plc_engine_js_round",
-      "community": 29,
+      "community": 13,
       "norm_label": "_js_round()"
     },
     {
@@ -5269,7 +5029,7 @@
       "source_location": "L912",
       "_origin": "ast",
       "id": "plc_engine_engine_gpiozero_available",
-      "community": 31,
+      "community": 27,
       "norm_label": "._gpiozero_available()"
     },
     {
@@ -5369,7 +5129,7 @@
       "source_location": "L1001",
       "_origin": "ast",
       "id": "plc_engine_engine_ms",
-      "community": 21,
+      "community": 29,
       "norm_label": "._ms()"
     },
     {
@@ -5379,7 +5139,7 @@
       "source_location": "L1014",
       "_origin": "ast",
       "id": "plc_engine_engine_secs",
-      "community": 21,
+      "community": 29,
       "norm_label": "._secs()"
     },
     {
@@ -5389,7 +5149,7 @@
       "source_location": "L1018",
       "_origin": "ast",
       "id": "plc_engine_engine_wkey",
-      "community": 32,
+      "community": 26,
       "norm_label": "._wkey()"
     },
     {
@@ -5399,7 +5159,7 @@
       "source_location": "L1025",
       "_origin": "ast",
       "id": "plc_engine_engine_write",
-      "community": 32,
+      "community": 26,
       "norm_label": "._write()"
     },
     {
@@ -5549,7 +5309,7 @@
       "source_location": "L1325",
       "_origin": "ast",
       "id": "plc_engine_engine_set_q",
-      "community": 32,
+      "community": 26,
       "norm_label": "._set_q()"
     },
     {
@@ -5689,7 +5449,7 @@
       "source_location": "L1711",
       "_origin": "ast",
       "id": "plc_engine_engine_run_block",
-      "community": 26,
+      "community": 25,
       "norm_label": "._run_block()"
     },
     {
@@ -5699,7 +5459,7 @@
       "source_location": "L1753",
       "_origin": "ast",
       "id": "plc_engine_engine_scl_program",
-      "community": 30,
+      "community": 25,
       "norm_label": "._scl_program()"
     },
     {
@@ -5749,7 +5509,7 @@
       "source_location": "L1843",
       "_origin": "ast",
       "id": "plc_engine_engine_scl_run_stmts",
-      "community": 13,
+      "community": 25,
       "norm_label": "._scl_run_stmts()"
     },
     {
@@ -5769,7 +5529,7 @@
       "source_location": "L1927",
       "_origin": "ast",
       "id": "plc_engine_engine_collect_called",
-      "community": 26,
+      "community": 25,
       "norm_label": "._collect_called()"
     },
     {
@@ -5779,7 +5539,7 @@
       "source_location": "L1948",
       "_origin": "ast",
       "id": "plc_engine_engine_scan",
-      "community": 26,
+      "community": 25,
       "norm_label": ".scan()"
     },
     {
@@ -5859,7 +5619,7 @@
       "source_location": "L192",
       "_origin": "ast",
       "id": "plc_engine_rationale_192",
-      "community": 29,
+      "community": 13,
       "norm_label": "map a box pin name -> params key (parity: sim.js inparamkey \u2014 an unwired     num"
     },
     {
@@ -5879,7 +5639,7 @@
       "source_location": "L655",
       "_origin": "ast",
       "id": "plc_engine_rationale_655",
-      "community": 29,
+      "community": 13,
       "norm_label": "js math.round: half rounds toward +infinity (python round() is banker's)."
     },
     {
@@ -5989,7 +5749,7 @@
       "source_location": "L1002",
       "_origin": "ast",
       "id": "plc_engine_rationale_1002",
-      "community": 21,
+      "community": 29,
       "norm_label": "resolve a time operand to milliseconds (the app's native unit): a         plain"
     },
     {
@@ -5999,7 +5759,7 @@
       "source_location": "L1015",
       "_origin": "ast",
       "id": "plc_engine_rationale_1015",
-      "community": 21,
+      "community": 29,
       "norm_label": "pt operand -> seconds (the timer primitives run on seconds)."
     },
     {
@@ -6009,7 +5769,7 @@
       "source_location": "L1019",
       "_origin": "ast",
       "id": "plc_engine_rationale_1019",
-      "community": 32,
+      "community": 26,
       "norm_label": "l-value memory key for writing an operand, or none if not writable."
     },
     {
@@ -6059,7 +5819,7 @@
       "source_location": "L1326",
       "_origin": "ast",
       "id": "plc_engine_rationale_1326",
-      "community": 32,
+      "community": 26,
       "norm_label": "write a q result to operand if set; the result is discarded otherwise         (t"
     },
     {
@@ -6129,7 +5889,7 @@
       "source_location": "L1712",
       "_origin": "ast",
       "id": "plc_engine_rationale_1712",
-      "community": 26,
+      "community": 25,
       "norm_label": "execute every network of a block under its own member context.         re-entran"
     },
     {
@@ -6139,7 +5899,7 @@
       "source_location": "L1754",
       "_origin": "ast",
       "id": "plc_engine_rationale_1754",
-      "community": 30,
+      "community": 25,
       "norm_label": "parse-and-cache a block's scl body. returns (code, program|none, err|none)."
     },
     {
@@ -6159,7 +5919,7 @@
       "source_location": "L1928",
       "_origin": "ast",
       "id": "plc_engine_rationale_1928",
-      "community": 26,
+      "community": 25,
       "norm_label": "block ids/names referenced by any kind:'call' element/box."
     },
     {
@@ -6169,7 +5929,7 @@
       "source_location": "L1949",
       "_origin": "ast",
       "id": "plc_engine_rationale_1949",
-      "community": 26,
+      "community": 25,
       "norm_label": "run exactly one plc scan (no i/o). mirrors sim.js scanonce():         run every"
     },
     {
@@ -6199,114 +5959,114 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "plc_server",
-      "community": 31,
+      "community": 13,
       "norm_label": "plc_server.py"
     },
     {
       "label": "Runtime",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L49",
+      "source_location": "L46",
       "_origin": "ast",
       "id": "plc_server_runtime",
-      "community": 31,
+      "community": 27,
       "norm_label": "runtime"
     },
     {
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L53",
+      "source_location": "L50",
       "_origin": "ast",
       "id": "plc_server_runtime_init",
-      "community": 31,
+      "community": 27,
       "norm_label": ".__init__()"
     },
     {
       "label": "._loop()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L66",
+      "source_location": "L62",
       "_origin": "ast",
       "id": "plc_server_runtime_loop",
-      "community": 31,
+      "community": 27,
       "norm_label": "._loop()"
     },
     {
       "label": ".shutdown()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L88",
+      "source_location": "L84",
       "_origin": "ast",
       "id": "plc_server_runtime_shutdown",
-      "community": 31,
+      "community": 27,
       "norm_label": ".shutdown()"
     },
     {
       "label": "._outputs_off()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L93",
+      "source_location": "L89",
       "_origin": "ast",
       "id": "plc_server_runtime_outputs_off",
-      "community": 31,
+      "community": 27,
       "norm_label": "._outputs_off()"
     },
     {
       "label": ".set_program()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L106",
+      "source_location": "L102",
       "_origin": "ast",
       "id": "plc_server_runtime_set_program",
-      "community": 31,
+      "community": 27,
       "norm_label": ".set_program()"
     },
     {
       "label": ".force()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L114",
+      "source_location": "L110",
       "_origin": "ast",
       "id": "plc_server_runtime_force",
-      "community": 31,
+      "community": 27,
       "norm_label": ".force()"
     },
     {
       "label": ".set_running()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L118",
+      "source_location": "L114",
       "_origin": "ast",
       "id": "plc_server_runtime_set_running",
-      "community": 31,
+      "community": 27,
       "norm_label": ".set_running()"
     },
     {
       "label": ".info()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L127",
+      "source_location": "L123",
       "_origin": "ast",
       "id": "plc_server_runtime_info",
-      "community": 31,
+      "community": 27,
       "norm_label": ".info()"
     },
     {
       "label": ".state()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L139",
+      "source_location": "L134",
       "_origin": "ast",
       "id": "plc_server_runtime_state",
-      "community": 31,
+      "community": 27,
       "norm_label": ".state()"
     },
     {
       "label": "Handler",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L149",
+      "source_location": "L144",
       "_origin": "ast",
       "id": "plc_server_handler",
       "community": 5,
@@ -6326,7 +6086,7 @@
       "label": "._cors()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L153",
+      "source_location": "L148",
       "_origin": "ast",
       "id": "plc_server_handler_cors",
       "community": 5,
@@ -6336,7 +6096,7 @@
       "label": "._send_json()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L158",
+      "source_location": "L153",
       "_origin": "ast",
       "id": "plc_server_handler_send_json",
       "community": 5,
@@ -6346,7 +6106,7 @@
       "label": "._send_bytes()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L167",
+      "source_location": "L162",
       "_origin": "ast",
       "id": "plc_server_handler_send_bytes",
       "community": 5,
@@ -6356,7 +6116,7 @@
       "label": "._read_body_json()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L178",
+      "source_location": "L173",
       "_origin": "ast",
       "id": "plc_server_handler_read_body_json",
       "community": 5,
@@ -6366,7 +6126,7 @@
       "label": ".log_message()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L188",
+      "source_location": "L183",
       "_origin": "ast",
       "id": "plc_server_handler_log_message",
       "community": 5,
@@ -6376,7 +6136,7 @@
       "label": ".do_OPTIONS()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L192",
+      "source_location": "L187",
       "_origin": "ast",
       "id": "plc_server_handler_do_options",
       "community": 5,
@@ -6386,7 +6146,7 @@
       "label": ".do_GET()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L198",
+      "source_location": "L193",
       "_origin": "ast",
       "id": "plc_server_handler_do_get",
       "community": 5,
@@ -6396,7 +6156,7 @@
       "label": ".do_POST()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L204",
+      "source_location": "L199",
       "_origin": "ast",
       "id": "plc_server_handler_do_post",
       "community": 5,
@@ -6406,7 +6166,7 @@
       "label": "._handle_api_get()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L214",
+      "source_location": "L209",
       "_origin": "ast",
       "id": "plc_server_handler_handle_api_get",
       "community": 5,
@@ -6416,7 +6176,7 @@
       "label": "._handle_api_post()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L224",
+      "source_location": "L216",
       "_origin": "ast",
       "id": "plc_server_handler_handle_api_post",
       "community": 5,
@@ -6426,7 +6186,7 @@
       "label": "._serve_static()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L249",
+      "source_location": "L241",
       "_origin": "ast",
       "id": "plc_server_handler_serve_static",
       "community": 5,
@@ -6436,49 +6196,49 @@
       "label": "main()",
       "file_type": "code",
       "source_file": "plc_server.py",
-      "source_location": "L277",
+      "source_location": "L269",
       "_origin": "ast",
       "id": "plc_server_main",
-      "community": 31,
+      "community": 27,
       "norm_label": "main()"
     },
     {
       "label": "Holds the engine, the running flag, and the scan thread. All engine access     i",
       "file_type": "rationale",
       "source_file": "plc_server.py",
-      "source_location": "L50",
+      "source_location": "L47",
       "_origin": "ast",
-      "id": "plc_server_rationale_50",
-      "community": 31,
+      "id": "plc_server_rationale_47",
+      "community": 27,
       "norm_label": "holds the engine, the running flag, and the scan thread. all engine access     i"
     },
     {
       "label": "Background thread: read inputs, scan, write outputs at ~SCAN_HZ while         ru",
       "file_type": "rationale",
       "source_file": "plc_server.py",
-      "source_location": "L67",
+      "source_location": "L63",
       "_origin": "ast",
-      "id": "plc_server_rationale_67",
-      "community": 31,
+      "id": "plc_server_rationale_63",
+      "community": 27,
       "norm_label": "background thread: read inputs, scan, write outputs at ~scan_hz while         ru"
     },
     {
       "label": "STOP behavior of a real PLC: de-energize every output. Without this,         sto",
       "file_type": "rationale",
       "source_file": "plc_server.py",
-      "source_location": "L94",
+      "source_location": "L90",
       "_origin": "ast",
-      "id": "plc_server_rationale_94",
-      "community": 31,
+      "id": "plc_server_rationale_90",
+      "community": 27,
       "norm_label": "stop behavior of a real plc: de-energize every output. without this,         sto"
     },
     {
       "label": "Serve files from STATIC_DIR. GET / -> index.html. Path traversal is         prev",
       "file_type": "rationale",
       "source_file": "plc_server.py",
-      "source_location": "L250",
+      "source_location": "L242",
       "_origin": "ast",
-      "id": "plc_server_rationale_250",
+      "id": "plc_server_rationale_242",
       "community": 5,
       "norm_label": "serve files from static_dir. get / -> index.html. path traversal is         prev"
     },
@@ -6741,20 +6501,10 @@
       "norm_label": "online mode \u2014 run + monitor + change the program live (pi runtime)"
     },
     {
-      "label": "Modbus TCP server mode (any SCADA/HMI can connect)",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L154",
-      "_origin": "ast",
-      "id": "readme_modbus_tcp_server_mode_any_scada_hmi_can_connect",
-      "community": 10,
-      "norm_label": "modbus tcp server mode (any scada/hmi can connect)"
-    },
-    {
       "label": "Saving your work",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L179",
+      "source_location": "L154",
       "_origin": "ast",
       "id": "readme_saving_your_work",
       "community": 10,
@@ -6764,7 +6514,7 @@
       "label": "Addresses & data types",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L188",
+      "source_location": "L163",
       "_origin": "ast",
       "id": "readme_addresses_data_types",
       "community": 10,
@@ -6774,7 +6524,7 @@
       "label": "Supported instructions",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L199",
+      "source_location": "L174",
       "_origin": "ast",
       "id": "readme_supported_instructions",
       "community": 10,
@@ -6784,7 +6534,7 @@
       "label": "Project tree & simulation table tips",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L216",
+      "source_location": "L191",
       "_origin": "ast",
       "id": "readme_project_tree_simulation_table_tips",
       "community": 10,
@@ -6794,7 +6544,7 @@
       "label": "Architecture (for extending)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L222",
+      "source_location": "L197",
       "_origin": "ast",
       "id": "readme_architecture_for_extending",
       "community": 10,
@@ -17212,597 +16962,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L60",
-      "weight": 1.0,
-      "source": "modbus_server",
-      "target": "modbus_server_bit_key",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L68",
-      "weight": 1.0,
-      "source": "modbus_server",
-      "target": "modbus_server_coil_key",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L76",
-      "weight": 1.0,
-      "source": "modbus_server",
-      "target": "modbus_server_discrete_key",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L131",
-      "weight": 1.0,
-      "source": "modbus_server",
-      "target": "modbus_server_handler",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L80",
-      "weight": 1.0,
-      "source": "modbus_server",
-      "target": "modbus_server_holding_key",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L88",
-      "weight": 1.0,
-      "source": "modbus_server",
-      "target": "modbus_server_input_key",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L92",
-      "weight": 1.0,
-      "source": "modbus_server",
-      "target": "modbus_server_modbus_map",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L54",
-      "weight": 1.0,
-      "source": "modbus_server",
-      "target": "modbus_server_modbuserror",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L266",
-      "weight": 1.0,
-      "source": "modbus_server",
-      "target": "modbus_server_serve_modbus",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L261",
-      "weight": 1.0,
-      "source": "modbus_server",
-      "target": "modbus_server_server",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L64",
-      "weight": 1.0,
-      "source": "modbus_server",
-      "target": "modbus_server_word_key",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "plc_server.py",
-      "source_location": "L42",
-      "weight": 1.0,
-      "source": "plc_server",
-      "target": "modbus_server",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L73",
-      "weight": 1.0,
-      "source": "modbus_server_coil_key",
-      "target": "modbus_server_modbuserror",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L187",
-      "weight": 1.0,
-      "source": "modbus_server_handler_handle_fc",
-      "target": "modbus_server_modbuserror",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L191",
-      "weight": 1.0,
-      "source": "modbus_server_handler_read_bits",
-      "target": "modbus_server_modbuserror",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L205",
-      "weight": 1.0,
-      "source": "modbus_server_handler_read_regs",
-      "target": "modbus_server_modbuserror",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L218",
-      "weight": 1.0,
-      "source": "modbus_server_handler_write_coil",
-      "target": "modbus_server_modbuserror",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L236",
-      "weight": 1.0,
-      "source": "modbus_server_handler_write_coils",
-      "target": "modbus_server_modbuserror",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L228",
-      "weight": 1.0,
-      "source": "modbus_server_handler_write_reg",
-      "target": "modbus_server_modbuserror",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L249",
-      "weight": 1.0,
-      "source": "modbus_server_handler_write_regs",
-      "target": "modbus_server_modbuserror",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L85",
-      "weight": 1.0,
-      "source": "modbus_server_holding_key",
-      "target": "modbus_server_modbuserror",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L54",
-      "weight": 1.0,
-      "source": "modbus_server_modbuserror",
-      "target": "exception",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L55",
-      "weight": 1.0,
-      "source": "modbus_server_modbuserror",
-      "target": "modbus_server_modbuserror_init",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "plc_engine.py",
-      "source_location": "L135",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "plc_engine_sclerror",
-      "target": "exception"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L70",
-      "weight": 1.0,
-      "source": "modbus_server_coil_key",
-      "target": "modbus_server_bit_key",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L77",
-      "weight": 1.0,
-      "source": "modbus_server_discrete_key",
-      "target": "modbus_server_bit_key",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L82",
-      "weight": 1.0,
-      "source": "modbus_server_holding_key",
-      "target": "modbus_server_word_key",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L89",
-      "weight": 1.0,
-      "source": "modbus_server_input_key",
-      "target": "modbus_server_word_key",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L223",
-      "weight": 1.0,
-      "source": "modbus_server_handler_write_coil",
-      "target": "modbus_server_coil_key",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L244",
-      "weight": 1.0,
-      "source": "modbus_server_handler_write_coils",
-      "target": "modbus_server_coil_key",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L231",
-      "weight": 1.0,
-      "source": "modbus_server_handler_write_reg",
-      "target": "modbus_server_holding_key",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L257",
-      "weight": 1.0,
-      "source": "modbus_server_handler_write_regs",
-      "target": "modbus_server_holding_key",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L93",
-      "weight": 1.0,
-      "source": "modbus_server_rationale_93",
-      "target": "modbus_server_modbus_map",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "plc_server.py",
-      "source_location": "L42",
-      "weight": 1.0,
-      "source": "plc_server",
-      "target": "modbus_server_modbus_map",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "plc_server.py",
-      "source_location": "L221",
-      "weight": 1.0,
-      "source": "plc_server_handler_handle_api_get",
-      "target": "modbus_server_modbus_map"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L155",
-      "weight": 1.0,
-      "source": "modbus_server_handler",
-      "target": "modbus_server_handler_dispatch",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L132",
-      "weight": 1.0,
-      "source": "modbus_server_handler",
-      "target": "modbus_server_handler_handle",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L170",
-      "weight": 1.0,
-      "source": "modbus_server_handler",
-      "target": "modbus_server_handler_handle_fc",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L189",
-      "weight": 1.0,
-      "source": "modbus_server_handler",
-      "target": "modbus_server_handler_read_bits",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L203",
-      "weight": 1.0,
-      "source": "modbus_server_handler",
-      "target": "modbus_server_handler_read_regs",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L216",
-      "weight": 1.0,
-      "source": "modbus_server_handler",
-      "target": "modbus_server_handler_write_coil",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L234",
-      "weight": 1.0,
-      "source": "modbus_server_handler",
-      "target": "modbus_server_handler_write_coils",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L226",
-      "weight": 1.0,
-      "source": "modbus_server_handler",
-      "target": "modbus_server_handler_write_reg",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L247",
-      "weight": 1.0,
-      "source": "modbus_server_handler",
-      "target": "modbus_server_handler_write_regs",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L149",
-      "weight": 1.0,
-      "source": "modbus_server_handler_handle",
-      "target": "modbus_server_handler_dispatch",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L162",
-      "weight": 1.0,
-      "source": "modbus_server_handler_dispatch",
-      "target": "modbus_server_handler_handle_fc",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L172",
-      "weight": 1.0,
-      "source": "modbus_server_handler_handle_fc",
-      "target": "modbus_server_handler_read_bits",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L176",
-      "weight": 1.0,
-      "source": "modbus_server_handler_handle_fc",
-      "target": "modbus_server_handler_read_regs",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L180",
-      "weight": 1.0,
-      "source": "modbus_server_handler_handle_fc",
-      "target": "modbus_server_handler_write_coil",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L184",
-      "weight": 1.0,
-      "source": "modbus_server_handler_handle_fc",
-      "target": "modbus_server_handler_write_coils",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L182",
-      "weight": 1.0,
-      "source": "modbus_server_handler_handle_fc",
-      "target": "modbus_server_handler_write_reg",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L186",
-      "weight": 1.0,
-      "source": "modbus_server_handler_handle_fc",
-      "target": "modbus_server_handler_write_regs",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L270",
-      "weight": 1.0,
-      "source": "modbus_server_serve_modbus",
-      "target": "modbus_server_server",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "modbus_server.py",
-      "source_location": "L267",
-      "weight": 1.0,
-      "source": "modbus_server_rationale_267",
-      "target": "modbus_server_serve_modbus",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "plc_server.py",
-      "source_location": "L42",
-      "weight": 1.0,
-      "source": "plc_server",
-      "target": "modbus_server_serve_modbus",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "plc_server.py",
-      "source_location": "L300",
-      "weight": 1.0,
-      "source": "plc_server_main",
-      "target": "modbus_server_serve_modbus",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "plc_engine.py",
       "source_location": "L110",
       "weight": 1.0,
@@ -18548,6 +17707,16 @@
       "confidence_score": 1.0,
       "source": "plc_engine_rationale_192",
       "target": "plc_engine_in_param_key"
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "plc_engine.py",
+      "source_location": "L135",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "plc_engine_sclerror",
+      "target": "exception"
     },
     {
       "relation": "method",
@@ -20924,11 +20093,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "plc_server.py",
-      "source_location": "L50",
+      "source_location": "L47",
       "weight": 1.0,
-      "source": "plc_server_rationale_50",
-      "target": "plc_server_runtime",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "plc_server_rationale_47",
+      "target": "plc_server_runtime"
     },
     {
       "relation": "method",
@@ -21024,22 +20193,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "plc_server.py",
-      "source_location": "L67",
+      "source_location": "L63",
       "weight": 1.0,
-      "source": "plc_server_rationale_67",
-      "target": "plc_server_runtime_loop",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "plc_server.py",
-      "source_location": "L319",
-      "weight": 1.0,
-      "source": "plc_server_main",
-      "target": "plc_server_runtime_shutdown",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "plc_server_rationale_63",
+      "target": "plc_server_runtime_loop"
     },
     {
       "relation": "calls",
@@ -21056,11 +20214,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "plc_server.py",
-      "source_location": "L94",
+      "source_location": "L90",
       "weight": 1.0,
-      "source": "plc_server_rationale_94",
-      "target": "plc_server_runtime_outputs_off",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "plc_server_rationale_90",
+      "target": "plc_server_runtime_outputs_off"
     },
     {
       "relation": "calls",
@@ -21318,11 +20476,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "plc_server.py",
-      "source_location": "L250",
+      "source_location": "L242",
       "weight": 1.0,
-      "source": "plc_server_rationale_250",
-      "target": "plc_server_handler_serve_static",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "plc_server_rationale_242",
+      "target": "plc_server_handler_serve_static"
     },
     {
       "relation": "contains",
@@ -21633,16 +20791,6 @@
       "confidence_score": 1.0,
       "source": "readme_the_demo_project_conveyor_demo",
       "target": "readme_try_it"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L154",
-      "weight": 1.0,
-      "source": "readme_online_mode_run_monitor_change_the_program_live_pi_runtime",
-      "target": "readme_modbus_tcp_server_mode_any_scada_hmi_can_connect",
-      "confidence_score": 1.0
     },
     {
       "relation": "semantically_similar_to",

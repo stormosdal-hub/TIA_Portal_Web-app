@@ -15,14 +15,16 @@
 #   python3 plc_server.py --mock          # force the pure-Python mock backend
 #   python3 plc_server.py --port 8080     # different port
 #   python3 plc_server.py --dir /path     # serve static files from a directory
+#   python3 plc_server.py --modbus-port 5020   # also serve Modbus TCP (see modbus_server.py)
 #
 # JSON API (all responses carry permissive CORS headers):
-#   GET  /api/info     -> {ok, running, mock, scan, hasProgram, project}
-#   GET  /api/state    -> engine.snapshot()
-#   POST /api/program  -> body = project JSON; load + start; -> {ok}
-#   POST /api/force    -> body = {key, value}; -> {ok}
-#   POST /api/run      -> running = True;  -> {ok, running}
-#   POST /api/stop     -> running = False; -> {ok, running}
+#   GET  /api/info        -> {ok, running, mock, scan, hasProgram, project, modbusPort}
+#   GET  /api/state       -> engine.snapshot()
+#   GET  /api/modbus-map  -> {ok, port, bank, map: {tagName: {kind, address[, registers]}}}
+#   POST /api/program     -> body = project JSON; load + start; -> {ok}
+#   POST /api/force       -> body = {key, value}; -> {ok}
+#   POST /api/run         -> running = True;  -> {ok, running}
+#   POST /api/stop        -> running = False; -> {ok, running}
 # ============================================================================
 
 import argparse
@@ -37,6 +39,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import unquote, urlparse
 
 from plc_engine import Engine
+from modbus_server import BANK, modbus_map, serve_modbus
 
 
 SCAN_HZ = 20                 # scan rate (Hz) while running
@@ -54,6 +57,7 @@ class Runtime:
         self.running = False
         self.has_program = False
         self.project_name = None
+        self.modbus_port = None   # set by main() once the Modbus server is up
         self._stop = threading.Event()
         self._thread = threading.Thread(target=self._loop, daemon=True)
         self._thread.start()
@@ -129,6 +133,7 @@ class Runtime:
                 'scan': self.engine.scan_count,
                 'hasProgram': self.has_program,
                 'project': self.project_name,
+                'modbusPort': self.modbus_port,
             }
 
     def state(self):
@@ -211,6 +216,9 @@ class Handler(BaseHTTPRequestHandler):
             return self._send_json(RT.info())
         if path == '/api/state':
             return self._send_json(RT.state())
+        if path == '/api/modbus-map':
+            return self._send_json({'ok': True, 'port': RT.modbus_port, 'bank': BANK,
+                                     'map': modbus_map(RT)})
         return self._send_json({'ok': False, 'error': 'unknown endpoint'}, 404)
 
     def _handle_api_post(self, path):
@@ -272,6 +280,9 @@ def main(argv=None):
     parser.add_argument('--port', type=int, default=8000, help='HTTP port (default 8000)')
     parser.add_argument('--mock', action='store_true', help='force the pure-Python mock GPIO backend')
     parser.add_argument('--dir', default=None, help='directory of static files (default: this file\'s dir)')
+    parser.add_argument('--modbus-port', type=int, default=0,
+                         help='also serve Modbus TCP on this port (0 = disabled); '
+                              'ports <1024 (e.g. the standard 502) need root/CAP_NET_BIND_SERVICE')
     args = parser.parse_args(argv)
 
     STATIC_DIR = os.path.abspath(args.dir or os.path.dirname(os.path.abspath(__file__)))
@@ -280,12 +291,22 @@ def main(argv=None):
     mimetypes.add_type('text/css', '.css')
 
     RT = Runtime(mock=args.mock)
+    RT.modbus_port = args.modbus_port or None
 
     httpd = ThreadingHTTPServer(('0.0.0.0', args.port), Handler)
+    modbus_srv = None
+    modbus_thread = None
+    if RT.modbus_port:
+        modbus_srv = serve_modbus(RT, RT.modbus_port)
+        modbus_thread = threading.Thread(target=modbus_srv.serve_forever, daemon=True)
+        modbus_thread.start()
+
     backend = 'MOCK' if (args.mock or not Engine._gpiozero_available()) else 'gpiozero'
     print('TIA PLC runtime — I/O backend: %s' % backend)
     print('Open the app at:  http://localhost:%d' % args.port)
     print('API base:         http://localhost:%d/api' % args.port)
+    if RT.modbus_port:
+        print('Modbus TCP server: 0.0.0.0:%d  (map: /api/modbus-map)' % RT.modbus_port)
     print('Idle (no program). POST a project to /api/program to start. Ctrl+C to stop.')
     try:
         httpd.serve_forever()
@@ -294,6 +315,9 @@ def main(argv=None):
     finally:
         RT.shutdown()
         httpd.server_close()
+        if modbus_srv:
+            modbus_srv.shutdown()
+            modbus_srv.server_close()
 
 
 if __name__ == '__main__':
