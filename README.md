@@ -146,6 +146,11 @@ Files: `plc_engine.py` interprets the program (a faithful Python port of the sim
 (`/api/state`, `/api/program`, `/api/force`, …). Pure stdlib + gpiozero; no other dependencies.
 **Stop** de-energizes all mapped GPIO outputs (real PLC STOP behavior).
 
+The same API makes the runtime a device for the sibling **Automation Sim** project
+(`../automation_sim`): its gateway's `tiaweb` adapter polls `/api/state` and forces inputs via
+`/api/force`, so PLC tags bind to a 3D factory scene (conveyors, lamps, robots) and panel
+widgets can press the PLC's buttons. See `automation_sim/README.md` → adapter `tiaweb`.
+
 ## Saving your work
 - **Save** stores the project in the browser's local storage (auto-restored next launch;
   the IDE also autosaves every few seconds).
