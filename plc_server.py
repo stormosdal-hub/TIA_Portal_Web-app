@@ -20,6 +20,7 @@
 # JSON API (all responses carry permissive CORS headers):
 #   GET  /api/info        -> {ok, running, mock, scan, hasProgram, project, modbusPort}
 #   GET  /api/state       -> engine.snapshot()
+#   GET  /api/tags        -> {ok, tags: [{name, dataType, address, comment}, ...]}
 #   GET  /api/modbus-map  -> {ok, port, bank, map: {tagName: {kind, address[, registers]}}}
 #   POST /api/program     -> body = project JSON; load + start; -> {ok}
 #   POST /api/force       -> body = {key, value}; -> {ok}
@@ -140,6 +141,16 @@ class Runtime:
         with self.lock:
             return self.engine.snapshot(running=self.running)
 
+    def tags(self):
+        """Declared project tags (name/dataType/address/comment) — lets a
+        client (e.g. the automation_sim gateway) discover what to subscribe to
+        instead of hand-maintaining its own copy of the tag list."""
+        with self.lock:
+            return [{'name': t.get('name'), 'dataType': t.get('dataType'),
+                     'address': t.get('address') or None, 'comment': t.get('comment') or None}
+                    for t in (getattr(self.engine, '_tags', None) or [])
+                    if t.get('name')]
+
 
 # module-global runtime + static dir, set up in main()
 RT = None
@@ -216,6 +227,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._send_json(RT.info())
         if path == '/api/state':
             return self._send_json(RT.state())
+        if path == '/api/tags':
+            return self._send_json({'ok': True, 'tags': RT.tags()})
         if path == '/api/modbus-map':
             return self._send_json({'ok': True, 'port': RT.modbus_port, 'bank': BANK,
                                      'map': modbus_map(RT)})

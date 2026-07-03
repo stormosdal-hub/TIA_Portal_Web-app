@@ -1,16 +1,16 @@
 # Graph Report - TIA_Portal_Web-app  (2026-07-03)
 
 ## Corpus Check
-- 26 files · ~75,387 words
+- 26 files · ~75,486 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 702 nodes · 1412 edges · 33 communities (30 shown, 3 thin omitted)
+- 704 nodes · 1414 edges · 33 communities (30 shown, 3 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 21 edges (avg confidence: 0.82)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `aa93bf25`
+- Built from commit: `0b993ee2`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -191,12 +191,12 @@ Cohesion: 0.21
 Nodes (10): _in_param_key(), _js_round(), parse_time_ms(), parse_time_s(), Time literal -> seconds (codegen.js uses seconds for the PT argument)., Map a box pin NAME -> params key (parity: sim.js inParamKey — an unwired     num, Set M[key] = value (input/memory forcing from the app). Booleans stay         bo, JS Math.round: half rounds toward +Infinity (Python round() is banker's). (+2 more)
 
 ### Community 30 - "Community 30"
-Cohesion: 0.16
-Nodes (7): dict, Exception, Mem, Parse-and-cache a block's SCL body. Returns (code, program|None, err|None)., Load or replace the running program. Resets all state, seeds memory         with, Initialise M with every declared tag by its NAME (bool->False, num->0)., _SclError
+Cohesion: 0.21
+Nodes (5): dict, Mem, Parse-and-cache a block's SCL body. Returns (code, program|None, err|None)., Load or replace the running program. Resets all state, seeds memory         with, Initialise M with every declared tag by its NAME (bool->False, num->0).
 
 ### Community 31 - "Community 31"
-Cohesion: 0.09
-Nodes (18): _bit_key(), _coil_key(), _discrete_key(), _Handler, _holding_key(), _input_key(), modbus_map(), ModbusError (+10 more)
+Cohesion: 0.08
+Nodes (21): Exception, _bit_key(), _coil_key(), _discrete_key(), _Handler, _holding_key(), _input_key(), modbus_map() (+13 more)
 
 ## Knowledge Gaps
 - **46 isolated node(s):** `node`, `name`, `version`, `type`, `main` (+41 more)
@@ -207,15 +207,15 @@ Nodes (18): _bit_key(), _coil_key(), _discrete_key(), _Handler, _holding_key(), 
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `index.html — App Entry Point` connect `Simulation Engine` to `PLC Scan Engine`, `FBD Editor`, `Ladder (LAD) Editor`, `Core Architecture & Data Model`, `HTTP / PLC Server`, `App Bootstrap & UI Shell`, `Toolbar & Ribbon`, `Tree Details View`, `Online PLC Monitor`, `PLC Launcher Script`, `Community 17`, `Community 19`, `Community 28`?**
-  _High betweenness centrality (0.259) - this node is a cross-community bridge._
+  _High betweenness centrality (0.257) - this node is a cross-community bridge._
 - **Why does `CLAUDE.md — Contributor / Agent Guide` connect `Simulation Engine` to `PLC Scan Engine`, `FBD Editor`, `Ladder (LAD) Editor`, `HTTP / PLC Server`, `Toolbar & Ribbon`?**
   _High betweenness centrality (0.081) - this node is a cross-community bridge._
 - **Why does `Engine` connect `Community 25` to `Community 32`, `Python Code Generator`, `Project Tree Panel`, `Tag Table Editor`, `Community 21`, `Community 26`, `Community 27`, `Community 29`, `Community 30`, `Community 31`?**
-  _High betweenness centrality (0.047) - this node is a cross-community bridge._
+  _High betweenness centrality (0.048) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `Engine` (e.g. with `Handler` and `Runtime`) actually correct?**
   _`Engine` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `node`, `name`, `version` to the rest of the system?**
-  _91 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _92 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `PLC Scan Engine` be split into smaller, more focused modules?**
   _Cohesion score 0.06049382716049383 - nodes in this community are weakly interconnected._
 - **Should `FBD Editor` be split into smaller, more focused modules?**

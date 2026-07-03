@@ -75,8 +75,8 @@
     "semantic_hash": ""
   },
   "plc_server.py": {
-    "mtime": 1783012118.191198,
-    "ast_hash": "96bffd4f1c0d34a696e1597bf61e909b",
+    "mtime": 1783091905.3460157,
+    "ast_hash": "69dae5a72442ac07c64c9ae96aa1d650",
     "semantic_hash": ""
   },
   "run_plc.sh": {
@@ -90,8 +90,8 @@
     "semantic_hash": "082d57f2d88a6edfcd8ee7c18f955bfe"
   },
   "README.md": {
-    "mtime": 1783031878.4850335,
-    "ast_hash": "31984f3c46e017ff357cbd43b17ded24",
+    "mtime": 1783092127.6738076,
+    "ast_hash": "79e35f5e62b51629b44a694f2a9a3460",
     "semantic_hash": ""
   },
   "SPEC.md": {
@@ -127,6 +127,11 @@
   "js/scl.js": {
     "mtime": 1783016348.7505434,
     "ast_hash": "c78d47935ea19b97e8e28adcda750bd4",
+    "semantic_hash": ""
+  },
+  "modbus_server.py": {
+    "mtime": 1783092064.644866,
+    "ast_hash": "0d843f8bdefd68e04051578d83cf1fdd",
     "semantic_hash": ""
   }
 }
