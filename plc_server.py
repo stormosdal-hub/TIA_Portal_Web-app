@@ -18,9 +18,9 @@
 #   python3 plc_server.py --modbus-port 5020   # also serve Modbus TCP (see modbus_server.py)
 #
 # JSON API (all responses carry permissive CORS headers):
-#   GET  /api/info        -> {ok, running, mock, scan, hasProgram, project, modbusPort}
-#   GET  /api/state       -> engine.snapshot()
-#   GET  /api/tags        -> {ok, tags: [{name, dataType, address, comment}, ...]}
+#   GET  /api/info        -> {ok, running, mock, scan, hasProgram, project, programRev, modbusPort}
+#   GET  /api/state       -> engine.snapshot()  (+ programRev)
+#   GET  /api/tags        -> {ok, programRev, tags: [{name, dataType, address, comment}, ...]}
 #   GET  /api/modbus-map  -> {ok, port, bank, map: {tagName: {kind, address[, registers]}}}
 #   POST /api/program     -> body = project JSON; load + start; -> {ok}
 #   POST /api/force       -> body = {key, value}; -> {ok}
@@ -58,6 +58,7 @@ class Runtime:
         self.running = False
         self.has_program = False
         self.project_name = None
+        self.program_rev = 0      # bumped on every /api/program; lets clients detect a re-download
         self.modbus_port = None   # set by main() once the Modbus server is up
         self._stop = threading.Event()
         self._thread = threading.Thread(target=self._loop, daemon=True)
@@ -110,6 +111,7 @@ class Runtime:
             self.has_program = True
             self.running = True
             self.project_name = (project or {}).get('name')
+            self.program_rev += 1   # a new download -> tags/logic may have changed
             return res
 
     def force(self, key, value):
@@ -134,22 +136,30 @@ class Runtime:
                 'scan': self.engine.scan_count,
                 'hasProgram': self.has_program,
                 'project': self.project_name,
+                'programRev': self.program_rev,
                 'modbusPort': self.modbus_port,
             }
 
     def state(self):
         with self.lock:
-            return self.engine.snapshot(running=self.running)
+            snap = self.engine.snapshot(running=self.running)
+            # carry the program revision so a poller can spot a re-download and
+            # re-discover tags without a separate request (see automation_sim tiaweb adapter)
+            snap['programRev'] = self.program_rev
+            return snap
 
     def tags(self):
         """Declared project tags (name/dataType/address/comment) — lets a
         client (e.g. the automation_sim gateway) discover what to subscribe to
-        instead of hand-maintaining its own copy of the tag list."""
+        instead of hand-maintaining its own copy of the tag list. `programRev`
+        pins the list to a specific download so the client can tell when it's
+        stale."""
         with self.lock:
-            return [{'name': t.get('name'), 'dataType': t.get('dataType'),
-                     'address': t.get('address') or None, 'comment': t.get('comment') or None}
-                    for t in (getattr(self.engine, '_tags', None) or [])
-                    if t.get('name')]
+            return {'programRev': self.program_rev, 'tags': [
+                {'name': t.get('name'), 'dataType': t.get('dataType'),
+                 'address': t.get('address') or None, 'comment': t.get('comment') or None}
+                for t in (getattr(self.engine, '_tags', None) or [])
+                if t.get('name')]}
 
 
 # module-global runtime + static dir, set up in main()
@@ -228,7 +238,8 @@ class Handler(BaseHTTPRequestHandler):
         if path == '/api/state':
             return self._send_json(RT.state())
         if path == '/api/tags':
-            return self._send_json({'ok': True, 'tags': RT.tags()})
+            t = RT.tags()
+            return self._send_json({'ok': True, 'programRev': t['programRev'], 'tags': t['tags']})
         if path == '/api/modbus-map':
             return self._send_json({'ok': True, 'port': RT.modbus_port, 'bank': BANK,
                                      'map': modbus_map(RT)})

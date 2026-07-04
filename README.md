@@ -151,8 +151,10 @@ The same API makes the runtime a device for the sibling **Automation Sim** proje
 `/api/force`, so PLC tags bind to a 3D factory scene (conveyors, lamps, robots) and panel
 widgets can press the PLC's buttons. `GET /api/tags` lists every declared tag
 (name/dataType/address/comment) so the gateway can **discover tags automatically** instead of
-requiring them to be hand-typed into its config — see `automation_sim/README.md` → adapter
-`tiaweb`.
+requiring them to be hand-typed into its config. Every response also carries a `programRev`
+(also in `/api/info` and `/api/state`) that bumps on each **Download → PLC**, so the gateway
+notices a changed program while polling and re-imports tags with no user action — see
+`automation_sim/README.md` → adapter `tiaweb`.
 
 ### Modbus TCP server mode (any SCADA/HMI can connect)
 `python3 plc_server.py --modbus-port 5020` also serves standard **Modbus TCP** (FC01-06,
