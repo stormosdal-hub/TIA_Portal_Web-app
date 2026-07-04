@@ -140,10 +140,13 @@ it live in the app — TIA-style online monitoring against a real Pi.
    program to the runtime — change it anytime) → **Monitor**. The diagram now lights up **green/blue from
    real GPIO/memory** and the **Simulation table** shows live values; toggling/forcing a tag there is sent
    to the running PLC. A `🔵 ONLINE` pill shows the status.
+3. **Address** (same toolbar group) opens a small pop-up showing this runtime's **hostname and network
+   address** — click *Check address* and it displays the exact `http://<ip>:<port>` (and Modbus port, if
+   enabled) to paste into Automation Sim on another computer. No `hostname -I` in a terminal needed.
 
 Files: `plc_engine.py` interprets the program (a faithful Python port of the simulator — LAD, FBD
 **and SCL** — verified by parity tests); `plc_server.py` serves the app and a small JSON API
-(`/api/state`, `/api/program`, `/api/force`, …). Pure stdlib + gpiozero; no other dependencies.
+(`/api/state`, `/api/program`, `/api/force`, `/api/netinfo`, …). Pure stdlib + gpiozero; no other dependencies.
 **Stop** de-energizes all mapped GPIO outputs (real PLC STOP behavior).
 
 The same API makes the runtime a device for the sibling **Automation Sim** project

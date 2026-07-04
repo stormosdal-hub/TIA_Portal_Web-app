@@ -52,6 +52,7 @@
     onlineConnect() { T.online && T.online.connect(); },
     onlineDownload() { T.online && T.online.download(); },
     onlineMonitor() { T.online && T.online.toggleMonitor(); },
+    onlineInfo() { T.online && T.online.showInfo(); },
   };
 
   function btn(opts) {
@@ -109,6 +110,8 @@
             title: 'Send this program to the running Pi runtime (change the program online)' }),
       btn({ id: 'tia-online-monitor', label: 'Monitor', icon: T.icons.run, onclick: T.actions.onlineMonitor,
             title: 'Live-monitor real GPIO/memory from the Pi on the diagram' }),
+      btn({ id: 'tia-online-info', label: 'Address', icon: T.icons.device, onclick: T.actions.onlineInfo,
+            title: 'Show this runtime\'s hostname & network address to connect Automation Sim (no terminal needed)' }),
     ]));
 
     updateSimBtn(T.sim && T.sim.running);

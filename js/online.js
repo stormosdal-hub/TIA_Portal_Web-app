@@ -155,6 +155,119 @@
     T.bus.emit('online:tick', { scan: O.scan });
   }
 
+  /* ---------------------------------------------- connection-info popup */
+  // A modal you open from the toolbar: shows this runtime's network address so
+  // you can connect Automation Sim (on another PC / your desk) without running
+  // `hostname -I` in a terminal. The "Check address" button hits /api/netinfo.
+  function injectInfoCSS() {
+    T.injectCSS('tia-online-info-css', `
+      .tia-oi-ov{position:fixed;inset:0;background:rgba(0,0,0,.42);display:flex;
+        align-items:center;justify-content:center;z-index:10000;}
+      .tia-oi{background:var(--tia-panel);color:var(--tia-text);border:1px solid var(--tia-border);
+        border-radius:8px;min-width:340px;max-width:480px;box-shadow:0 14px 44px rgba(0,0,0,.45);
+        font-family:var(--tia-font);}
+      .tia-oi-head{padding:12px 16px;font-weight:600;border-bottom:1px solid var(--tia-border);}
+      .tia-oi-body{padding:14px 16px;display:flex;flex-direction:column;gap:10px;font-size:13px;}
+      .tia-oi-foot{padding:10px 16px;border-top:1px solid var(--tia-border);display:flex;
+        justify-content:flex-end;gap:8px;}
+      .tia-oi button{font:inherit;font-size:12px;padding:5px 12px;border-radius:5px;cursor:pointer;
+        border:1px solid var(--tia-border);background:var(--tia-hover);color:var(--tia-text);}
+      .tia-oi button.primary{background:var(--tia-accent);border-color:var(--tia-accent);color:var(--tia-text-inv);}
+      .tia-oi-status{font-size:12px;color:var(--tia-text-soft);}
+      .tia-oi-section{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--tia-text-soft);}
+      .tia-oi-box{background:var(--tia-bg);border:1px solid var(--tia-border-soft);border-radius:6px;
+        padding:10px 12px;font-size:12.5px;line-height:1.6;}
+      .tia-oi-row{display:flex;align-items:center;gap:8px;margin:3px 0;}
+      .tia-oi-url{font-family:var(--tia-mono);color:var(--tia-accent);word-break:break-all;flex:1;}
+      .tia-oi-copy{padding:2px 8px !important;font-size:11px !important;}
+      .tia-oi-hint{font-size:11.5px;color:var(--tia-text-soft);}
+      .tia-oi-warn{color:#c0392b;}
+    `);
+  }
+
+  O.showInfo = function () {
+    injectInfoCSS();
+    const old = document.querySelector('.tia-oi-ov');
+    if (old) old.remove();
+
+    const statusEl = T.el('div', { class: 'tia-oi-status' });
+    const box = T.el('div', { class: 'tia-oi-box' }, 'Checking…');
+    const checkBtn = T.el('button', { class: 'primary', onclick: check }, 'Check address');
+    const closeBtn = T.el('button', { onclick: closeIt }, 'Close');
+
+    const modal = T.el('div', { class: 'tia-oi' },
+      T.el('div', { class: 'tia-oi-head' }, 'PLC connection'),
+      T.el('div', { class: 'tia-oi-body' },
+        statusEl,
+        T.el('div', { class: 'tia-oi-section' }, 'This runtime is reachable at'),
+        box,
+        T.el('div', { class: 'tia-oi-hint' },
+          'In Automation Sim → Online ▾, enter one of these addresses (or use its Search button).')
+      ),
+      T.el('div', { class: 'tia-oi-foot' }, closeBtn, checkBtn)
+    );
+    const ov = T.el('div', { class: 'tia-oi-ov' }, modal);
+    ov.addEventListener('mousedown', (e) => { if (e.target === ov) closeIt(); });
+    ov.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeIt(); });
+    ov.tabIndex = -1;
+    document.body.appendChild(ov);
+    ov.focus();
+
+    renderStatus();
+    check();
+
+    function closeIt() { if (ov.parentNode) ov.parentNode.removeChild(ov); }
+
+    function renderStatus() {
+      const bits = [];
+      bits.push(O.connected ? 'connected' : (O.available() ? 'not connected' : 'offline app'));
+      if (O.connected) bits.push(O.mock ? 'mock I/O' : 'real GPIO');
+      if (O.monitoring) bits.push('monitoring');
+      statusEl.textContent = 'Status: ' + bits.join(' · ');
+    }
+
+    function check() {
+      if (!O.available()) {
+        T.clear(box);
+        box.appendChild(T.el('span', { class: 'tia-oi-warn' },
+          'Open this app from the runtime (http://<host>:<port>) to read its address — a file:// page has no server.'));
+        return;
+      }
+      box.textContent = 'Checking…';
+      api('/api/netinfo').then(render).catch((e) => {
+        T.clear(box);
+        box.appendChild(T.el('span', { class: 'tia-oi-warn' }, 'Unavailable: ' + (e && e.message || e)));
+      });
+    }
+
+    function render(ni) {
+      T.clear(box);
+      box.appendChild(T.el('div', { class: 'tia-oi-row' },
+        T.el('span', { class: 'tia-oi-hint' }, 'hostname: '),
+        T.el('b', null, ni.hostname || '?')));
+      const urls = (ni.urls && ni.urls.length) ? ni.urls
+        : ['http://localhost:' + (ni.port || '?') + '  (this machine only — no LAN address found)'];
+      urls.forEach((u) => {
+        const row = T.el('div', { class: 'tia-oi-row' },
+          T.el('span', { class: 'tia-oi-url' }, u));
+        if (/^https?:\/\//.test(u) && navigator.clipboard) {
+          row.appendChild(T.el('button', {
+            class: 'tia-oi-copy', onclick: () => {
+              navigator.clipboard.writeText(u).then(
+                () => T.status('Copied ' + u, 'ok'), () => T.status('Copy failed', 'warn'));
+            }
+          }, 'Copy'));
+        }
+        box.appendChild(row);
+      });
+      if (ni.modbusPort) {
+        box.appendChild(T.el('div', { class: 'tia-oi-row' },
+          T.el('span', { class: 'tia-oi-hint' }, 'Modbus TCP on port '),
+          T.el('b', null, String(ni.modbusPort))));
+      }
+    }
+  };
+
   // rebuild the id index if the project reloads while monitoring
   T.bus.on('project:loaded', () => { if (O.monitoring) buildIndex(); });
   T.bus.on('tree:changed',   () => { if (O.monitoring) buildIndex(); });

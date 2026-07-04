@@ -21,6 +21,7 @@
 #   GET  /api/info        -> {ok, running, mock, scan, hasProgram, project, programRev, modbusPort}
 #   GET  /api/state       -> engine.snapshot()  (+ programRev)
 #   GET  /api/tags        -> {ok, programRev, tags: [{name, dataType, address, comment}, ...]}
+#   GET  /api/netinfo     -> {ok, hostname, port, modbusPort, addresses:[...], urls:[...]}
 #   GET  /api/modbus-map  -> {ok, port, bank, map: {tagName: {kind, address[, registers]}}}
 #   POST /api/program     -> body = project JSON; load + start; -> {ok}
 #   POST /api/force       -> body = {key, value}; -> {ok}
@@ -33,11 +34,38 @@ import json
 import mimetypes
 import os
 import posixpath
+import socket
 import sys
 import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import unquote, urlparse
+
+
+def _lan_ips():
+    """Best-effort list of this machine's LAN IPv4 address(es), most useful
+    first. The UDP-connect trick reveals the primary outbound interface's IP
+    without sending a packet; hostname resolution catches any others. Loopback
+    is dropped. Lets a client show 'reach me at http://<ip>:<port>' with no
+    terminal (see /api/netinfo)."""
+    ips = []
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            s.connect(('8.8.8.8', 80))
+            ips.append(s.getsockname()[0])
+        finally:
+            s.close()
+    except OSError:
+        pass
+    try:
+        for info in socket.getaddrinfo(socket.gethostname(), None, socket.AF_INET):
+            ip = info[4][0]
+            if ip not in ips:
+                ips.append(ip)
+    except OSError:
+        pass
+    return [ip for ip in ips if not ip.startswith('127.')]
 
 from plc_engine import Engine
 from modbus_server import BANK, modbus_map, serve_modbus
@@ -59,6 +87,7 @@ class Runtime:
         self.has_program = False
         self.project_name = None
         self.program_rev = 0      # bumped on every /api/program; lets clients detect a re-download
+        self.http_port = None     # set by main(); reported by /api/netinfo
         self.modbus_port = None   # set by main() once the Modbus server is up
         self._stop = threading.Event()
         self._thread = threading.Thread(target=self._loop, daemon=True)
@@ -147,6 +176,23 @@ class Runtime:
             # re-discover tags without a separate request (see automation_sim tiaweb adapter)
             snap['programRev'] = self.program_rev
             return snap
+
+    def netinfo(self):
+        """Where this runtime is reachable on the network — hostname, HTTP port,
+        Modbus port, and the LAN IPv4 address(es) + ready-to-paste URLs — so the
+        TIA app can show 'connect Automation Sim to http://<ip>:<port>' without
+        anyone running `hostname -I` in a terminal."""
+        with self.lock:
+            port = self.http_port
+        ips = _lan_ips()
+        return {
+            'ok': True,
+            'hostname': socket.gethostname(),
+            'port': port,
+            'modbusPort': self.modbus_port,
+            'addresses': ips,
+            'urls': ['http://%s:%d' % (ip, port) for ip in ips] if port else [],
+        }
 
     def tags(self):
         """Declared project tags (name/dataType/address/comment) — lets a
@@ -240,6 +286,8 @@ class Handler(BaseHTTPRequestHandler):
         if path == '/api/tags':
             t = RT.tags()
             return self._send_json({'ok': True, 'programRev': t['programRev'], 'tags': t['tags']})
+        if path == '/api/netinfo':
+            return self._send_json(RT.netinfo())
         if path == '/api/modbus-map':
             return self._send_json({'ok': True, 'port': RT.modbus_port, 'bank': BANK,
                                      'map': modbus_map(RT)})
@@ -315,6 +363,7 @@ def main(argv=None):
     mimetypes.add_type('text/css', '.css')
 
     RT = Runtime(mock=args.mock)
+    RT.http_port = args.port
     RT.modbus_port = args.modbus_port or None
 
     httpd = ThreadingHTTPServer(('0.0.0.0', args.port), Handler)

@@ -1,16 +1,16 @@
 # Graph Report - TIA_Portal_Web-app  (2026-07-04)
 
 ## Corpus Check
-- 26 files · ~75,606 words
+- 26 files · ~76,349 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 704 nodes · 1414 edges · 33 communities (30 shown, 3 thin omitted)
+- 714 nodes · 1426 edges · 33 communities (30 shown, 3 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 21 edges (avg confidence: 0.82)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c551b788`
+- Built from commit: `f21492e8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -59,7 +59,7 @@
 7. `index.html — App Entry Point` - 16 edges
 8. `applyOutput()` - 15 edges
 9. `num()` - 15 edges
-10. `renderNet()` - 14 edges
+10. `Runtime` - 15 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Handler` --uses--> `Engine`  [INFERRED]
@@ -99,8 +99,8 @@ Cohesion: 0.11
 Nodes (31): blockBody(), blockCtx(), buildPinTable(), callInstName(), callLines(), cmt(), cvVar(), ensureGpio() (+23 more)
 
 ### Community 5 - "Python Code Generator"
-Cohesion: 0.26
-Nodes (3): BaseHTTPRequestHandler, Handler, Serve files from STATIC_DIR. GET / -> index.html. Path traversal is         prev
+Cohesion: 0.07
+Nodes (17): BaseHTTPRequestHandler, modbus_map(), Build (not start) the Modbus TCP server bound to (bind, port). Caller     runs `, {tag name: {kind, address[, registers]}} for every tag whose TIA address     fal, serve_modbus(), _Server, Handler, _lan_ips() (+9 more)
 
 ### Community 6 - "HTTP / PLC Server"
 Cohesion: 0.15
@@ -115,7 +115,7 @@ Cohesion: 0.14
 Nodes (10): _cmp(), norm_x(), Per-element state id, scoped by the executing instance so an FB's         timers, Inline (contact-area) element value; records el._live in self.live., Apply one output-area element with rung power p. Records el._live., Evaluate one FBD box; return a list of output-pin values (in pin order)., NORM_X: OUT = (VALUE-MIN)/(MAX-MIN); 0 if MAX==MIN. Not clamped (matches sim.js), SCALE_X: OUT = VALUE*(MAX-MIN)+MIN (mirrors sim.js scaleX). (+2 more)
 
 ### Community 9 - "Toolbar & Ribbon"
-Cohesion: 0.14
+Cohesion: 0.13
 Nodes (5): btn(), build(), group(), updateOnlineBtns(), updateSimBtn()
 
 ### Community 10 - "Tags Outline Panel"
@@ -155,8 +155,8 @@ Cohesion: 0.22
 Nodes (20): check(), compile(), evalExpr(), exec(), invalidate(), lineCount(), onInput(), onKeyDown() (+12 more)
 
 ### Community 19 - "Community 19"
-Cohesion: 0.43
-Nodes (5): api(), applyState(), emit(), poll(), snap()
+Cohesion: 0.23
+Nodes (6): api(), applyState(), check(), emit(), poll(), snap()
 
 ### Community 20 - "Community 20"
 Cohesion: 0.29
@@ -195,8 +195,8 @@ Cohesion: 0.21
 Nodes (5): dict, Mem, Parse-and-cache a block's SCL body. Returns (code, program|None, err|None)., Load or replace the running program. Resets all state, seeds memory         with, Initialise M with every declared tag by its NAME (bool->False, num->0).
 
 ### Community 31 - "Community 31"
-Cohesion: 0.08
-Nodes (21): Exception, _bit_key(), _coil_key(), _discrete_key(), _Handler, _holding_key(), _input_key(), modbus_map() (+13 more)
+Cohesion: 0.20
+Nodes (10): Exception, _bit_key(), _coil_key(), _discrete_key(), _Handler, _holding_key(), _input_key(), ModbusError (+2 more)
 
 ## Knowledge Gaps
 - **46 isolated node(s):** `node`, `name`, `version`, `type`, `main` (+41 more)
@@ -207,15 +207,15 @@ Nodes (21): Exception, _bit_key(), _coil_key(), _discrete_key(), _Handler, _hold
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `index.html — App Entry Point` connect `Simulation Engine` to `PLC Scan Engine`, `FBD Editor`, `Ladder (LAD) Editor`, `Core Architecture & Data Model`, `HTTP / PLC Server`, `App Bootstrap & UI Shell`, `Toolbar & Ribbon`, `Tree Details View`, `Online PLC Monitor`, `PLC Launcher Script`, `Community 17`, `Community 19`, `Community 28`?**
-  _High betweenness centrality (0.257) - this node is a cross-community bridge._
+  _High betweenness centrality (0.259) - this node is a cross-community bridge._
 - **Why does `CLAUDE.md — Contributor / Agent Guide` connect `Simulation Engine` to `PLC Scan Engine`, `FBD Editor`, `Ladder (LAD) Editor`, `HTTP / PLC Server`, `Toolbar & Ribbon`?**
-  _High betweenness centrality (0.081) - this node is a cross-community bridge._
-- **Why does `Engine` connect `Community 25` to `Community 32`, `Python Code Generator`, `Project Tree Panel`, `Tag Table Editor`, `Community 21`, `Community 26`, `Community 27`, `Community 29`, `Community 30`, `Community 31`?**
+  _High betweenness centrality (0.079) - this node is a cross-community bridge._
+- **Why does `Engine` connect `Community 25` to `Community 32`, `Python Code Generator`, `Project Tree Panel`, `Tag Table Editor`, `Community 21`, `Community 26`, `Community 27`, `Community 29`, `Community 30`?**
   _High betweenness centrality (0.048) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `Engine` (e.g. with `Handler` and `Runtime`) actually correct?**
   _`Engine` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `node`, `name`, `version` to the rest of the system?**
-  _92 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _94 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `PLC Scan Engine` be split into smaller, more focused modules?**
   _Cohesion score 0.06049382716049383 - nodes in this community are weakly interconnected._
 - **Should `FBD Editor` be split into smaller, more focused modules?**
