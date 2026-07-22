@@ -7,6 +7,18 @@ A browser-based, Siemens-TIA-Portal-style PLC IDE for practicing **Ladder (LAD)*
 > User docs: `README.md`. Module interface contract: `SPEC.md`. This file is the
 > contributor/agent guide — read it before changing code.
 
+## Launchers
+`run.bat` (Windows) is the single entry point users are pointed at: a menu with
+**offline** (opens `index.html`), **online** (`plc_server.py --port 8000`), and
+**online + Modbus** (`--modbus-port 5020`), also usable as
+`run.bat online [httpPort]` / `run.bat modbus [mbPort] [httpPort]`. `run_plc.sh`
+is the Linux/Pi equivalent for the online mode only. **If you change
+`plc_server.py`'s CLI, update `run.bat` and its `:usage` block too** — it hard-codes
+`--port` / `--modbus-port` and the 8000/5020 defaults. It prefers the `py -3`
+launcher because a bare `python` on Windows is often the Microsoft Store alias;
+`--mock` is never passed since `Engine._gpiozero_available()` already falls back
+to the mock backend off-Pi. Batch files must stay **CRLF**.
+
 ## Hard constraints (never violate)
 - Runs from **`file://`**. So: **no ES modules / `import` / `export`**, **no `fetch()`** of local
   files, **no bundler**, **no npm**, **no CDN / external libraries**. Classic `<script>` tags only.

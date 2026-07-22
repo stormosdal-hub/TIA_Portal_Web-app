@@ -9,6 +9,36 @@ the look and workflow of Siemens TIA Portal.
 no internet. Works directly from the filesystem (`file://`). Chromium/Chrome and
 Firefox are both fine.
 
+### Windows: one launcher for every mode (`run.bat`)
+There are three ways to start this thing and it's easy to lose track of which one
+you want. **Double-click `run.bat`** and pick from the menu:
+
+| | Mode | What it does | Needs Python? |
+|---|---|---|---|
+| **1** | Offline | Opens `index.html`. Everything works except the live Pi runtime. | no |
+| **2** | Online runtime | `plc_server.py` on <http://localhost:8000> — for **Download / Monitor** (online mode). | yes |
+| **3** | Online + Modbus | Same, plus **Modbus TCP** on 5020 — what the Automation Sim gateway connects to. | yes |
+
+It opens your browser for you and prints the URL. **Ctrl+C** in the window stops
+the server (Windows then asks *"Terminate batch job (Y/N)?"* — answer `Y`).
+
+From a terminal it also takes arguments, so you don't have to sit through the menu:
+
+```bat
+run.bat offline
+run.bat online              :: http://localhost:8000
+run.bat online 8001         :: pick another port
+run.bat modbus              :: Modbus 5020 + http 8000
+run.bat modbus 502 8080     :: Modbus 502 + http 8080
+run.bat --help
+```
+
+On Windows you never need `--mock`: with no `gpiozero` installed the runtime
+selects the mock I/O backend by itself and prints `I/O backend: MOCK`. Anything
+the launcher doesn't cover is still plain `py -3 plc_server.py …`.
+
+On Linux/Pi the equivalent is `./run_plc.sh` (or `python3 plc_server.py`).
+
 ## What's included
 - **Project tree** (left): Device → Program blocks (OB/FC/FB) → PLC tags.
   Click a block to open it; right-click to rename/delete; `＋ Add new block` to create one.
@@ -136,6 +166,7 @@ it live in the app — TIA-style online monitoring against a real Pi.
 
 1. On the Pi, start the runtime + web server (add `--mock` to try it with no hardware):
    `./run_plc.sh`  (or `python3 plc_server.py`)  — then open **http://localhost:8000** in the browser.
+   On Windows: **`run.bat online`** (or double-click `run.bat` and pick `[2]`), which opens it for you.
 2. In the app, the **Online (PLC)** toolbar group: **Connect** → **Download → PLC** (sends the current
    program to the runtime — change it anytime) → **Monitor**. The diagram now lights up **green/blue from
    real GPIO/memory** and the **Simulation table** shows live values; toggling/forcing a tag there is sent

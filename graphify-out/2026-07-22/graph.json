@@ -4689,7 +4689,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "modbus_server",
-      "community": 5,
+      "community": 31,
       "norm_label": "modbus_server.py"
     },
     {
@@ -4699,7 +4699,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "modbus_server_modbuserror",
-      "community": 5,
+      "community": 31,
       "norm_label": "modbuserror"
     },
     {
@@ -4709,7 +4709,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "exception",
-      "community": 30,
+      "community": 31,
       "norm_label": "exception"
     },
     {
@@ -4719,7 +4719,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "modbus_server_modbuserror_init",
-      "community": 5,
+      "community": 31,
       "norm_label": ".__init__()"
     },
     {
@@ -4729,7 +4729,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "modbus_server_bit_key",
-      "community": 5,
+      "community": 31,
       "norm_label": "_bit_key()"
     },
     {
@@ -4739,7 +4739,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "modbus_server_word_key",
-      "community": 5,
+      "community": 31,
       "norm_label": "_word_key()"
     },
     {
@@ -4749,7 +4749,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "modbus_server_coil_key",
-      "community": 5,
+      "community": 31,
       "norm_label": "_coil_key()"
     },
     {
@@ -4759,7 +4759,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "modbus_server_discrete_key",
-      "community": 5,
+      "community": 31,
       "norm_label": "_discrete_key()"
     },
     {
@@ -4769,7 +4769,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "modbus_server_holding_key",
-      "community": 5,
+      "community": 31,
       "norm_label": "_holding_key()"
     },
     {
@@ -4779,7 +4779,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "modbus_server_input_key",
-      "community": 5,
+      "community": 31,
       "norm_label": "_input_key()"
     },
     {
@@ -4799,7 +4799,7 @@
       "source_location": "L131",
       "_origin": "ast",
       "id": "modbus_server_handler",
-      "community": 5,
+      "community": 31,
       "norm_label": "_handler"
     },
     {
@@ -4809,7 +4809,7 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "modbus_server_handler_handle",
-      "community": 5,
+      "community": 31,
       "norm_label": ".handle()"
     },
     {
@@ -4819,7 +4819,7 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "modbus_server_handler_dispatch",
-      "community": 5,
+      "community": 31,
       "norm_label": "._dispatch()"
     },
     {
@@ -4829,7 +4829,7 @@
       "source_location": "L170",
       "_origin": "ast",
       "id": "modbus_server_handler_handle_fc",
-      "community": 5,
+      "community": 31,
       "norm_label": "._handle_fc()"
     },
     {
@@ -4839,7 +4839,7 @@
       "source_location": "L189",
       "_origin": "ast",
       "id": "modbus_server_handler_read_bits",
-      "community": 5,
+      "community": 31,
       "norm_label": "._read_bits()"
     },
     {
@@ -4849,7 +4849,7 @@
       "source_location": "L203",
       "_origin": "ast",
       "id": "modbus_server_handler_read_regs",
-      "community": 5,
+      "community": 31,
       "norm_label": "._read_regs()"
     },
     {
@@ -4859,7 +4859,7 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "modbus_server_handler_write_coil",
-      "community": 5,
+      "community": 31,
       "norm_label": "._write_coil()"
     },
     {
@@ -4869,7 +4869,7 @@
       "source_location": "L226",
       "_origin": "ast",
       "id": "modbus_server_handler_write_reg",
-      "community": 5,
+      "community": 31,
       "norm_label": "._write_reg()"
     },
     {
@@ -4879,7 +4879,7 @@
       "source_location": "L234",
       "_origin": "ast",
       "id": "modbus_server_handler_write_coils",
-      "community": 5,
+      "community": 31,
       "norm_label": "._write_coils()"
     },
     {
@@ -4889,7 +4889,7 @@
       "source_location": "L247",
       "_origin": "ast",
       "id": "modbus_server_handler_write_regs",
-      "community": 5,
+      "community": 31,
       "norm_label": "._write_regs()"
     },
     {
@@ -5099,7 +5099,7 @@
       "source_location": "L213",
       "_origin": "ast",
       "id": "plc_engine_sclerror",
-      "community": 30,
+      "community": 31,
       "norm_label": "_sclerror"
     },
     {
@@ -5109,7 +5109,7 @@
       "source_location": "L214",
       "_origin": "ast",
       "id": "plc_engine_sclerror_init",
-      "community": 30,
+      "community": 31,
       "norm_label": ".__init__()"
     },
     {
@@ -6399,7 +6399,7 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "plc_server_handler",
-      "community": 31,
+      "community": 5,
       "norm_label": "handler"
     },
     {
@@ -6409,7 +6409,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "basehttprequesthandler",
-      "community": 31,
+      "community": 5,
       "norm_label": "basehttprequesthandler"
     },
     {
@@ -6419,7 +6419,7 @@
       "source_location": "L220",
       "_origin": "ast",
       "id": "plc_server_handler_cors",
-      "community": 31,
+      "community": 5,
       "norm_label": "._cors()"
     },
     {
@@ -6429,7 +6429,7 @@
       "source_location": "L225",
       "_origin": "ast",
       "id": "plc_server_handler_send_json",
-      "community": 31,
+      "community": 5,
       "norm_label": "._send_json()"
     },
     {
@@ -6439,7 +6439,7 @@
       "source_location": "L234",
       "_origin": "ast",
       "id": "plc_server_handler_send_bytes",
-      "community": 31,
+      "community": 5,
       "norm_label": "._send_bytes()"
     },
     {
@@ -6449,7 +6449,7 @@
       "source_location": "L245",
       "_origin": "ast",
       "id": "plc_server_handler_read_body_json",
-      "community": 31,
+      "community": 5,
       "norm_label": "._read_body_json()"
     },
     {
@@ -6459,7 +6459,7 @@
       "source_location": "L255",
       "_origin": "ast",
       "id": "plc_server_handler_log_message",
-      "community": 31,
+      "community": 5,
       "norm_label": ".log_message()"
     },
     {
@@ -6469,7 +6469,7 @@
       "source_location": "L259",
       "_origin": "ast",
       "id": "plc_server_handler_do_options",
-      "community": 31,
+      "community": 5,
       "norm_label": ".do_options()"
     },
     {
@@ -6479,7 +6479,7 @@
       "source_location": "L265",
       "_origin": "ast",
       "id": "plc_server_handler_do_get",
-      "community": 31,
+      "community": 5,
       "norm_label": ".do_get()"
     },
     {
@@ -6489,7 +6489,7 @@
       "source_location": "L271",
       "_origin": "ast",
       "id": "plc_server_handler_do_post",
-      "community": 31,
+      "community": 5,
       "norm_label": ".do_post()"
     },
     {
@@ -6499,7 +6499,7 @@
       "source_location": "L281",
       "_origin": "ast",
       "id": "plc_server_handler_handle_api_get",
-      "community": 31,
+      "community": 5,
       "norm_label": "._handle_api_get()"
     },
     {
@@ -6509,7 +6509,7 @@
       "source_location": "L296",
       "_origin": "ast",
       "id": "plc_server_handler_handle_api_post",
-      "community": 31,
+      "community": 5,
       "norm_label": "._handle_api_post()"
     },
     {
@@ -6519,7 +6519,7 @@
       "source_location": "L321",
       "_origin": "ast",
       "id": "plc_server_handler_serve_static",
-      "community": 31,
+      "community": 5,
       "norm_label": "._serve_static()"
     },
     {
@@ -6599,7 +6599,7 @@
       "source_location": "L322",
       "_origin": "ast",
       "id": "plc_server_rationale_322",
-      "community": 31,
+      "community": 5,
       "norm_label": "serve files from static_dir. get / -> index.html. path traversal is         prev"
     },
     {
@@ -6651,20 +6651,10 @@
       "norm_label": "claude.md \u2014 tia web practice (project operating manual)"
     },
     {
-      "label": "Launchers",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L10",
-      "_origin": "ast",
-      "id": "claude_launchers",
-      "community": 12,
-      "norm_label": "launchers"
-    },
-    {
       "label": "Hard constraints (never violate)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L22",
+      "source_location": "L10",
       "_origin": "ast",
       "id": "claude_hard_constraints_never_violate",
       "community": 12,
@@ -6674,7 +6664,7 @@
       "label": "Architecture / where things live",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L33",
+      "source_location": "L21",
       "_origin": "ast",
       "id": "claude_architecture_where_things_live",
       "community": 12,
@@ -6684,7 +6674,7 @@
       "label": "Data model (core.js)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L50",
+      "source_location": "L38",
       "_origin": "ast",
       "id": "claude_data_model_core_js",
       "community": 12,
@@ -6694,7 +6684,7 @@
       "label": "Verifying changes (no Node here \u2014 use headless Chromium, already installed at /usr/bin/chromium)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L59",
+      "source_location": "L47",
       "_origin": "ast",
       "id": "claude_verifying_changes_no_node_here_use_headless_chromium_already_installed_at_usr_bin_chromium",
       "community": 12,
@@ -6704,7 +6694,7 @@
       "label": "Known gotchas (these bit us before)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L73",
+      "source_location": "L61",
       "_origin": "ast",
       "id": "claude_known_gotchas_these_bit_us_before",
       "community": 12,
@@ -6714,7 +6704,7 @@
       "label": "Adding a new instruction (LAD/FBD) \u2014 the recipe",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L93",
+      "source_location": "L81",
       "_origin": "ast",
       "id": "claude_adding_a_new_instruction_lad_fbd_the_recipe",
       "community": 12,
@@ -6724,7 +6714,7 @@
       "label": "Style",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L104",
+      "source_location": "L92",
       "_origin": "ast",
       "id": "claude_style",
       "community": 12,
@@ -6761,20 +6751,10 @@
       "norm_label": "run it"
     },
     {
-      "label": "Windows: one launcher for every mode (`run.bat`)",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L12",
-      "_origin": "ast",
-      "id": "readme_windows_one_launcher_for_every_mode_run_bat",
-      "community": 10,
-      "norm_label": "windows: one launcher for every mode (`run.bat`)"
-    },
-    {
       "label": "What's included",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L42",
+      "source_location": "L12",
       "_origin": "ast",
       "id": "readme_what_s_included",
       "community": 10,
@@ -6784,7 +6764,7 @@
       "label": "The demo project (`Conveyor_Demo`)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L53",
+      "source_location": "L23",
       "_origin": "ast",
       "id": "readme_the_demo_project_conveyor_demo",
       "community": 10,
@@ -6794,7 +6774,7 @@
       "label": "Try it",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L63",
+      "source_location": "L33",
       "_origin": "ast",
       "id": "readme_try_it",
       "community": 10,
@@ -6804,7 +6784,7 @@
       "label": "Assigning tags by drag-and-drop",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L70",
+      "source_location": "L40",
       "_origin": "ast",
       "id": "readme_assigning_tags_by_drag_and_drop",
       "community": 10,
@@ -6814,7 +6794,7 @@
       "label": "Typing with autocomplete",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L80",
+      "source_location": "L50",
       "_origin": "ast",
       "id": "readme_typing_with_autocomplete",
       "community": 10,
@@ -6824,7 +6804,7 @@
       "label": "Editing",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L85",
+      "source_location": "L55",
       "_origin": "ast",
       "id": "readme_editing",
       "community": 10,
@@ -6834,7 +6814,7 @@
       "label": "Simulation view (online-style)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L124",
+      "source_location": "L94",
       "_origin": "ast",
       "id": "readme_simulation_view_online_style",
       "community": 10,
@@ -6844,7 +6824,7 @@
       "label": "Run it on a Raspberry Pi (Export Python)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L130",
+      "source_location": "L100",
       "_origin": "ast",
       "id": "readme_run_it_on_a_raspberry_pi_export_python",
       "community": 10,
@@ -6854,7 +6834,7 @@
       "label": "Analog output (software PWM) + scaling",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L141",
+      "source_location": "L111",
       "_origin": "ast",
       "id": "readme_analog_output_software_pwm_scaling",
       "community": 10,
@@ -6864,7 +6844,7 @@
       "label": "Scan cycle time (timer/blinker speed)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L155",
+      "source_location": "L125",
       "_origin": "ast",
       "id": "readme_scan_cycle_time_timer_blinker_speed",
       "community": 10,
@@ -6874,7 +6854,7 @@
       "label": "Online mode \u2014 run + monitor + change the program live (Pi runtime)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L163",
+      "source_location": "L133",
       "_origin": "ast",
       "id": "readme_online_mode_run_monitor_change_the_program_live_pi_runtime",
       "community": 10,
@@ -6884,7 +6864,7 @@
       "label": "Modbus TCP server mode (any SCADA/HMI can connect)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L193",
+      "source_location": "L162",
       "_origin": "ast",
       "id": "readme_modbus_tcp_server_mode_any_scada_hmi_can_connect",
       "community": 10,
@@ -6894,7 +6874,7 @@
       "label": "Saving your work",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L218",
+      "source_location": "L187",
       "_origin": "ast",
       "id": "readme_saving_your_work",
       "community": 10,
@@ -6904,7 +6884,7 @@
       "label": "Addresses & data types",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L227",
+      "source_location": "L196",
       "_origin": "ast",
       "id": "readme_addresses_data_types",
       "community": 10,
@@ -6914,7 +6894,7 @@
       "label": "Supported instructions",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L238",
+      "source_location": "L207",
       "_origin": "ast",
       "id": "readme_supported_instructions",
       "community": 10,
@@ -6924,7 +6904,7 @@
       "label": "Project tree & simulation table tips",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L255",
+      "source_location": "L224",
       "_origin": "ast",
       "id": "readme_project_tree_simulation_table_tips",
       "community": 10,
@@ -6934,7 +6914,7 @@
       "label": "Architecture (for extending)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L261",
+      "source_location": "L230",
       "_origin": "ast",
       "id": "readme_architecture_for_extending",
       "community": 10,
@@ -14213,9 +14193,9 @@
       "source_file": "js/online.js",
       "source_location": "L229",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "js_online",
-      "target": "js_online_check"
+      "target": "js_online_check",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -14223,9 +14203,9 @@
       "source_file": "js/online.js",
       "source_location": "L219",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "js_online",
-      "target": "js_online_closeit"
+      "target": "js_online_closeit",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -14243,9 +14223,9 @@
       "source_file": "js/online.js",
       "source_location": "L162",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "js_online",
-      "target": "js_online_injectinfocss"
+      "target": "js_online_injectinfocss",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -14263,9 +14243,9 @@
       "source_file": "js/online.js",
       "source_location": "L243",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "js_online",
-      "target": "js_online_render"
+      "target": "js_online_render",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -14273,9 +14253,9 @@
       "source_file": "js/online.js",
       "source_location": "L221",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "js_online",
-      "target": "js_online_renderstatus"
+      "target": "js_online_renderstatus",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -14294,9 +14274,9 @@
       "source_file": "js/online.js",
       "source_location": "L237",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "js_online_check",
-      "target": "js_online_api"
+      "target": "js_online_api",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -16904,9 +16884,9 @@
       "source_file": "js/toolbar.js",
       "source_location": "L55",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "js_toolbar",
-      "target": "js_toolbar_onlineinfo"
+      "target": "js_toolbar_onlineinfo",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -21106,9 +21086,9 @@
       "source_file": "plc_server.py",
       "source_location": "L45",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "plc_server",
-      "target": "plc_server_lan_ips"
+      "target": "plc_server_lan_ips",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -21136,9 +21116,9 @@
       "source_file": "plc_server.py",
       "source_location": "L46",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "plc_server_rationale_46",
-      "target": "plc_server_lan_ips"
+      "target": "plc_server_lan_ips",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -21147,9 +21127,9 @@
       "source_file": "plc_server.py",
       "source_location": "L187",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "plc_server_runtime_netinfo",
-      "target": "plc_server_lan_ips"
+      "target": "plc_server_lan_ips",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -21168,9 +21148,9 @@
       "source_file": "plc_server.py",
       "source_location": "L79",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "plc_server_rationale_79",
-      "target": "plc_server_runtime"
+      "target": "plc_server_runtime",
+      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -21218,9 +21198,9 @@
       "source_file": "plc_server.py",
       "source_location": "L180",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "plc_server_runtime",
-      "target": "plc_server_runtime_netinfo"
+      "target": "plc_server_runtime_netinfo",
+      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -21288,9 +21268,9 @@
       "source_file": "plc_server.py",
       "source_location": "L98",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "plc_server_rationale_98",
-      "target": "plc_server_runtime_loop"
+      "target": "plc_server_runtime_loop",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -21320,9 +21300,9 @@
       "source_file": "plc_server.py",
       "source_location": "L125",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "plc_server_rationale_125",
-      "target": "plc_server_runtime_outputs_off"
+      "target": "plc_server_runtime_outputs_off",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -21341,9 +21321,9 @@
       "source_file": "plc_server.py",
       "source_location": "L181",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "plc_server_rationale_181",
-      "target": "plc_server_runtime_netinfo"
+      "target": "plc_server_runtime_netinfo",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -21351,9 +21331,9 @@
       "source_file": "plc_server.py",
       "source_location": "L198",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "plc_server_rationale_198",
-      "target": "plc_server_runtime_tags"
+      "target": "plc_server_runtime_tags",
+      "confidence_score": 1.0
     },
     {
       "relation": "inherits",
@@ -21602,9 +21582,9 @@
       "source_file": "plc_server.py",
       "source_location": "L322",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "plc_server_rationale_322",
-      "target": "plc_server_handler_serve_static"
+      "target": "plc_server_handler_serve_static",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -21675,16 +21655,6 @@
       "confidence_score": 1.0,
       "source": "claude_claude_md_tia_web_practice_project_operating_manual",
       "target": "claude_known_gotchas_these_bit_us_before"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L10",
-      "weight": 1.0,
-      "source": "claude_claude_md_tia_web_practice_project_operating_manual",
-      "target": "claude_launchers",
-      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -21915,16 +21885,6 @@
       "confidence_score": 1.0,
       "source": "readme_tia_web_practice_a_browser_based_tia_portal_style_plc_ide",
       "target": "readme_what_s_included"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L12",
-      "weight": 1.0,
-      "source": "readme_run_it",
-      "target": "readme_windows_one_launcher_for_every_mode_run_bat",
-      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -22188,5 +22148,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "857dd2606bc4ea44d1986a7e5ff7de0288181877"
+  "built_at_commit": "f21492e80b298d9a3caee72d25395c5cf2665075"
 }
